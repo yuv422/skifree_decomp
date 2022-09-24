@@ -1,0 +1,11 @@
+*~
+*.aps
+*.pch
+*.plg
+*.ncb
+*.obj
+*.opt
+Debug/
+Release/
+resources/
+

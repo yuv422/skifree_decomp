@@ -1,0 +1,204 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#define APSTUDIO_HIDDEN_SYMBOLS
+#include "windows.h"
+#undef APSTUDIO_HIDDEN_SYMBOLS
+#include "resource.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "#include ""windows.h""\r\n"
+    "#undef APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "#include ""resource.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+1                       BITMAP  DISCARDABLE     "resources\\ski32_1.bmp"
+2                       BITMAP  DISCARDABLE     "resources\\ski32_2.bmp"
+3                       BITMAP  DISCARDABLE     "resources\\ski32_3.bmp"
+4                       BITMAP  DISCARDABLE     "resources\\ski32_4.bmp"
+5                       BITMAP  DISCARDABLE     "resources\\ski32_5.bmp"
+6                       BITMAP  DISCARDABLE     "resources\\ski32_6.bmp"
+7                       BITMAP  DISCARDABLE     "resources\\ski32_7.bmp"
+8                       BITMAP  DISCARDABLE     "resources\\ski32_8.bmp"
+9                       BITMAP  DISCARDABLE     "resources\\ski32_9.bmp"
+10                      BITMAP  DISCARDABLE     "resources\\ski32_10.bmp"
+11                      BITMAP  DISCARDABLE     "resources\\ski32_11.bmp"
+12                      BITMAP  DISCARDABLE     "resources\\ski32_12.bmp"
+13                      BITMAP  DISCARDABLE     "resources\\ski32_13.bmp"
+14                      BITMAP  DISCARDABLE     "resources\\ski32_14.bmp"
+15                      BITMAP  DISCARDABLE     "resources\\ski32_15.bmp"
+16                      BITMAP  DISCARDABLE     "resources\\ski32_16.bmp"
+17                      BITMAP  DISCARDABLE     "resources\\ski32_17.bmp"
+18                      BITMAP  DISCARDABLE     "resources\\ski32_18.bmp"
+19                      BITMAP  DISCARDABLE     "resources\\ski32_19.bmp"
+20                      BITMAP  DISCARDABLE     "resources\\ski32_20.bmp"
+21                      BITMAP  DISCARDABLE     "resources\\ski32_21.bmp"
+22                      BITMAP  DISCARDABLE     "resources\\ski32_22.bmp"
+23                      BITMAP  DISCARDABLE     "resources\\ski32_23.bmp"
+24                      BITMAP  DISCARDABLE     "resources\\ski32_24.bmp"
+25                      BITMAP  DISCARDABLE     "resources\\ski32_25.bmp"
+26                      BITMAP  DISCARDABLE     "resources\\ski32_26.bmp"
+27                      BITMAP  DISCARDABLE     "resources\\ski32_27.bmp"
+28                      BITMAP  DISCARDABLE     "resources\\ski32_28.bmp"
+29                      BITMAP  DISCARDABLE     "resources\\ski32_29.bmp"
+30                      BITMAP  DISCARDABLE     "resources\\ski32_30.bmp"
+31                      BITMAP  DISCARDABLE     "resources\\ski32_31.bmp"
+32                      BITMAP  DISCARDABLE     "resources\\ski32_32.bmp"
+33                      BITMAP  DISCARDABLE     "resources\\ski32_33.bmp"
+34                      BITMAP  DISCARDABLE     "resources\\ski32_34.bmp"
+35                      BITMAP  DISCARDABLE     "resources\\ski32_35.bmp"
+36                      BITMAP  DISCARDABLE     "resources\\ski32_36.bmp"
+37                      BITMAP  DISCARDABLE     "resources\\ski32_37.bmp"
+38                      BITMAP  DISCARDABLE     "resources\\ski32_38.bmp"
+39                      BITMAP  DISCARDABLE     "resources\\ski32_39.bmp"
+40                      BITMAP  DISCARDABLE     "resources\\ski32_40.bmp"
+41                      BITMAP  DISCARDABLE     "resources\\ski32_41.bmp"
+42                      BITMAP  DISCARDABLE     "resources\\ski32_42.bmp"
+43                      BITMAP  DISCARDABLE     "resources\\ski32_43.bmp"
+44                      BITMAP  DISCARDABLE     "resources\\ski32_44.bmp"
+45                      BITMAP  DISCARDABLE     "resources\\ski32_45.bmp"
+46                      BITMAP  DISCARDABLE     "resources\\ski32_46.bmp"
+47                      BITMAP  DISCARDABLE     "resources\\ski32_47.bmp"
+48                      BITMAP  DISCARDABLE     "resources\\ski32_48.bmp"
+49                      BITMAP  DISCARDABLE     "resources\\ski32_49.bmp"
+50                      BITMAP  DISCARDABLE     "resources\\ski32_50.bmp"
+51                      BITMAP  DISCARDABLE     "resources\\ski32_51.bmp"
+52                      BITMAP  DISCARDABLE     "resources\\ski32_52.bmp"
+53                      BITMAP  DISCARDABLE     "resources\\ski32_53.bmp"
+54                      BITMAP  DISCARDABLE     "resources\\ski32_54.bmp"
+55                      BITMAP  DISCARDABLE     "resources\\ski32_55.bmp"
+56                      BITMAP  DISCARDABLE     "resources\\ski32_56.bmp"
+57                      BITMAP  DISCARDABLE     "resources\\ski32_57.bmp"
+58                      BITMAP  DISCARDABLE     "resources\\ski32_58.bmp"
+59                      BITMAP  DISCARDABLE     "resources\\ski32_59.bmp"
+60                      BITMAP  DISCARDABLE     "resources\\ski32_60.bmp"
+61                      BITMAP  DISCARDABLE     "resources\\ski32_61.bmp"
+62                      BITMAP  DISCARDABLE     "resources\\ski32_62.bmp"
+63                      BITMAP  DISCARDABLE     "resources\\ski32_63.bmp"
+64                      BITMAP  DISCARDABLE     "resources\\ski32_64.bmp"
+65                      BITMAP  DISCARDABLE     "resources\\ski32_65.bmp"
+66                      BITMAP  DISCARDABLE     "resources\\ski32_66.bmp"
+67                      BITMAP  DISCARDABLE     "resources\\ski32_67.bmp"
+68                      BITMAP  DISCARDABLE     "resources\\ski32_68.bmp"
+69                      BITMAP  DISCARDABLE     "resources\\ski32_69.bmp"
+70                      BITMAP  DISCARDABLE     "resources\\ski32_70.bmp"
+71                      BITMAP  DISCARDABLE     "resources\\ski32_71.bmp"
+72                      BITMAP  DISCARDABLE     "resources\\ski32_72.bmp"
+73                      BITMAP  DISCARDABLE     "resources\\ski32_73.bmp"
+74                      BITMAP  DISCARDABLE     "resources\\ski32_74.bmp"
+75                      BITMAP  DISCARDABLE     "resources\\ski32_75.bmp"
+76                      BITMAP  DISCARDABLE     "resources\\ski32_76.bmp"
+77                      BITMAP  DISCARDABLE     "resources\\ski32_77.bmp"
+78                      BITMAP  DISCARDABLE     "resources\\ski32_78.bmp"
+79                      BITMAP  DISCARDABLE     "resources\\ski32_79.bmp"
+80                      BITMAP  DISCARDABLE     "resources\\ski32_80.bmp"
+81                      BITMAP  DISCARDABLE     "resources\\ski32_81.bmp"
+82                      BITMAP  DISCARDABLE     "resources\\ski32_82.bmp"
+83                      BITMAP  DISCARDABLE     "resources\\ski32_83.bmp"
+84                      BITMAP  DISCARDABLE     "resources\\ski32_84.bmp"
+85                      BITMAP  DISCARDABLE     "resources\\ski32_85.bmp"
+86                      BITMAP  DISCARDABLE     "resources\\ski32_86.bmp"
+87                      BITMAP  DISCARDABLE     "resources\\ski32_87.bmp"
+88                      BITMAP  DISCARDABLE     "resources\\ski32_88.bmp"
+89                      BITMAP  DISCARDABLE     "resources\\ski32_89.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+ICONSKI                 ICON    DISCARDABLE     "resources\\iconski.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_TITLE               "SkiFree"
+    IDS_PAUSED              "Ski Paused ... Press F3 to continue"
+    IDS_TIME                "Time:"
+    IDS_DIST                "Dist:"
+    IDS_SPEED               "Speed:"
+    IDS_STYLE               "Style:"
+    IDS_TIME_BLANK          "00:00:00.00"
+    IDS_DIST_BLANK          " 0000m"
+    IDS_SPEED_BLANK         " 0000m/s"
+    IDS_STYLE_BLANK         "0000000"
+    IDS_TIME_FORMAT         "%2u:%2.2u:%2.2u.%2.2u"
+    IDS_DIST_FORMAT         "%5.2dm"
+    IDS_SPEED_FORMAT        "%5.2dm/s"
+    IDS_STYLE_FORMAT        "%7ld"
+    IDS_HIGH_SCORES         "High Scores"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_THATS_YOU           " <-- that's you"
+    IDS_TRY_AGAIN           " <-- try again!"
+END
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
