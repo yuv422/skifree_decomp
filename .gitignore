@@ -7,5 +7,6 @@
 *.opt
 Debug/
 Release/
-resources/
+resources/*.bmp
+resources/*.ico
 
