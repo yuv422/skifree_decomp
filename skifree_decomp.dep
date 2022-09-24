@@ -1,0 +1,117 @@
+# Microsoft Developer Studio Generated Dependency File, included by skifree_decomp.mak
+
+!IF  "$(CFG)" == "skifree_decomp - Win32 Release"
+
+!ELSEIF  "$(CFG)" == "skifree_decomp - Win32 Debug"
+
+!ENDIF 
+
+!IF  "$(CFG)" == "skifree_decomp - Win32 Release"
+
+!ELSEIF  "$(CFG)" == "skifree_decomp - Win32 Debug"
+
+!ENDIF 
+
+!IF  "$(CFG)" == "skifree_decomp - Win32 Release"
+
+!ELSEIF  "$(CFG)" == "skifree_decomp - Win32 Debug"
+
+!ENDIF 
+
+.\skifree_decomp.rc : \
+	".\resources\iconski.ico"\
+	".\resources\ski32_1.bmp"\
+	".\resources\ski32_10.bmp"\
+	".\resources\ski32_11.bmp"\
+	".\resources\ski32_12.bmp"\
+	".\resources\ski32_13.bmp"\
+	".\resources\ski32_14.bmp"\
+	".\resources\ski32_15.bmp"\
+	".\resources\ski32_16.bmp"\
+	".\resources\ski32_17.bmp"\
+	".\resources\ski32_18.bmp"\
+	".\resources\ski32_19.bmp"\
+	".\resources\ski32_2.bmp"\
+	".\resources\ski32_20.bmp"\
+	".\resources\ski32_21.bmp"\
+	".\resources\ski32_22.bmp"\
+	".\resources\ski32_23.bmp"\
+	".\resources\ski32_24.bmp"\
+	".\resources\ski32_25.bmp"\
+	".\resources\ski32_26.bmp"\
+	".\resources\ski32_27.bmp"\
+	".\resources\ski32_28.bmp"\
+	".\resources\ski32_29.bmp"\
+	".\resources\ski32_3.bmp"\
+	".\resources\ski32_30.bmp"\
+	".\resources\ski32_31.bmp"\
+	".\resources\ski32_32.bmp"\
+	".\resources\ski32_33.bmp"\
+	".\resources\ski32_34.bmp"\
+	".\resources\ski32_35.bmp"\
+	".\resources\ski32_36.bmp"\
+	".\resources\ski32_37.bmp"\
+	".\resources\ski32_38.bmp"\
+	".\resources\ski32_39.bmp"\
+	".\resources\ski32_4.bmp"\
+	".\resources\ski32_40.bmp"\
+	".\resources\ski32_41.bmp"\
+	".\resources\ski32_42.bmp"\
+	".\resources\ski32_43.bmp"\
+	".\resources\ski32_44.bmp"\
+	".\resources\ski32_45.bmp"\
+	".\resources\ski32_46.bmp"\
+	".\resources\ski32_47.bmp"\
+	".\resources\ski32_48.bmp"\
+	".\resources\ski32_49.bmp"\
+	".\resources\ski32_5.bmp"\
+	".\resources\ski32_50.bmp"\
+	".\resources\ski32_51.bmp"\
+	".\resources\ski32_52.bmp"\
+	".\resources\ski32_53.bmp"\
+	".\resources\ski32_54.bmp"\
+	".\resources\ski32_55.bmp"\
+	".\resources\ski32_56.bmp"\
+	".\resources\ski32_57.bmp"\
+	".\resources\ski32_58.bmp"\
+	".\resources\ski32_59.bmp"\
+	".\resources\ski32_6.bmp"\
+	".\resources\ski32_60.bmp"\
+	".\resources\ski32_61.bmp"\
+	".\resources\ski32_62.bmp"\
+	".\resources\ski32_63.bmp"\
+	".\resources\ski32_64.bmp"\
+	".\resources\ski32_65.bmp"\
+	".\resources\ski32_66.bmp"\
+	".\resources\ski32_67.bmp"\
+	".\resources\ski32_68.bmp"\
+	".\resources\ski32_69.bmp"\
+	".\resources\ski32_7.bmp"\
+	".\resources\ski32_70.bmp"\
+	".\resources\ski32_71.bmp"\
+	".\resources\ski32_72.bmp"\
+	".\resources\ski32_73.bmp"\
+	".\resources\ski32_74.bmp"\
+	".\resources\ski32_75.bmp"\
+	".\resources\ski32_76.bmp"\
+	".\resources\ski32_77.bmp"\
+	".\resources\ski32_78.bmp"\
+	".\resources\ski32_79.bmp"\
+	".\resources\ski32_8.bmp"\
+	".\resources\ski32_80.bmp"\
+	".\resources\ski32_81.bmp"\
+	".\resources\ski32_82.bmp"\
+	".\resources\ski32_83.bmp"\
+	".\resources\ski32_84.bmp"\
+	".\resources\ski32_85.bmp"\
+	".\resources\ski32_86.bmp"\
+	".\resources\ski32_87.bmp"\
+	".\resources\ski32_88.bmp"\
+	".\resources\ski32_89.bmp"\
+	".\resources\ski32_9.bmp"\
+	
+
+.\StdAfx.c : \
+	".\StdAfx.h"\
+	"c:\program files\microsoft visual studio\vc98\include\basetsd.h"\
+	
