@@ -28,12 +28,8 @@ db 3 DUP (00h)
 PUBLIC C DAT_0040c020
 DAT_0040c020 byte 00h
 db 15 DUP (00h)
-PUBLIC C DAT_0040c030
-DAT_0040c030 byte 00h
-db 19 DUP (00h)
-PUBLIC C DAT_0040c044
-DAT_0040c044 byte 00h
-db 3 DUP (00h), 12h, 3 DUP (00h), 40h, 51 DUP (00h)
+PUBLIC C playerActorMaybe
+playerActorMaybe byte 24 DUP (00h), 12h, 3 DUP (00h), 40h, 51 DUP (00h)
 PUBLIC C entpack_ini_section_name_ski
 entpack_ini_section_name_ski byte 53h, 6bh, 69h, 00h
 PUBLIC C s_entpack_ini
@@ -250,8 +246,8 @@ PUBLIC C DAT_0040c640
 DAT_0040c640 byte 4 DUP (00h)
 PUBLIC C DAT_0040c644
 DAT_0040c644 byte 4 DUP (00h)
-PUBLIC C DAT_0040c648
-DAT_0040c648 byte 4 DUP (00h)
+PUBLIC C actors
+actors byte 4 DUP (00h)
 PUBLIC C PTR_0040c64c
 PTR_0040c64c byte 4 DUP (00h)
 PUBLIC C DAT_0040c650
@@ -354,8 +350,8 @@ sound_4 byte 8 DUP (00h)
 PUBLIC C DAT_0040c720
 DAT_0040c720 byte 00h
 db 11 DUP (00h)
-PUBLIC C playerActorMaybe
-playerActorMaybe byte 4 DUP (00h)
+PUBLIC C playerActorPtrMaybe
+playerActorPtrMaybe byte 4 DUP (00h)
 PUBLIC C DAT_0040c730
 DAT_0040c730 byte 4 DUP (00h)
 db 4 DUP (00h)
@@ -370,8 +366,8 @@ PUBLIC C SCREEN_HEIGHT
 SCREEN_HEIGHT byte 4 DUP (00h)
 PUBLIC C sound_5
 sound_5 byte 8 DUP (00h)
-PUBLIC C DAT_0040c758
-DAT_0040c758 byte 4 DUP (00h)
+PUBLIC C PTR_0040c758
+PTR_0040c758 byte 4 DUP (00h)
 PUBLIC C DAT_0040c75c
 DAT_0040c75c byte 4 DUP (00h)
 PUBLIC C DAT_0040c760

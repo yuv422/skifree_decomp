@@ -1,3 +1,6 @@
 @assertFailed@8
 @doRectsOverlap@8
 @assertFailedDialog@8
+@getCachedString@4
+@showErrorMessage@4
+_allocateMemory
