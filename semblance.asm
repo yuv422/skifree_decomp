@@ -5281,6 +5281,7 @@ LAB_004047d6:
           db 090h
 _timerCallbackFunc endp
 
+COMMENT ~
 _WinMain@16 proc
           mov   eax, dword ptr [esp+00Ch]
           sub   esp, 00000001Ch
@@ -5309,7 +5310,7 @@ LAB_0040481f:     mov   ecx, dword ptr [esp+02Ch]
           jnz   LAB_0040483b
           add   esp, 00000001Ch
           ret   00010h
-LAB_0040483b:     call  _FUN_00404a80
+LAB_0040483b:     call  _setupGame
           test  eax, eax
           jnz   LAB_0040485e
           mov   edx, dword ptr [hSkiMainWnd]    ; <c6c8>
@@ -5367,6 +5368,7 @@ LAB_004048b5:
           db 090h
           db 090h
 _WinMain@16 endp
+~
 
 COMMENT ~
 _allocateMemory proc
@@ -5533,7 +5535,7 @@ LAB_00404a7a:
           db 090h
 _FUN_00404a70 endp
 
-_FUN_00404a80 proc
+_setupGame proc
           push  000000000h
           push  000000000h
           mov   edx, 000000003h
@@ -5563,7 +5565,7 @@ LAB_00404ac7:
           db 090h
           db 090h
           db 090h
-_FUN_00404a80 endp
+_setupGame endp
 
 _FUN_00404ad0 proc
           mov   eax, dword ptr [hSkiMainWnd]    ; <c6c8>
@@ -7896,7 +7898,7 @@ LAB_00406517:     mov   eax, dword ptr [hSkiMainWnd]    ; <c6c8>
           push  000000000h
           push  eax
           call  dword ptr [__imp__InvalidateRect@12]    ; <InvalidateRect>
-          call  _FUN_00404a80
+          call  _setupGame
           test  eax, eax
           jz    LAB_0040653e
           mov   ecx, dword ptr [hSkiMainWnd]    ; <c6c8>

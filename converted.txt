@@ -4,3 +4,4 @@
 @getCachedString@4
 @showErrorMessage@4
 _allocateMemory
+_WinMain@16

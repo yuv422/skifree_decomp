@@ -7,4 +7,4 @@ extern _allocateMemory: proc
 
 
 ; exports
-public _WinMain@16
+; public _WinMain@16

@@ -38,14 +38,22 @@ typedef struct Actor {
 
 void __fastcall assertFailed(char *srcFilename, int lineNumber);
 int __fastcall showErrorMessage(LPCSTR text);
+int allocateMemory();
+
 
 #define ski_assert(exp, src, line) (void)( (exp) || (assertFailed(src, line), 0) )
 
 extern char s_assertErrorFormat[];
 extern char s_Assertion_Failed_0040c0a8[];
 extern char s_insufficient_local_memory[];
+extern char s_nosound_0040c0fc[];
 
 extern void setWindowTitle();
+extern void cleanupSound();
+extern int setupGame();
+extern int resetGame();
+extern int __fastcall initWindows(HINSTANCE param_1, HINSTANCE param_2, int param_3);
+
 extern char sourceFilename[];
 extern HWND hSkiMainWnd;
 extern char **stringCache;
@@ -54,6 +62,7 @@ extern char s_out_o_memory[];
 extern Sprite *sprites;
 extern Actor *actors;
 extern void *PTR_0040c758;
+extern int isSoundDisabled;
 
 void __fastcall assertFailedDialog(LPCSTR lpCaption, LPCSTR lpText) {
     int iVar1;
@@ -99,6 +108,43 @@ char * __fastcall getCachedString(UINT stringIdx) {
         lstrcpyA(stringCache[stringIdx],buf);
     }
     return stringCache[stringIdx];
+}
+
+int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
+    int iVar1;
+    BOOL retVal;
+    MSG msg;
+
+    iVar1 = lstrcmpiA(lpCmdLine,s_nosound_0040c0fc);
+    if (iVar1 == 0) {
+        isSoundDisabled = 1;
+    }
+    retVal = allocateMemory();
+    if (retVal == 0) {
+        return 0;
+    }
+    retVal = resetGame();
+    if (retVal == 0) {
+        return 0;
+    }
+    retVal = initWindows(hInstance,hPrevInstance,nCmdShow);
+    if (retVal == 0) {
+        return 0;
+    }
+    iVar1 = setupGame();
+    if (iVar1 == 0) {
+        DestroyWindow(hSkiMainWnd);
+        cleanupSound();
+        return 0;
+    }
+    iVar1 = GetMessageA(&msg,NULL,0,0);
+    while (iVar1 != 0) {
+        TranslateMessage(&msg);
+        DispatchMessageA(&msg);
+        iVar1 = GetMessageA(&msg,NULL,0,0);
+    }
+    cleanupSound();
+    return msg.wParam;
 }
 
 int allocateMemory() {
