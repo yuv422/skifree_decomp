@@ -9,4 +9,5 @@ Debug/
 Release/
 resources/*.bmp
 resources/*.ico
-
+cmake-build-debug/
+.idea/
