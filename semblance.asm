@@ -3,9 +3,10 @@
 .code
 include structs.inc
 include data_extern.inc
+include c_funcs.inc
 assume fs:nothing
 option noscoped
-timerUpdateFunc proc
+_timerUpdateFunc proc
           call  dword ptr [__imp__GetTickCount@0]       ; <GetTickCount>
           mov   ecx, dword ptr [currentTickCount]       ; <c698>
           mov   edx, eax
@@ -13,10 +14,10 @@ timerUpdateFunc proc
           mov   dword ptr [prevTickCount], ecx  ; <c708>
           mov   dword ptr [timerFrameDurationInMillis], edx     ; <c5f4>
           mov   dword ptr [currentTickCount], eax       ; <c698>
-          call  FUN_00401e50
+          call  _FUN_00401e50
           mov   ecx, dword ptr [mainWindowDC]   ; <c63c>
           mov   edx, offset tagRECT_0040c6b0.left       ; <c6b0>
-          call  drawWindow
+          call  @drawWindow@8
           mov   eax, dword ptr [currentTickCount]       ; <c698>
           mov   edx, dword ptr [statusWindowLastUpdateTime]     ; <c5dc>
           sub   eax, edx
@@ -24,11 +25,11 @@ timerUpdateFunc proc
           cmp   eax, 000000147h
           jle   LAB_0040105f
           mov   ecx, dword ptr [statusWindowDC] ; <c6cc>
-          jmp   formatAndPrintStatusStrings
+          jmp   @formatAndPrintStatusStrings@4
 LAB_0040105f:     ret
-timerUpdateFunc endp
+_timerUpdateFunc endp
 
-drawWindow proc
+@drawWindow@8 proc
           sub   esp, 000000008h
           push  ebx
           push  ebp
@@ -41,12 +42,12 @@ drawWindow proc
           jnz   LAB_00401084
           mov   edx, 0000004F8h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_00401084:     test  ebp, ebp
           jnz   LAB_00401097
           mov   edx, 0000004F9h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_00401097:     mov   esi, dword ptr [PTR_0040c618]   ; <c618>
           test  esi, esi
           jz    LAB_00401125
@@ -69,17 +70,17 @@ LAB_004010aa:     test  byte ptr [esi+04Ch], 00Bh
           lea   ebp, dword ptr [edi+020h]
           jmp   LAB_004010de
 LAB_004010d5:     mov   ecx, edi
-          call  FUN_00401410
+          call  @FUN_00401410@4
           mov   ebp, eax
 LAB_004010de:     test  byte ptr [esi+04Ch], 004h
           jz    LAB_004010e9
           lea   eax, dword ptr [esi+020h]
           jmp   LAB_004010f0
 LAB_004010e9:     mov   ecx, esi
-          call  FUN_00401410
+          call  @FUN_00401410@4
 LAB_004010f0:     mov   edx, ebp
           mov   ecx, eax
-          call  FUN_004012f0
+          call  @FUN_004012f0@8
           test  eax, eax
           jz    LAB_00401115
           mov   ecx, dword ptr [esi+04Ch]
@@ -89,7 +90,7 @@ LAB_004010f0:     mov   edx, ebp
           and   eax, ebx
           mov   ecx, edi
           mov   dword ptr [edi+04Ch], eax
-          call  FUN_00401350
+          call  @FUN_00401350@4
 LAB_00401115:     mov   esi, dword ptr [esi]
           test  esi, esi
           jnz   LAB_004010aa
@@ -109,11 +110,11 @@ LAB_00401139:     test  al, 004h
           lea   edi, dword ptr [esi+020h]
           jmp   LAB_0040114b
 LAB_00401142:     mov   ecx, esi
-          call  FUN_00401410
+          call  @FUN_00401410@4
           mov   edi, eax
 LAB_0040114b:     mov   edx, ebp
           mov   ecx, edi
-          call  doRectsOverlap
+          call  @doRectsOverlap@8
           mov   edx, dword ptr [esi+04Ch]
           and   eax, 000000001h
           shl   eax, 004h
@@ -149,12 +150,12 @@ LAB_0040119c:     test  byte ptr [edi+04Ch], bl
           jz    LAB_004011c7
           lea   edx, dword ptr [esi+030h]
           mov   ecx, ebp
-          call  doRectsOverlap
+          call  @doRectsOverlap@8
           test  eax, eax
           jz    LAB_004011c7
 LAB_004011be:     mov   edx, esi
           mov   ecx, edi
-          call  FUN_00401a60
+          call  @FUN_00401a60@8
 LAB_004011c7:     mov   esi, dword ptr [PTR_0040c618]   ; <c618>
 LAB_004011cd:     test  esi, esi
           jz    LAB_004011ec
@@ -164,7 +165,7 @@ LAB_004011cd:     test  esi, esi
           jz    LAB_004011e8
           lea   edx, dword ptr [esi+030h]
           mov   ecx, ebp
-          call  doRectsOverlap
+          call  @doRectsOverlap@8
           test  eax, eax
           jnz   LAB_004011be
 LAB_004011e8:     mov   esi, dword ptr [esi]
@@ -179,7 +180,7 @@ LAB_004011fc:     test  byte ptr [esi+04Ch], bl
           jz    LAB_0040120c
           mov   ecx, dword ptr [esp+014h]
           mov   edx, esi
-          call  drawActor
+          call  @drawActor@8
 LAB_0040120c:     mov   esi, dword ptr [esi]
           test  esi, esi
           jnz   LAB_004011fc
@@ -189,11 +190,11 @@ LAB_00401212:     mov   esi, dword ptr [PTR_0040c618]   ; <c618>
 LAB_0040121c:     test  byte ptr [esi+04Ch], 002h
           jz    LAB_00401229
           mov   ecx, esi
-          call  FUN_00401350
+          call  @FUN_00401350@4
 LAB_00401229:     mov   esi, dword ptr [esi]
           test  esi, esi
           jnz   LAB_0040121c
-LAB_0040122f:     call  FUN_00401390
+LAB_0040122f:     call  _FUN_00401390
           pop   edi
           pop   esi
           pop   ebp
@@ -205,13 +206,12 @@ LAB_0040123c:
           db 090h
           db 090h
           db 090h
-drawWindow endp
+@drawWindow@8 endp
 
-zeroOffset equ 0
-
-assertFailed proc
+COMMENT ~
+@assertFailed@8 proc
           sub   esp, 000000020h
-          lea   eax, dword ptr [esp + zeroOffset]
+          lea   eax, dword ptr [esp+000h]
           push  edx
           push  ecx
           push  offset s_assertErrorFormat      ; <c0bc>
@@ -220,15 +220,17 @@ assertFailed proc
           add   esp, 000000010h
           lea   edx, dword ptr [esp+000h]
           mov   ecx, offset s_Assertion_Failed_0040c0a8 ; <c0a8>
-          call  assertFailedDialog
-          call  setWindowTitle
+          call  @assertFailedDialog@8
+          call  _setWindowTitle
           add   esp, 000000020h
           ret
 LAB_0040126f:
           db 090h
-assertFailed endp
+@assertFailed@8 endp
+~
 
-assertFailedDialog proc
+COMMENT ~
+@assertFailedDialog@8 proc
           push  000000031h
           push  ecx
           push  edx
@@ -243,9 +245,11 @@ LAB_0040128d:     ret
 LAB_0040128e:
           db 090h
           db 090h
-assertFailedDialog endp
+@assertFailedDialog@8 endp
+~
 
-doRectsOverlap proc
+COMMENT ~
+@doRectsOverlap@8 proc
           push  esi
           mov   esi, ecx
           push  edi
@@ -254,12 +258,12 @@ doRectsOverlap proc
           jnz   LAB_004012a9
           mov   edx, 000000160h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_004012a9:     test  edi, edi
           jnz   LAB_004012bc
           mov   edx, 000000161h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_004012bc:     mov   eax, dword ptr [esi+008h]
           mov   ecx, dword ptr [edi]
           cmp   eax, ecx
@@ -286,9 +290,10 @@ LAB_004012ea:     pop   edi
           ret
 LAB_004012ef:
           db 090h
-doRectsOverlap endp
+@doRectsOverlap@8 endp
+~
 
-FUN_004012f0 proc
+@FUN_004012f0@8 proc
           push  esi
           mov   esi, ecx
           push  edi
@@ -297,12 +302,12 @@ FUN_004012f0 proc
           jnz   LAB_00401309
           mov   edx, 00000017Dh
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_00401309:     test  edi, edi
           jnz   LAB_0040131c
           mov   edx, 00000017Eh
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_0040131c:     mov   eax, dword ptr [esi+004h]
           mov   ecx, dword ptr [edi+004h]
           cmp   eax, ecx
@@ -329,16 +334,16 @@ LAB_0040134a:     pop   edi
           ret
 LAB_0040134f:
           db 090h
-FUN_004012f0 endp
+@FUN_004012f0@8 endp
 
-FUN_00401350 proc
+@FUN_00401350@4 proc
           push  esi
           mov   esi, ecx
           test  esi, esi
           jnz   LAB_00401366
           mov   edx, 000000361h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_00401366:     test  byte ptr [esi+04Ch], 001h
           jnz   LAB_00401382
           mov   eax, dword ptr [esi+004h]
@@ -363,9 +368,9 @@ LAB_00401384:
           db 090h
           db 090h
           db 090h
-FUN_00401350 endp
+@FUN_00401350@4 endp
 
-FUN_00401390 proc
+_FUN_00401390 proc
           push  ebp
           push  esi
           mov   esi, dword ptr [PTR_0040c618]   ; <c618>
@@ -383,7 +388,7 @@ LAB_004013a4:     test  byte ptr [esi+04Ch], 008h
           jz    LAB_004013c4
           mov   edx, 000000376h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_004013c4:     mov   eax, dword ptr [esi+00Ch]
           mov   dword ptr [eax], ebp
 LAB_004013c9:     cmp   esi, dword ptr [playerActorMaybe]       ; <c72c>
@@ -418,9 +423,9 @@ LAB_00401405:
           db 090h
           db 090h
           db 090h
-FUN_00401390 endp
+_FUN_00401390 endp
 
-FUN_00401410 proc
+@FUN_00401410@4 proc
           push  esi
           mov   esi, ecx
           test  esi, esi
@@ -428,17 +433,17 @@ FUN_00401410 proc
           jnz   LAB_00401427
           mov   edx, 0000003A3h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_00401427:     test  byte ptr [esi+04Ch], 004h
           jz    LAB_0040143c
           mov   edx, 0000003A4h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_0040143c:     cmp   word ptr [esi+010h], 000000000h
           jnz   LAB_00401452
           mov   edx, 0000003A5h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_00401452:     mov   edx, dword ptr [sprites]        ; <c5f8>
           mov   ecx, dword ptr [esi+014h]
           xor   eax, eax
@@ -449,7 +454,7 @@ LAB_00401452:     mov   edx, dword ptr [sprites]        ; <c5f8>
           jz    LAB_00401479
           mov   edx, 0000003A6h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_00401479:     mov   cx, word ptr [esi+044h]
           mov   dx, word ptr [esi+042h]
           mov   ax, word ptr [esi+040h]
@@ -459,7 +464,7 @@ LAB_00401479:     mov   cx, word ptr [esi+044h]
           mov   edx, dword ptr [esi+014h]
           push  eax
           mov   ecx, edi
-          call  FUN_004014b0
+          call  @FUN_004014b0@14
           mov   eax, dword ptr [esi+04Ch]
           or    al, 004h
           mov   dword ptr [esi+04Ch], eax
@@ -482,9 +487,9 @@ LAB_004014a2:
           db 090h
           db 090h
           db 090h
-FUN_00401410 endp
+@FUN_00401410@4 endp
 
-FUN_004014b0 proc
+@FUN_004014b0@14 proc
           push  ebx
           push  ebp
           push  esi
@@ -497,12 +502,12 @@ FUN_004014b0 proc
           jnz   LAB_004014d3
           mov   edx, 00000038Bh
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_004014d3:     test  edi, edi
           jnz   LAB_004014e6
           mov   edx, 00000038Ch
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_004014e6:     mov   ax, word ptr [skierScreenYOffset]       ; <c5fc>
           mov   edi, dword ptr [esp+01Ch]
           sub   ax, word ptr [DAT_0040c5f2]     ; <c5f2>
@@ -537,9 +542,9 @@ LAB_004014e6:     mov   ax, word ptr [skierScreenYOffset]       ; <c5fc>
           ret   0000Ch
 LAB_0040153f:
           db 090h
-FUN_004014b0 endp
+@FUN_004014b0@14 endp
 
-drawActor proc
+@drawActor@8 proc
           sub   esp, 000000040h
           push  ebx
           push  ebp
@@ -563,18 +568,18 @@ drawActor proc
           jnz   LAB_00401592
           mov   edx, 00000046Dh
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_00401592:     mov   eax, dword ptr [esp+014h]
           test  eax, eax
           jnz   LAB_004015a9
           mov   edx, 00000046Eh
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_004015a9:     test  byte ptr [ebx+04Ch], 010h
           jnz   LAB_004015be
           mov   edx, 00000046Fh
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_004015be:     test  ebx, ebx
           mov   ecx, ebx
           jz    LAB_0040195a
@@ -597,7 +602,7 @@ LAB_004015c8:     mov   eax, dword ptr [ecx+04Ch]
 LAB_004015e8:     mov   edx, esi
           mov   ecx, ebp
           mov   dword ptr [esp+034h], 000000000h
-          call  FUN_00401970
+          call  @FUN_00401970@4
           test  eax, eax
           jnz   LAB_00401696
           movsx edx, word ptr [esp+018h]
@@ -632,7 +637,7 @@ LAB_0040163d:     test  ecx, ecx
           lea   eax, dword ptr [esi+020h]
           jmp   LAB_00401658
 LAB_00401651:     mov   ecx, esi
-          call  FUN_00401410
+          call  @FUN_00401410@4
 LAB_00401658:     movsx edx, word ptr [edi+008h]
           mov   ecx, dword ptr [edi]
           push  0008800C6h
@@ -716,7 +721,7 @@ LAB_00401703:     mov   eax, dword ptr [ebp+000h]
           add   esi, 000000020h
           jmp   LAB_00401747
 LAB_0040173e:     mov   ecx, esi
-          call  FUN_00401410
+          call  @FUN_00401410@4
           mov   esi, eax
 LAB_00401747:     movsx eax, word ptr [esp+01Ch]
           mov   edx, dword ptr [esi+008h]
@@ -731,7 +736,7 @@ LAB_00401747:     movsx eax, word ptr [esp+01Ch]
           jz    LAB_0040177b
           mov   edx, 0000004B3h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_0040177b:     movsx eax, word ptr [esp+020h]
           mov   ecx, dword ptr [esi+00Ch]
           mov   edx, dword ptr [esi+004h]
@@ -741,29 +746,29 @@ LAB_0040177b:     movsx eax, word ptr [esp+020h]
           jz    LAB_0040179f
           mov   edx, 0000004B4h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_0040179f:     test  bp, bp
           jge   LAB_004017b3
           mov   edx, 0000004B5h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_004017b3:     test  di, di
           jge   LAB_004017c7
           mov   edx, 0000004B6h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_004017c7:     mov   dx, word ptr [esp+01Ch]
           cmp   dx, word ptr [esp+010h]
           jle   LAB_004017e2
           mov   edx, 0000004B7h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_004017e2:     mov   esi, dword ptr [esp+038h]
           cmp   word ptr [esp+020h], si
           jle   LAB_004017fc
           mov   edx, 0000004B8h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_004017fc:     mov   eax, dword ptr [esp+034h]
           test  eax, eax
           jnz   LAB_00401873
@@ -907,9 +912,9 @@ LAB_00401962:
           db 090h
           db 090h
           db 090h
-drawActor endp
+@drawActor@8 endp
 
-FUN_00401970 proc
+@FUN_00401970@4 proc
           push  ebx
           push  esi
           mov   esi, ecx
@@ -981,9 +986,9 @@ LAB_00401a48:     pop   edi
           xor   eax, eax
           pop   ebx
           ret
-FUN_00401970 endp
+@FUN_00401970@4 endp
 
-FUN_00401a60 proc
+@FUN_00401a60@8 proc
           push  ebx
           push  ebp
           push  esi
@@ -995,29 +1000,29 @@ FUN_00401a60 proc
           jnz   LAB_00401a7d
           mov   edx, 0000004E4h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_00401a7d:     test  ebp, ebp
           jnz   LAB_00401a90
           mov   edx, 0000004E5h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_00401a90:     mov   al, byte ptr [edi+04Ch]
           mov   bl, 010h
           test  bl, al
           jnz   LAB_00401aa8
           mov   edx, 0000004E6h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_00401aa8:     test  byte ptr [ebp+04Ch], bl
           jnz   LAB_00401abc
           mov   edx, 0000004E7h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_00401abc:     cmp   edi, ebp
           jnz   LAB_00401acf
           mov   edx, 0000004E8h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_00401acf:     mov   ecx, dword ptr [edi+008h]
           lea   eax, dword ptr [edi+008h]
           test  ecx, ecx
@@ -1027,7 +1032,7 @@ LAB_00401ad9:     mov   esi, dword ptr [eax]
           jz    LAB_00401aef
           mov   edx, 0000004ECh
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_00401aef:     mov   ecx, dword ptr [esi+008h]
           lea   eax, dword ptr [esi+008h]
           test  ecx, ecx
@@ -1035,7 +1040,7 @@ LAB_00401aef:     mov   ecx, dword ptr [esi+008h]
 LAB_00401af9:     lea   edx, dword ptr [ebp+030h]
           lea   ecx, dword ptr [edi+030h]
           mov   dword ptr [esi+008h], ebp
-          call  FUN_00401b20
+          call  @FUN_00401b20@8
           mov   eax, dword ptr [ebp+04Ch]
           and   al, 0EFh
           pop   edi
@@ -1057,9 +1062,9 @@ LAB_00401b14:
           db 090h
           db 090h
           db 090h
-FUN_00401a60 endp
+@FUN_00401a60@8 endp
 
-FUN_00401b20 proc
+@FUN_00401b20@8 proc
           push  esi
           push  edi
           mov   edi, edx
@@ -1068,12 +1073,12 @@ FUN_00401b20 proc
           jnz   LAB_00401b39
           mov   edx, 00000016Dh
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_00401b39:     test  esi, esi
           jnz   LAB_00401b4c
           mov   edx, 00000016Eh
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_00401b4c:     mov   eax, dword ptr [edi]
           mov   ecx, dword ptr [esi]
           cmp   eax, ecx
@@ -1097,9 +1102,9 @@ LAB_00401b70:     mov   edi, dword ptr [edi+00Ch]
 LAB_00401b7d:     pop   edi
           pop   esi
           ret
-FUN_00401b20 endp
+@FUN_00401b20@8 endp
 
-formatAndPrintStatusStrings proc
+@formatAndPrintStatusStrings@4 proc
           sub   esp, 000000018h
           mov   eax, dword ptr [playerActorMaybe]       ; <c72c>
           push  ebx
@@ -1152,7 +1157,7 @@ LAB_00401c00:     mov   eax, dword ptr [DAT_0040c958]   ; <c958>
           mov   edi, edx
 LAB_00401c12:     mov   ecx, dword ptr [elapsedTime]    ; <c944>
           lea   edx, dword ptr [esp+014h]
-          call  formatElapsedTime
+          call  @formatElapsedTime@8
           and   eax, 00000FFFFh
           lea   edx, dword ptr [esp+014h]
           push  eax
@@ -1160,7 +1165,7 @@ LAB_00401c12:     mov   ecx, dword ptr [elapsedTime]    ; <c944>
           push  eax
           push  esi
           mov   ecx, ebx
-          call  drawText
+          call  @drawText@18
           movsx eax, di
           cdq
           and   edx, 00000000Fh
@@ -1169,7 +1174,7 @@ LAB_00401c12:     mov   ecx, dword ptr [elapsedTime]    ; <c944>
           movsx ecx, ax
           push  ecx
           mov   ecx, 00000000Ch
-          call  getCachedString
+          call  @getCachedString@4
           mov   edi, dword ptr [__imp__wsprintfA]       ; <wsprintfA>
           lea   edx, dword ptr [esp+018h]
           push  eax
@@ -1182,11 +1187,11 @@ LAB_00401c12:     mov   ecx, dword ptr [elapsedTime]    ; <c944>
           lea   eax, dword ptr [esp+014h]
           push  eax
           push  esi
-          call  drawText
+          call  @drawText@18
           movsx ecx, bp
           push  ecx
           mov   ecx, 00000000Dh
-          call  getCachedString
+          call  @getCachedString@4
           lea   edx, dword ptr [esp+018h]
           push  eax
           push  edx
@@ -1198,11 +1203,11 @@ LAB_00401c12:     mov   ecx, dword ptr [elapsedTime]    ; <c944>
           lea   eax, dword ptr [esp+014h]
           push  eax
           push  esi
-          call  drawText
+          call  @drawText@18
           mov   ecx, dword ptr [stylePoints]    ; <c6a8>
           push  ecx
           mov   ecx, 00000000Eh
-          call  getCachedString
+          call  @getCachedString@4
           lea   edx, dword ptr [esp+018h]
           push  eax
           push  edx
@@ -1214,7 +1219,7 @@ LAB_00401c12:     mov   ecx, dword ptr [elapsedTime]    ; <c944>
           lea   eax, dword ptr [esp+014h]
           push  eax
           push  esi
-          call  drawText
+          call  @drawText@18
           mov   ecx, dword ptr [currentTickCount]       ; <c698>
           pop   edi
           pop   esi
@@ -1238,9 +1243,9 @@ LAB_00401ce2:
           db 090h
           db 090h
           db 090h
-formatAndPrintStatusStrings endp
+@formatAndPrintStatusStrings@4 endp
 
-getCachedString proc
+@getCachedString@4 proc
           mov   eax, dword ptr [stringCache]    ; <c674>
           sub   esp, 000000100h
           push  esi
@@ -1284,9 +1289,9 @@ LAB_00401d6b:
           db 090h
           db 090h
           db 090h
-getCachedString endp
+@getCachedString@4 endp
 
-formatElapsedTime proc
+@formatElapsedTime@8 proc
           push  ebx
           mov   ebx, edx
           mov   eax, ecx
@@ -1343,7 +1348,7 @@ formatElapsedTime proc
           mov   ecx, 00000000Bh
           and   edx, 00000FFFFh
           push  edx
-          call  getCachedString
+          call  @getCachedString@4
           push  eax
           push  ebx
           call  dword ptr [__imp__wsprintfA]    ; <wsprintfA>
@@ -1355,9 +1360,9 @@ formatElapsedTime proc
 LAB_00401e1e:
           db 090h
           db 090h
-formatElapsedTime endp
+@formatElapsedTime@8 endp
 
-drawText proc
+@drawText@18 proc
           mov   eax, dword ptr [esp+00Ch]
           push  esi
           mov   esi, dword ptr [esp+00Ch]
@@ -1380,9 +1385,9 @@ LAB_00401e4a:
           db 090h
           db 090h
           db 090h
-drawText endp
+@drawText@18 endp
 
-FUN_00401e50 proc
+_FUN_00401e50 proc
           mov   ax, word ptr [DAT_0040c640]     ; <c640>
           mov   cx, word ptr [DAT_0040c5f2]     ; <c5f2>
           sub   word ptr [DAT_0040c714], ax     ; <c714>
@@ -1406,7 +1411,7 @@ LAB_00401e82:     test  byte ptr [esi+04Ch], 00Ah
           cmp   dword ptr [esi+018h], ebx
           jge   LAB_00401ea3
           mov   ecx, esi
-          call  updateActor
+          call  @updateActor@4
 LAB_00401ea3:     mov   eax, dword ptr [esi+04Ch]
           test  al, 001h
           jnz   LAB_00401eee
@@ -1417,10 +1422,10 @@ LAB_00401ea3:     mov   eax, dword ptr [esi+04Ch]
           lea   eax, dword ptr [esi+020h]
           jmp   LAB_00401ec2
 LAB_00401ebb:     mov   ecx, esi
-          call  FUN_00401410
+          call  @FUN_00401410@4
 LAB_00401ec2:     mov   edx, offset DAT_0040c680        ; <c680>
           mov   ecx, eax
-          call  doRectsOverlap
+          call  @doRectsOverlap@8
           test  eax, eax
           jnz   LAB_00401eee
           mov   edx, dword ptr [esi+014h]
@@ -1429,21 +1434,21 @@ LAB_00401ec2:     mov   edx, offset DAT_0040c680        ; <c680>
           sub   ecx, eax
           mov   dword ptr [DAT_0040c6fc], ecx   ; <c6fc>
           mov   ecx, esi
-          call  FUN_00401350
+          call  @FUN_00401350@4
 LAB_00401eee:     mov   esi, dword ptr [esi]
           test  esi, esi
           jnz   LAB_00401e82
 LAB_00401ef4:     mov   ecx, offset DAT_0040c630        ; <c630>
-          call  FUN_004046e0
+          call  @FUN_004046e0@4
           mov   ecx, offset DAT_0040c5e0        ; <c5e0>
-          call  FUN_004046e0
+          call  @FUN_004046e0@4
           mov   ecx, offset DAT_0040c658        ; <c658>
-          call  FUN_004046e0
+          call  @FUN_004046e0@4
           mov   ecx, offset DAT_0040c738        ; <c738>
-          call  FUN_004046e0
+          call  @FUN_004046e0@4
           mov   ecx, offset DAT_0040c720        ; <c720>
-          call  FUN_004040a0
-          call  FUN_00401390
+          call  @FUN_004040a0@4
+          call  _FUN_00401390
           mov   edi, dword ptr [PTR_0040c618]   ; <c618>
           test  edi, edi
           jz    LAB_00401fc5
@@ -1456,7 +1461,7 @@ LAB_00401f3a:     mov   eax, dword ptr [edi+04Ch]
           lea   ebx, dword ptr [edi+020h]
           jmp   LAB_00401f53
 LAB_00401f4a:     mov   ecx, edi
-          call  FUN_00401410
+          call  @FUN_00401410@4
           mov   ebx, eax
 LAB_00401f53:     mov   ebp, dword ptr [edi+04Ch]
           mov   esi, dword ptr [PTR_0040c618]   ; <c618>
@@ -1478,22 +1483,22 @@ LAB_00401f79:     test  al, 004h
           lea   eax, dword ptr [esi+020h]
           jmp   LAB_00401f89
 LAB_00401f82:     mov   ecx, esi
-          call  FUN_00401410
+          call  @FUN_00401410@4
 LAB_00401f89:     mov   edx, eax
           mov   ecx, ebx
-          call  doRectsOverlap
+          call  @doRectsOverlap@8
           test  eax, eax
           jz    LAB_00401fb4
           mov   edx, esi
           mov   ecx, edi
-          call  FUN_00403a00
+          call  @FUN_00403a00@8
           test  byte ptr [edi+04Ch], 008h
           jnz   LAB_00401fb4
           test  byte ptr [esi+04Ch], 008h
           jnz   LAB_00401fb4
           mov   edx, edi
           mov   ecx, esi
-          call  FUN_00403a00
+          call  @FUN_00403a00@8
 LAB_00401fb4:     mov   esi, dword ptr [esi]
           test  esi, esi
           jnz   LAB_00401f66
@@ -1512,7 +1517,7 @@ LAB_00401fc5:     mov   ax, word ptr [DAT_0040c5d8]     ; <c5d8>
           pop   ebx
           jle   LAB_0040200f
 LAB_00401fef:     mov   ecx, 000000003h
-          call  FUN_004025c0
+          call  @FUN_004025c0@4
           mov   ax, word ptr [DAT_0040c5d8]     ; <c5d8>
           add   ax, 0FFC4h
           cmp   ax, 0003Ch
@@ -1521,7 +1526,7 @@ LAB_00401fef:     mov   ecx, 000000003h
 LAB_0040200f:     cmp   ax, 0FFC4h
           jge   LAB_00402035
 LAB_00402015:     mov   ecx, 000000002h
-          call  FUN_004025c0
+          call  @FUN_004025c0@4
           mov   ax, word ptr [DAT_0040c5d8]     ; <c5d8>
           add   ax, 0003Ch
           cmp   ax, 0FFC4h
@@ -1531,7 +1536,7 @@ LAB_00402035:     mov   ax, word ptr [DAT_0040c714]     ; <c714>
           cmp   ax, 0003Ch
           jle   LAB_00402061
 LAB_00402041:     mov   ecx, 000000001h
-          call  FUN_004025c0
+          call  @FUN_004025c0@4
           mov   ax, word ptr [DAT_0040c714]     ; <c714>
           add   ax, 0FFC4h
           cmp   ax, 0003Ch
@@ -1540,28 +1545,28 @@ LAB_00402041:     mov   ecx, 000000001h
 LAB_00402061:     cmp   ax, 0FFC4h
           jge   LAB_00402084
 LAB_00402067:     xor   ecx, ecx
-          call  FUN_004025c0
+          call  @FUN_004025c0@4
           mov   ax, word ptr [DAT_0040c714]     ; <c714>
           add   ax, 0003Ch
           cmp   ax, 0FFC4h
           mov   word ptr [DAT_0040c714], ax     ; <c714>
           jl    LAB_00402067
 LAB_00402084:     mov   ecx, 00000029Ah
-          call  random
+          call  @random@2
           test  ax, ax
           jnz   LAB_004020ae
           mov   edx, 00000001Fh
           mov   ecx, 000000003h
-          call  FUN_004020d0
+          call  @FUN_004020d0@8
           mov   ecx, eax
           mov   edx, 000000002h
           jmp   LAB_00402350
 LAB_004020ae:     ret
 LAB_004020af:
           db 090h
-FUN_00401e50 endp
+_FUN_00401e50 endp
 
-random proc
+@random@2 proc
           push  esi
           mov   si, cx
           call  _rand
@@ -1582,15 +1587,15 @@ LAB_004020c7:
           db 090h
           db 090h
           db 090h
-random endp
+@random@2 endp
 
-FUN_004020d0 proc
+@FUN_004020d0@8 proc
           push  ebx
           push  esi
           push  edi
           mov   ebx, edx
           mov   edi, ecx
-          call  FUN_00402330
+          call  _FUN_00402330
           mov   esi, eax
           test  esi, esi
           jz    LAB_00402118
@@ -1598,19 +1603,19 @@ FUN_004020d0 proc
           jge   LAB_004020f5
           mov   edx, 00000056Ch
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_004020f5:     cmp   edi, 000000012h
           jl    LAB_00402109
           mov   edx, 00000056Dh
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_00402109:     mov   dword ptr [esi+018h], edi
           mov   ecx, esi
           pop   edi
           mov   edx, ebx
           pop   esi
           pop   ebx
-          jmp   FUN_00402120
+          jmp   @FUN_00402120@8
 LAB_00402118:     mov   eax, esi
           pop   edi
           pop   esi
@@ -1619,9 +1624,9 @@ LAB_00402118:     mov   eax, esi
 LAB_0040211e:
           db 090h
           db 090h
-FUN_004020d0 endp
+@FUN_004020d0@8 endp
 
-FUN_00402120 proc
+@FUN_00402120@8 proc
           push  esi
           push  edi
           mov   edi, ecx
@@ -1630,22 +1635,22 @@ FUN_00402120 proc
           jnz   LAB_00402139
           mov   edx, 00000043Ch
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_00402139:     cmp   esi, 000000040h
           jl    LAB_0040214d
           mov   edx, 00000043Dh
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_0040214d:     cmp   dword ptr [edi+01Ch], esi
           jz    LAB_0040217b
           cmp   esi, 000000040h
           jb    LAB_00402166
           mov   edx, 000000440h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_00402166:     mov   dx, word ptr [esi*2+unk_array_0040a1ac] ; <a1ac>
           mov   ecx, edi
-          call  FUN_00402180
+          call  @FUN_00402180@6
           mov   dword ptr [eax+01Ch], esi
           pop   edi
           pop   esi
@@ -1654,9 +1659,9 @@ LAB_0040217b:     mov   eax, edi
           pop   edi
           pop   esi
           ret
-FUN_00402120 endp
+@FUN_00402120@8 endp
 
-FUN_00402180 proc
+@FUN_00402180@6 proc
           push  esi
           mov   esi, ecx
           push  edi
@@ -1665,7 +1670,7 @@ FUN_00402180 proc
           jnz   LAB_00402199
           mov   edx, 0000003D3h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_00402199:     cmp   di, word ptr [esi+010h]
           jz    LAB_00402213
           mov   eax, dword ptr [esi+014h]
@@ -1677,7 +1682,7 @@ LAB_00402199:     cmp   di, word ptr [esi+010h]
           test  al, 001h
           jz    LAB_004021c4
           mov   ecx, esi
-          call  FUN_00402220
+          call  @FUN_00402220@4
           mov   esi, eax
 LAB_004021c4:     mov   edx, edi
           mov   word ptr [esi+010h], di
@@ -1695,7 +1700,7 @@ LAB_004021c4:     mov   edx, edi
           and   edx, 0FFFFFFFBh
           or    edx, 000000020h
           mov   dword ptr [esi+04Ch], edx
-          call  FUN_00402310
+          call  @FUN_00402310@2
           mov   ecx, dword ptr [esi+04Ch]
           and   eax, 000000001h
           shl   eax, 006h
@@ -1715,24 +1720,24 @@ LAB_00402218:
           db 090h
           db 090h
           db 090h
-FUN_00402180 endp
+@FUN_00402180@6 endp
 
-FUN_00402220 proc
+@FUN_00402220@4 proc
           push  esi
           mov   esi, ecx
           test  esi, esi
           jnz   LAB_00402236
           mov   edx, 0000003B3h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_00402236:     test  byte ptr [esi+04Ch], 001h
           jnz   LAB_0040224b
           mov   edx, 0000003B5h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_0040224b:     mov   edx, 000000001h
           mov   ecx, esi
-          call  FUN_00402280
+          call  @FUN_00402280@8
           test  eax, eax
           mov   dword ptr [esi+004h], eax
           jz    LAB_00402272
@@ -1757,9 +1762,9 @@ LAB_00402276:
           db 090h
           db 090h
           db 090h
-FUN_00402220 endp
+@FUN_00402220@4 endp
 
-FUN_00402280 proc
+@FUN_00402280@8 proc
           push  ecx
           push  ebx
           mov   ebx, dword ptr [DAT_0040c744]   ; <c744>
@@ -1770,7 +1775,7 @@ FUN_00402280 proc
           jnz   LAB_004022a2
           mov   edx, 000000348h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_004022a2:     test  ebx, ebx
           jz    LAB_004022ed
           mov   eax, dword ptr [ebx]
@@ -1805,7 +1810,7 @@ LAB_004022d9:     mov   edx, dword ptr [PTR_0040c618]   ; <c618>
           ret
 LAB_004022ed:     mov   edx, 000000359h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
           mov   eax, ebx
           pop   ebp
           pop   ebx
@@ -1826,9 +1831,9 @@ LAB_00402302:
           db 090h
           db 090h
           db 090h
-FUN_00402280 endp
+@FUN_00402280@8 endp
 
-FUN_00402310 proc
+@FUN_00402310@2 proc
           cmp   cx, 00000001Bh
           jz    LAB_0040231f
           cmp   cx, 000000052h
@@ -1849,14 +1854,14 @@ LAB_00402325:
           db 090h
           db 090h
           db 090h
-FUN_00402310 endp
+@FUN_00402310@2 endp
 
-FUN_00402330 proc
+_FUN_00402330 proc
           mov   eax, dword ptr [sprites]        ; <c5f8>
           xor   edx, edx
           mov   dword ptr [DAT_0040c044], eax   ; <c044>
           mov   ecx, offset DAT_0040c030        ; <c030>
-          jmp   FUN_00402280
+          jmp   @FUN_00402280@8
 LAB_00402346:
           db 090h
           db 090h
@@ -1878,13 +1883,13 @@ LAB_00402350:     sub   esp, 000000008h
           lea   edx, dword ptr [esp+008h]
           push  ecx
           mov   ecx, eax
-          call  FUN_004024f0
+          call  @FUN_004024f0@12
           mov   ecx, esi
           mov   edx, dword ptr [esp+004h]
           push  000000000h
           push  edx
           mov   edx, dword ptr [esp+010h]
-          call  updateActorPositionMaybe
+          call  @updateActorPositionMaybe@10
           pop   esi
           add   esp, 000000008h
           ret
@@ -1899,9 +1904,9 @@ LAB_0040238a:
           db 090h
           db 090h
           db 090h
-FUN_00402330 endp
+_FUN_00402330 endp
 
-updateActorPositionMaybe proc
+@updateActorPositionMaybe@10 proc
           push  ecx
           push  ebx
           push  ebp
@@ -1930,14 +1935,14 @@ LAB_004023b3:     mov   dx, word ptr [esi+044h]
           jnz   LAB_004023e5
           mov   edx, 00000040Dh
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_004023e5:     test  ebx, ebx
           jz    LAB_004023f8
           test  edi, edi
           jz    LAB_004023fc
           mov   edx, dword ptr [esp+018h]
           mov   ecx, ebp
-          call  FUN_00402470
+          call  @FUN_00402470@4
 LAB_004023f8:     test  edi, edi
           jnz   LAB_00402404
 LAB_004023fc:     mov   eax, dword ptr [esp+010h]
@@ -1950,7 +1955,7 @@ LAB_00402404:     mov   eax, dword ptr [esi+04Ch]
           test  al, 001h
           jz    LAB_0040241c
           mov   ecx, esi
-          call  FUN_00402220
+          call  @FUN_00402220@4
           mov   esi, eax
 LAB_0040241c:     test  edi, edi
           jz    LAB_00402433
@@ -1990,9 +1995,9 @@ LAB_00402468:
           db 090h
           db 090h
           db 090h
-updateActorPositionMaybe endp
+@updateActorPositionMaybe@10 endp
 
-FUN_00402470 proc
+@FUN_00402470@4 proc
           push  ecx
           push  ebx
           push  ebp
@@ -2019,7 +2024,7 @@ LAB_0040249c:     cmp   esi, dword ptr [PTR_0040c64c]   ; <c64c>
           test  al, 001h
           jz    LAB_004024c0
           mov   ecx, esi
-          call  FUN_00402220
+          call  @FUN_00402220@4
           mov   edx, dword ptr [esp+010h]
           jmp   LAB_004024c2
 LAB_004024c0:     mov   eax, esi
@@ -2043,9 +2048,9 @@ LAB_004024da:     pop   edi
 LAB_004024ee:
           db 090h
           db 090h
-FUN_00402470 endp
+@FUN_00402470@4 endp
 
-FUN_004024f0 proc
+@FUN_004024f0@12 proc
           mov   eax, dword ptr [DAT_0040c640]   ; <c640>
           push  ebx
           mov   ebx, dword ptr [skierScreenXOffset]     ; <c704>
@@ -2071,7 +2076,7 @@ LAB_00402537:     mov   eax, dword ptr [tagRECT_0040c6b0.right] ; <c6b8>
           add   eax, 00000003Ch
 LAB_0040253f:     add   word ptr [esi], ax
           mov   ecx, dword ptr [DAT_0040c6d8]   ; <c6d8>
-          call  random
+          call  @random@2
           mov   edx, dword ptr [tagRECT_0040c6b0.top]   ; <c6b4>
           add   eax, edx
           pop   edi
@@ -2080,7 +2085,7 @@ LAB_0040253f:     add   word ptr [esi], ax
           pop   ebx
           ret   00004h
 LAB_0040255e:     mov   ecx, dword ptr [SHORT_0040c5f0] ; <c5f0>
-          call  random
+          call  @random@2
           add   eax, dword ptr [tagRECT_0040c6b0.left]  ; <c6b0>
           add   word ptr [esi], ax
           cmp   edi, 000000002h
@@ -2101,7 +2106,7 @@ LAB_00402589:     mov   edx, dword ptr [tagRECT_0040c6b0.bottom]        ; <c6bc>
           ret   00004h
 LAB_0040259b:     mov   edx, 0000005AEh
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
           pop   edi
           pop   esi
           pop   ebx
@@ -2111,9 +2116,9 @@ DAT_004025b0  dword offset LAB_00402528
 DAT_004025b4  dword offset LAB_00402528
 DAT_004025b8  dword offset LAB_0040255e
 DAT_004025bc  dword offset LAB_0040255e
-FUN_004024f0 endp
+@FUN_004024f0@12 endp
 
-FUN_004025c0 proc
+@FUN_004025c0@4 proc
           sub   esp, 000000008h
           lea   eax, dword ptr [esp+000h]
           lea   edx, dword ptr [esp+004h]
@@ -2121,7 +2126,7 @@ FUN_004025c0 proc
           push  edi
           push  eax
           xor   edi, edi
-          call  FUN_004024f0
+          call  @FUN_004024f0@12
           mov   eax, dword ptr [esp+00Ch]
           mov   ecx, dword ptr [esp+008h]
           cmp   ax, 0FDC0h
@@ -2132,7 +2137,7 @@ FUN_004025c0 proc
           jl    LAB_004025fe
           cmp   cx, 021C0h
           jg    LAB_004025fe
-          call  FUN_00402770
+          call  _FUN_00402770
           jmp   LAB_00402645
 LAB_004025fe:     cmp   ax, 00140h
           jl    LAB_0040261f
@@ -2142,7 +2147,7 @@ LAB_004025fe:     cmp   ax, 00140h
           jl    LAB_0040261f
           cmp   cx, 04100h
           jg    LAB_0040261f
-          call  FUN_004027a0
+          call  _FUN_004027a0
           jmp   LAB_00402645
 LAB_0040261f:     cmp   ax, 0FF60h
           jl    LAB_00402640
@@ -2152,9 +2157,9 @@ LAB_0040261f:     cmp   ax, 0FF60h
           jl    LAB_00402640
           cmp   cx, 04100h
           jg    LAB_00402640
-          call  FUN_004027e0
+          call  _FUN_004027e0
           jmp   LAB_00402645
-LAB_00402640:     call  FUN_004026f0
+LAB_00402640:     call  _FUN_004026f0
 LAB_00402645:     mov   esi, eax
           cmp   esi, 000000012h
           jz    LAB_0040268d
@@ -2162,13 +2167,13 @@ LAB_00402645:     mov   esi, eax
           jge   LAB_00402661
           mov   edx, dword ptr [esi*4+DAT_0040a22c]     ; <a22c>
           mov   ecx, esi
-          call  FUN_004020d0
+          call  @FUN_004020d0@8
           jmp   LAB_00402671
 LAB_00402661:     mov   ecx, esi
-          call  FUN_00402850
+          call  @FUN_00402850@4
           mov   edx, eax
           mov   ecx, esi
-          call  FUN_004026a0
+          call  @FUN_004026a0@6
 LAB_00402671:     test  eax, eax
           jz    LAB_0040268f
           mov   ecx, dword ptr [esp+008h]
@@ -2176,7 +2181,7 @@ LAB_00402671:     test  eax, eax
           push  000000000h
           push  ecx
           mov   ecx, eax
-          call  updateActorPositionMaybe
+          call  @updateActorPositionMaybe@10
           pop   edi
           pop   esi
           add   esp, 000000008h
@@ -2198,15 +2203,15 @@ LAB_00402695:
           db 090h
           db 090h
           db 090h
-FUN_004025c0 endp
+@FUN_004025c0@4 endp
 
-FUN_004026a0 proc
+@FUN_004026a0@6 proc
           push  ebx
           push  esi
           push  edi
           mov   ebx, edx
           mov   edi, ecx
-          call  FUN_00402330
+          call  _FUN_00402330
           mov   esi, eax
           test  esi, esi
           jz    LAB_004026e8
@@ -2214,19 +2219,19 @@ FUN_004026a0 proc
           jge   LAB_004026c5
           mov   edx, 00000057Bh
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_004026c5:     cmp   edi, 000000012h
           jl    LAB_004026d9
           mov   edx, 00000057Ch
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_004026d9:     mov   dword ptr [esi+018h], edi
           mov   ecx, esi
           pop   edi
           mov   edx, ebx
           pop   esi
           pop   ebx
-          jmp   FUN_00402180
+          jmp   @FUN_00402180@6
 LAB_004026e8:     mov   eax, esi
           pop   edi
           pop   esi
@@ -2235,9 +2240,9 @@ LAB_004026e8:     mov   eax, esi
 LAB_004026ee:
           db 090h
           db 090h
-FUN_004026a0 endp
+@FUN_004026a0@6 endp
 
-FUN_004026f0 proc
+_FUN_004026f0 proc
           mov   eax, dword ptr [DAT_0040c748]   ; <c748>
           mov   ecx, dword ptr [DAT_0040c6fc]   ; <c6fc>
           cdq
@@ -2249,7 +2254,7 @@ FUN_004026f0 proc
           mov   eax, 000000012h
           ret
 LAB_0040270e:     mov   ecx, 0000003E8h
-          call  random
+          call  @random@2
           cmp   ax, 00032h
           jae   LAB_00402724
           mov   eax, 00000000Ah
@@ -2285,9 +2290,9 @@ LAB_0040276a:
           db 090h
           db 090h
           db 090h
-FUN_004026f0 endp
+_FUN_004026f0 endp
 
-FUN_00402770 proc
+_FUN_00402770 proc
           mov   eax, dword ptr [DAT_0040c748]   ; <c748>
           xor   ecx, ecx
           cdq
@@ -2314,9 +2319,9 @@ LAB_00402795:
           db 090h
           db 090h
           db 090h
-FUN_00402770 endp
+_FUN_00402770 endp
 
-FUN_004027a0 proc
+_FUN_004027a0 proc
           mov   eax, dword ptr [DAT_0040c748]   ; <c748>
           mov   ecx, dword ptr [DAT_0040c6fc]   ; <c6fc>
           cdq
@@ -2328,7 +2333,7 @@ FUN_004027a0 proc
           mov   eax, 000000012h
           ret
 LAB_004027be:     mov   ecx, 000000040h
-          call  random
+          call  @random@2
           neg   ax
           sbb   eax, eax
           and   eax, 00000000Bh
@@ -2347,9 +2352,9 @@ LAB_004027d4:
           db 090h
           db 090h
           db 090h
-FUN_004027a0 endp
+_FUN_004027a0 endp
 
-FUN_004027e0 proc
+_FUN_004027e0 proc
           mov   eax, dword ptr [DAT_0040c748]   ; <c748>
           mov   ecx, dword ptr [DAT_0040c6fc]   ; <c6fc>
           cdq
@@ -2361,7 +2366,7 @@ FUN_004027e0 proc
           mov   eax, 000000012h
           ret
 LAB_004027fe:     mov   ecx, 000000064h
-          call  random
+          call  @random@2
           cmp   ax, 00002h
           jae   LAB_00402814
           mov   eax, 00000000Ah
@@ -2396,9 +2401,9 @@ LAB_00402844:
           db 090h
           db 090h
           db 090h
-FUN_004027e0 endp
+_FUN_004027e0 endp
 
-FUN_00402850 proc
+@FUN_00402850@4 proc
           lea   eax, dword ptr [ecx-00Bh]
           cmp   eax, 000000005h
           ja    LAB_004028b3
@@ -2406,7 +2411,7 @@ FUN_00402850 proc
 LAB_0040285f:     mov   ax, 0001Bh
           ret
 LAB_00402864:     mov   ecx, 000000008h
-          call  random
+          call  @random@2
           movsx eax, ax
           sub   eax, 000000000h
           jz    LAB_00402883
@@ -2419,13 +2424,13 @@ LAB_0040287e:     mov   ax, 00033h
 LAB_00402883:     mov   ax, 00032h
           ret
 LAB_00402888:     mov   ecx, 000000004h
-          call  random
+          call  @random@2
           neg   ax
           sbb   eax, eax
           add   eax, 00000002Eh
           ret
 LAB_0040289b:     mov   ecx, 000000003h
-          call  random
+          call  @random@2
           neg   ax
           sbb   eax, eax
           add   eax, 000000030h
@@ -2434,7 +2439,7 @@ LAB_004028ae:     mov   ax, 00034h
           ret
 LAB_004028b3:     mov   edx, 000000623h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
           xor   ax, ax
           ret
 LAB_004028c6:
@@ -2447,16 +2452,16 @@ DAT_004028d0  dword offset LAB_00402864
 DAT_004028d4  dword offset LAB_00402888
 DAT_004028d8  dword offset LAB_0040289b
 DAT_004028dc  dword offset LAB_004028ae
-FUN_00402850 endp
+@FUN_00402850@4 endp
 
-updateActor proc
+@updateActor@4 proc
           push  esi
           mov   esi, ecx
           test  esi, esi
           jnz   LAB_004028f6
           mov   edx, 000000907h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_004028f6:     cmp   dword ptr [esi+018h], 00000000Bh
           jge   LAB_00402903
           mov   eax, dword ptr [esi+00Ch]
@@ -2464,7 +2469,7 @@ LAB_004028f6:     cmp   dword ptr [esi+018h], 00000000Bh
           jz    LAB_00402912
 LAB_00402903:     mov   edx, 000000908h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_00402912:     mov   eax, dword ptr [esi+018h]
           cmp   eax, 00000000Ah
           ja    LAB_00402951
@@ -2474,22 +2479,22 @@ LAB_00402921:     mov   ecx, esi
           jmp   LAB_00402990
 LAB_00402929:     mov   ecx, esi
           pop   esi
-          jmp   updateActorType3
+          jmp   @updateActorType3@4
 LAB_00402931:     mov   ecx, esi
           pop   esi
-          jmp   updateActorType2
+          jmp   @updateActorType2@4
 LAB_00402939:     mov   ecx, esi
           pop   esi
-          jmp   updateActorType1
+          jmp   @updateActorType1@4
 LAB_00402941:     mov   ecx, esi
           pop   esi
-          jmp   updateActorType9
+          jmp   @updateActorType9@4
 LAB_00402949:     mov   ecx, esi
           pop   esi
-          jmp   updateActorTypeA
+          jmp   @updateActorTypeA@4
 LAB_00402951:     mov   edx, 00000091Fh
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
           mov   eax, esi
           pop   esi
           ret
@@ -2517,25 +2522,25 @@ LAB_00402990:     push  ebx
           jnz   LAB_004029b4
           mov   edx, 0000007E6h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_004029b4:     mov   eax, dword ptr [esi+018h]
           test  eax, eax
           jz    LAB_004029ca
           mov   edx, 0000007E7h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_004029ca:     cmp   edi, 00000000Bh
           jnz   LAB_00402a55
           cmp   word ptr [esi+044h], 000000000h
           jz    LAB_004029e9
           mov   edx, 0000007EBh
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_004029e9:     cmp   word ptr [esi+04Ah], 000000000h
           jz    LAB_004029ff
           mov   edx, 0000007ECh
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_004029ff:     mov   ax, word ptr [esi+046h]
           test  ax, ax
           jnz   LAB_00402a16
@@ -2565,18 +2570,18 @@ LAB_00402a42:     xor   ecx, ecx
           mov   word ptr [esi+048h], ax
           jmp   LAB_00402af0
 LAB_00402a55:     mov   ecx, esi
-          call  updateActorPositionWithVelocityMaybe
+          call  @updateActorPositionWithVelocityMaybe@4
           cmp   edi, 000000016h
           mov   esi, eax
           jb    LAB_00402a72
           mov   edx, 0000007F8h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_00402a72:     mov   edx, edi
           mov   ecx, esi
           shl   edx, 004h
           add   edx, offset DAT_0040a308        ; <a308>
-          call  updateActorVelMaybe
+          call  @updateActorVelMaybe@8
           mov   esi, eax
           lea   eax, dword ptr [edi-007h]
           cmp   eax, 00000000Eh
@@ -2595,19 +2600,19 @@ LAB_00402aab:     cmp   word ptr [esi+044h], 000000000h
           jb    LAB_00402ac9
           mov   edx, 000000812h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_00402ac9:     mov   edi, dword ptr [edi*4+UINT_ARRAY_0040a434]      ; <a434>
           cmp   edi, 000000011h
           jnz   LAB_00402ae6
           mov   ecx, 0FFFFFFC0h
-          call  FUN_00403420
+          call  @FUN_00403420@4
           mov   ecx, offset sound_1.soundResource       ; <c6c0>
           jmp   LAB_00402aeb
 LAB_00402ae6:     mov   ecx, offset sound_4.soundResource       ; <c718>
-LAB_00402aeb:     call  playSound
+LAB_00402aeb:     call  @playSound@4
 LAB_00402af0:     mov   edx, edi
           mov   ecx, esi
-          call  FUN_00402120
+          call  @FUN_00402120@8
           mov   esi, eax
           lea   eax, dword ptr [edi-007h]
           cmp   eax, 00000000Eh
@@ -2622,19 +2627,19 @@ LAB_00402b17:     mov   ecx, 000000008h
 LAB_00402b1e:     mov   ecx, 000000004h
           jmp   LAB_00402b2a
 LAB_00402b25:     mov   ecx, 000000002h
-LAB_00402b2a:     call  FUN_00403420
+LAB_00402b2a:     call  @FUN_00403420@4
 LAB_00402b2f:     push  ebp
           mov   edx, ebx
           mov   ecx, esi
-          call  FUN_00402c60
+          call  @FUN_00402c60@8
           mov   edx, ebx
           mov   ecx, esi
           push  ebp
-          call  FUN_00403180
+          call  @FUN_00403180@8
           mov   edx, ebx
           mov   ecx, esi
           push  ebp
-          call  FUN_00403250
+          call  @FUN_00403250@8
           mov   eax, esi
           pop   edi
           pop   esi
@@ -2694,9 +2699,9 @@ LAB_00402b88:
           db 090h
           db 090h
           db 090h
-updateActor endp
+@updateActor@4 endp
 
-playSound proc
+@playSound@4 proc
           mov   eax, dword ptr [isSoundDisabled]        ; <c794>
           push  esi
           test  eax, eax
@@ -2729,9 +2734,9 @@ LAB_00402bda:
           db 090h
           db 090h
           db 090h
-playSound endp
+@playSound@4 endp
 
-updateActorPositionWithVelocityMaybe proc
+@updateActorPositionWithVelocityMaybe@4 proc
           push  ebx
           push  ebp
           push  esi
@@ -2747,7 +2752,7 @@ updateActorPositionWithVelocityMaybe proc
           jnz   LAB_00402c11
           mov   edx, 000000425h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_00402c11:     mov   eax, dword ptr [DAT_0040c670]   ; <c670>
           test  eax, eax
           jz    LAB_00402c2c
@@ -2764,7 +2769,7 @@ LAB_00402c2c:     test  di, di
           push  ebp
           mov   edx, ebx
           mov   ecx, esi
-          call  updateActorPositionMaybe
+          call  @updateActorPositionMaybe@10
           pop   edi
           pop   esi
           pop   ebp
@@ -2776,7 +2781,7 @@ LAB_00402c45:     xor   edi, edi
           push  ebp
           mov   ecx, esi
           mov   word ptr [esi+04Ah], 00000h
-          call  updateActorPositionMaybe
+          call  @updateActorPositionMaybe@10
           pop   edi
           pop   esi
           pop   ebp
@@ -2786,9 +2791,9 @@ LAB_00402c5d:
           db 090h
           db 090h
           db 090h
-updateActorPositionWithVelocityMaybe endp
+@updateActorPositionWithVelocityMaybe@4 endp
 
-FUN_00402c60 proc
+@FUN_00402c60@8 proc
           mov   eax, dword ptr [playerActorMaybe]       ; <c72c>
           push  ebx
           push  ebp
@@ -2805,7 +2810,7 @@ FUN_00402c60 proc
           jz    LAB_00402c94
           mov   edx, 0000006FCh
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_00402c94:     cmp   dword ptr [DAT_0040c95c], edi   ; <c95c>
           jz    LAB_00402da7
           mov   ecx, dword ptr [currentTickCount]       ; <c698>
@@ -2821,17 +2826,17 @@ LAB_00402c94:     cmp   dword ptr [DAT_0040c95c], edi   ; <c95c>
           push  edx
           mov   edx, dword ptr [prevTickCount]  ; <c708>
           push  eax
-          call  FUN_00402e30
+          call  @FUN_00402e30@20
           mov   ecx, dword ptr [DAT_0040c948]   ; <c948>
           mov   dword ptr [DAT_0040c95c], edi   ; <c95c>
           sub   eax, ecx
           mov   dword ptr [DAT_0040c964], 000000001h    ; <c964>
           mov   dword ptr [elapsedTime], eax    ; <c944>
-          call  FUN_00402e80
+          call  _FUN_00402e80
           mov   edx, dword ptr [elapsedTime]    ; <c944>
           mov   ecx, offset iniSsConfigKey      ; <c0d8>
           push  000000001h
-          call  updateEntPackIniKeyValue
+          call  @updateEntPackIniKeyValue@12
           pop   edi
           pop   esi
           pop   ebp
@@ -2858,7 +2863,7 @@ LAB_00402d25:     mov   ecx, dword ptr [DAT_0040c6f8]   ; <c6f8>
           mov   edi, 000000019h
           movsx edx, bp
           movsx ecx, bx
-          call  FUN_00402e30
+          call  @FUN_00402e30@20
           mov   ecx, dword ptr [DAT_0040c6f8]   ; <c6f8>
           mov   dx, word ptr [ecx+008h]
           cmp   dx, 000000017h
@@ -2874,7 +2879,7 @@ LAB_00402d78:     mov   eax, dword ptr [DAT_0040c948]   ; <c948>
           sub   eax, 000001388h
           mov   dword ptr [DAT_0040c948], eax   ; <c948>
 LAB_00402d8c:     mov   edx, edi
-          call  FUN_00403130
+          call  @FUN_00403130@6
           mov   eax, dword ptr [DAT_0040c6f8]   ; <c6f8>
           pop   edi
           add   eax, 000000024h
@@ -2895,7 +2900,7 @@ LAB_00402da7:     mov   ax, word ptr [esp+014h]
           movsx edx, bp
           movsx ecx, bx
           push  esi
-          call  FUN_00402e30
+          call  @FUN_00402e30@20
           cmp   ax, 0FDC0h
           jl    LAB_00402e1d
           cmp   ax, 0FEC0h
@@ -2906,7 +2911,7 @@ LAB_00402da7:     mov   ax, word ptr [esp+014h]
           push  edi
           push  esi
           mov   dword ptr [DAT_0040c95c], 000000001h    ; <c95c>
-          call  FUN_00402e30
+          call  @FUN_00402e30@20
           mov   ecx, dword ptr [currentTickCount]       ; <c698>
           mov   edx, dword ptr [DAT_0040c94c]   ; <c94c>
           mov   dword ptr [DAT_0040c948], eax   ; <c948>
@@ -2931,9 +2936,9 @@ LAB_00402e24:
           db 090h
           db 090h
           db 090h
-FUN_00402c60 endp
+@FUN_00402c60@8 endp
 
-FUN_00402e30 proc
+@FUN_00402e30@20 proc
           push  ebx
           push  ebp
           mov   ebp, dword ptr [esp+010h]
@@ -2946,7 +2951,7 @@ FUN_00402e30 proc
           jnz   LAB_00402e53
           mov   edx, 00000064Ch
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_00402e53:     mov   eax, esi
           mov   ecx, edi
           sub   eax, ebx
@@ -2978,9 +2983,9 @@ LAB_00402e72:
           db 090h
           db 090h
           db 090h
-FUN_00402e30 endp
+@FUN_00402e30@20 endp
 
-FUN_00402e80 proc
+_FUN_00402e80 proc
           mov   ecx, dword ptr [playerActorMaybe]       ; <c72c>
           test  ecx, ecx
           jz    LAB_00402eb7
@@ -2995,9 +3000,9 @@ FUN_00402e80 proc
           dec   edx
           and   edx, 00000000Bh
           add   edx, 000000003h
-LAB_00402ea7:     call  FUN_00402120
+LAB_00402ea7:     call  @FUN_00402120@8
           mov   ecx, dword ptr [statusWindowDC] ; <c6cc>
-          jmp   formatAndPrintStatusStrings
+          jmp   @formatAndPrintStatusStrings@4
 LAB_00402eb7:     ret
 LAB_00402eb8:
           db 090h
@@ -3008,9 +3013,9 @@ LAB_00402eb8:
           db 090h
           db 090h
           db 090h
-FUN_00402e80 endp
+_FUN_00402e80 endp
 
-updateEntPackIniKeyValue proc
+@updateEntPackIniKeyValue@12 proc
           sub   esp, 000000138h
           mov   eax, dword ptr [esp+00000013Ch]
           push  ebx
@@ -3148,7 +3153,7 @@ LAB_00403047:     mov   eax, dword ptr [esp+00000014Ch]
           mov   ecx, dword ptr [ebx]
           mov   edx, esi
           neg   ecx
-          call  formatElapsedTime
+          call  @formatElapsedTime@8
           and   eax, 00000FFFFh
           jmp   LAB_00403072
 LAB_00403064:     mov   eax, dword ptr [ebx]
@@ -3161,7 +3166,7 @@ LAB_00403072:     add   esi, eax
           cmp   di, word ptr [esp+018h]
           jnz   LAB_00403093
           mov   ecx, 000000010h
-          call  getCachedString
+          call  @getCachedString@4
           push  eax
           push  offset DAT_0040c0e0     ; <c0e0>
           push  esi
@@ -3185,7 +3190,7 @@ LAB_0040309e:     cmp   word ptr [esp+018h], 00000000Ah
           mov   ecx, dword ptr [esp+014h]
           mov   edx, esi
           neg   ecx
-          call  formatElapsedTime
+          call  @formatElapsedTime@8
           mov   di, ax
           and   edi, 00000FFFFh
           jmp   LAB_004030e8
@@ -3197,7 +3202,7 @@ LAB_004030d6:     mov   ecx, dword ptr [esp+014h]
           add   esp, 00000000Ch
           mov   edi, eax
 LAB_004030e8:     mov   ecx, 000000011h
-          call  getCachedString
+          call  @getCachedString@4
           add   edi, esi
           push  eax
           push  offset DAT_0040c0e0     ; <c0e0>
@@ -3206,7 +3211,7 @@ LAB_004030e8:     mov   ecx, 000000011h
           add   esp, 00000000Ch
 LAB_00403100:     push  000000000h
           mov   ecx, 00000000Fh
-          call  getCachedString
+          call  @getCachedString@4
           lea   edx, dword ptr [esp+04Ch]
           push  eax
           mov   eax, dword ptr [hSkiMainWnd]    ; <c6c8>
@@ -3225,9 +3230,9 @@ LAB_0040312b:
           db 090h
           db 090h
           db 090h
-updateEntPackIniKeyValue endp
+@updateEntPackIniKeyValue@12 endp
 
-FUN_00403130 proc
+@FUN_00403130@6 proc
           push  esi
           mov   esi, ecx
           push  edi
@@ -3236,7 +3241,7 @@ FUN_00403130 proc
           jnz   LAB_00403149
           mov   edx, 0000006EDh
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_00403149:     mov   eax, edi
           mov   word ptr [esi+008h], di
           mov   ecx, dword ptr [sprites]        ; <c5f8>
@@ -3248,7 +3253,7 @@ LAB_00403149:     mov   eax, edi
           mov   dword ptr [esi+004h], eax
           jz    LAB_0040316f
           mov   edx, edi
-          call  FUN_00402180
+          call  @FUN_00402180@6
 LAB_0040316f:     pop   edi
           pop   esi
           ret
@@ -3267,9 +3272,9 @@ LAB_00403172:
           db 090h
           db 090h
           db 090h
-FUN_00403130 endp
+@FUN_00403130@6 endp
 
-FUN_00403180 proc
+@FUN_00403180@8 proc
           mov   eax, dword ptr [playerActorMaybe]       ; <c72c>
           push  ebx
           push  esi
@@ -3284,7 +3289,7 @@ FUN_00403180 proc
           jz    LAB_004031b1
           mov   edx, 00000072Fh
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_004031b1:     mov   eax, dword ptr [DAT_0040c954]   ; <c954>
           test  eax, eax
           jz    LAB_00403209
@@ -3292,11 +3297,11 @@ LAB_004031b1:     mov   eax, dword ptr [DAT_0040c954]   ; <c954>
           jle   LAB_004031f2
           mov   dword ptr [DAT_0040c954], 000000000h    ; <c954>
           mov   dword ptr [DAT_0040c968], 000000001h    ; <c968>
-          call  FUN_00402e80
+          call  _FUN_00402e80
           mov   edx, dword ptr [stylePoints]    ; <c6a8>
           mov   ecx, offset iniFsConfigKey      ; <c0f4>
           push  000000000h
-          call  updateEntPackIniKeyValue
+          call  @updateEntPackIniKeyValue@12
           pop   edi
           pop   esi
           pop   ebx
@@ -3320,7 +3325,7 @@ LAB_00403209:     mov   ax, word ptr [esp+010h]
           push  ecx
           movsx edx, bx
           movsx ecx, di
-          call  FUN_00402e30
+          call  @FUN_00402e30@20
           cmp   ax, 0FF60h
           jl    LAB_00403249
           cmp   ax, 000A0h
@@ -3332,9 +3337,9 @@ LAB_00403249:     pop   edi
           ret   00004h
 LAB_0040324f:
           db 090h
-FUN_00403180 endp
+@FUN_00403180@8 endp
 
-FUN_00403250 proc
+@FUN_00403250@8 proc
           mov   eax, dword ptr [playerActorMaybe]       ; <c72c>
           push  ebx
           push  ebp
@@ -3351,7 +3356,7 @@ FUN_00403250 proc
           jz    LAB_00403284
           mov   edx, 00000074Eh
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_00403284:     cmp   dword ptr [DAT_0040c958], edi   ; <c958>
           jz    LAB_00403397
           mov   ecx, dword ptr [currentTickCount]       ; <c698>
@@ -3367,17 +3372,17 @@ LAB_00403284:     cmp   dword ptr [DAT_0040c958], edi   ; <c958>
           push  edx
           mov   edx, dword ptr [prevTickCount]  ; <c708>
           push  eax
-          call  FUN_00402e30
+          call  @FUN_00402e30@20
           mov   ecx, dword ptr [DAT_0040c948]   ; <c948>
           mov   dword ptr [DAT_0040c958], edi   ; <c958>
           sub   eax, ecx
           mov   dword ptr [DAT_0040c960], 000000001h    ; <c960>
           mov   dword ptr [elapsedTime], eax    ; <c944>
-          call  FUN_00402e80
+          call  _FUN_00402e80
           mov   edx, dword ptr [elapsedTime]    ; <c944>
           mov   ecx, offset iniGsConfigKey      ; <c0f8>
           push  000000001h
-          call  updateEntPackIniKeyValue
+          call  @updateEntPackIniKeyValue@12
           pop   edi
           pop   esi
           pop   ebp
@@ -3404,7 +3409,7 @@ LAB_00403315:     mov   ecx, dword ptr [DAT_0040c6f8]   ; <c6f8>
           mov   edi, 000000019h
           movsx edx, bp
           movsx ecx, bx
-          call  FUN_00402e30
+          call  @FUN_00402e30@20
           mov   ecx, dword ptr [DAT_0040c6f8]   ; <c6f8>
           mov   dx, word ptr [ecx+008h]
           cmp   dx, 000000017h
@@ -3420,7 +3425,7 @@ LAB_00403368:     mov   eax, dword ptr [DAT_0040c948]   ; <c948>
           sub   eax, 000001388h
           mov   dword ptr [DAT_0040c948], eax   ; <c948>
 LAB_0040337c:     mov   edx, edi
-          call  FUN_00403130
+          call  @FUN_00403130@6
           mov   eax, dword ptr [DAT_0040c6f8]   ; <c6f8>
           pop   edi
           add   eax, 000000024h
@@ -3441,7 +3446,7 @@ LAB_00403397:     mov   ax, word ptr [esp+014h]
           movsx edx, bp
           movsx ecx, bx
           push  esi
-          call  FUN_00402e30
+          call  @FUN_00402e30@20
           cmp   ax, 00140h
           jl    LAB_0040340d
           cmp   ax, 00200h
@@ -3452,7 +3457,7 @@ LAB_00403397:     mov   ax, word ptr [esp+014h]
           push  edi
           push  esi
           mov   dword ptr [DAT_0040c958], 000000001h    ; <c958>
-          call  FUN_00402e30
+          call  @FUN_00402e30@20
           mov   ecx, dword ptr [currentTickCount]       ; <c698>
           mov   edx, dword ptr [DAT_0040c950]   ; <c950>
           mov   dword ptr [DAT_0040c948], eax   ; <c948>
@@ -3477,17 +3482,17 @@ LAB_00403414:
           db 090h
           db 090h
           db 090h
-FUN_00403250 endp
+@FUN_00403250@8 endp
 
-FUN_00403420 proc
+@FUN_00403420@4 proc
           mov   eax, dword ptr [DAT_0040c954]   ; <c954>
           test  eax, eax
           jz    LAB_0040342f
           add   dword ptr [stylePoints], ecx    ; <c6a8>
 LAB_0040342f:     ret
-FUN_00403420 endp
+@FUN_00403420@4 endp
 
-updateActorVelMaybe proc
+@updateActorVelMaybe@8 proc
           push  ecx
           push  ebx
           push  ebp
@@ -3501,19 +3506,19 @@ updateActorVelMaybe proc
           jnz   LAB_00403454
           mov   edx, 00000079Fh
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_00403454:     test  esi, esi
           jnz   LAB_00403467
           mov   edx, 0000007A0h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_00403467:     mov   eax, dword ptr [ebp+01Ch]
           mov   ecx, dword ptr [esi+00Ch]
           cmp   eax, ecx
           jz    LAB_00403480
           mov   edx, 0000007A1h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_00403480:     mov   ax, word ptr [esi+008h]
           test  ax, ax
           mov   dword ptr [esp+010h], eax
@@ -3597,7 +3602,7 @@ LAB_00403533:
           db 090h
           db 090h
           db 090h
-updateActorType1:         push  esi
+@updateActorType1@4:      push  esi
           mov   esi, ecx
           push  edi
           mov   edi, dword ptr [esi+01Ch]
@@ -3605,35 +3610,35 @@ updateActorType1:         push  esi
           jnz   LAB_0040355a
           mov   edx, 000000852h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_0040355a:     cmp   dword ptr [esi+018h], 000000001h
           jz    LAB_0040356f
           mov   edx, 000000853h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_0040356f:     cmp   edi, 000000019h
           jge   LAB_00403604
           mov   ecx, esi
-          call  updateActorPositionWithVelocityMaybe
+          call  @updateActorPositionWithVelocityMaybe@4
           mov   esi, eax
           lea   eax, dword ptr [edi-016h]
           cmp   eax, 000000005h
           jb    LAB_00403598
           mov   edx, 000000857h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_00403598:     lea   edx, dword ptr [edi-016h]
           mov   ecx, esi
           shl   edx, 004h
           add   edx, offset DAT_0040a490        ; <a490>
-          call  updateActorVelMaybe
+          call  @updateActorVelMaybe@8
           mov   ecx, 00000000Ch
           mov   esi, eax
-          call  random
+          call  @random@2
           test  ax, ax
           jnz   LAB_004035f9
           mov   ecx, 000000003h
-          call  random
+          call  @random@2
           movsx eax, ax
           sub   eax, 000000000h
           jz    LAB_004035f4
@@ -3646,19 +3651,19 @@ LAB_00403598:     lea   edx, dword ptr [edi-016h]
           mov   edx, edi
           pop   edi
           pop   esi
-          jmp   FUN_00402120
+          jmp   @FUN_00402120@8
 LAB_004035e4:     mov   edi, 000000017h
           mov   ecx, esi
           mov   edx, edi
           pop   edi
           pop   esi
-          jmp   FUN_00402120
+          jmp   @FUN_00402120@8
 LAB_004035f4:     mov   edi, 000000016h
 LAB_004035f9:     mov   edx, edi
           mov   ecx, esi
           pop   edi
           pop   esi
-          jmp   FUN_00402120
+          jmp   @FUN_00402120@8
 LAB_00403604:     mov   eax, esi
           pop   edi
           pop   esi
@@ -3671,7 +3676,7 @@ LAB_00403609:
           db 090h
           db 090h
           db 090h
-updateActorType2:         push  esi
+@updateActorType2@4:      push  esi
           push  edi
           mov   edi, ecx
           mov   eax, dword ptr [edi+018h]
@@ -3680,31 +3685,31 @@ updateActorType2:         push  esi
           jz    LAB_0040362e
           mov   edx, 000000872h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_0040362e:     lea   eax, dword ptr [esi-01Bh]
           cmp   eax, 000000003h
           ja    LAB_0040371f
           jmp   dword ptr [eax*4+LAB_00403734]  ; <3734>
 LAB_00403641:     mov   ecx, 000000003h
           mov   esi, 00000001Ch
-          call  random
+          call  @random@2
           dec   eax
           mov   ecx, edi
           mov   word ptr [edi+048h], ax
-          call  updateActorPositionWithVelocityMaybe
+          call  @updateActorPositionWithVelocityMaybe@4
           mov   ecx, eax
           mov   edx, esi
-          call  FUN_00402120
+          call  @FUN_00402120@8
           pop   edi
           pop   esi
           ret
 LAB_00403668:     mov   ecx, edi
           mov   esi, 00000001Bh
           mov   word ptr [edi+046h], 00004h
-          call  updateActorPositionWithVelocityMaybe
+          call  @updateActorPositionWithVelocityMaybe@4
           mov   ecx, eax
           mov   edx, esi
-          call  FUN_00402120
+          call  @FUN_00402120@8
           pop   edi
           pop   esi
           ret
@@ -3712,30 +3717,30 @@ LAB_00403686:     xor   eax, eax
           mov   ecx, 000000020h
           mov   word ptr [edi+048h], ax
           mov   word ptr [edi+046h], ax
-          call  random
+          call  @random@2
           mov   si, ax
           mov   ecx, edi
           neg   si
           sbb   esi, esi
           and   esi, 000000003h
           add   esi, 00000001Bh
-          call  updateActorPositionWithVelocityMaybe
+          call  @updateActorPositionWithVelocityMaybe@4
           mov   ecx, eax
           mov   edx, esi
-          call  FUN_00402120
+          call  @FUN_00402120@8
           pop   edi
           pop   esi
           ret
 LAB_004036bb:     mov   ecx, 000000064h
-          call  random
+          call  @random@2
           test  ax, ax
           jz    LAB_004036e2
           mov   ecx, edi
           mov   esi, 00000001Dh
-          call  updateActorPositionWithVelocityMaybe
+          call  @updateActorPositionWithVelocityMaybe@4
           mov   ecx, eax
           mov   edx, esi
-          call  FUN_00402120
+          call  @FUN_00402120@8
           pop   edi
           pop   esi
           ret
@@ -3748,20 +3753,20 @@ LAB_004036e2:     mov   cx, word ptr [edi+042h]
           mov   edx, 000000052h
           mov   ecx, 000000011h
           sub   si, 000000004h
-          call  FUN_004026a0
+          call  @FUN_004026a0@6
           mov   ecx, eax
           mov   edx, esi
-          call  updateActorPositionMaybe
+          call  @updateActorPositionMaybe@10
           mov   ecx, offset sound_8.soundResource       ; <c608>
           mov   esi, 00000001Bh
-          call  playSound
+          call  @playSound@4
 LAB_0040371f:     mov   ecx, edi
-          call  updateActorPositionWithVelocityMaybe
+          call  @updateActorPositionWithVelocityMaybe@4
           mov   edx, esi
           mov   ecx, eax
           pop   edi
           pop   esi
-          jmp   FUN_00402120
+          jmp   @FUN_00402120@8
 LAB_00403731:
           db 08Dh
           db 049h
@@ -3783,7 +3788,7 @@ DAT_00403740  dword offset LAB_004036bb
           db 090h
           db 090h
           db 090h
-updateActorType9:         push  esi
+@updateActorType9@4:      push  esi
           push  edi
           mov   edi, ecx
           mov   eax, dword ptr [edi+018h]
@@ -3792,17 +3797,17 @@ updateActorType9:         push  esi
           jz    LAB_0040376e
           mov   edx, 00000089Ch
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_0040376e:     cmp   esi, 000000038h
           jge   LAB_00403782
           mov   edx, 00000089Dh
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_00403782:     cmp   esi, 00000003Ch
           jl    LAB_00403796
           mov   edx, 00000089Eh
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_00403796:     inc   esi
           cmp   esi, 00000003Ch
           jl    LAB_004037a1
@@ -3811,13 +3816,13 @@ LAB_004037a1:     mov   ecx, edi
           mov   edx, esi
           pop   edi
           pop   esi
-          jmp   FUN_00402120
+          jmp   @FUN_00402120@8
 LAB_004037ac:
           db 090h
           db 090h
           db 090h
           db 090h
-updateActorTypeA:         push  esi
+@updateActorTypeA@4:      push  esi
           mov   esi, ecx
           push  edi
           mov   eax, dword ptr [esi+018h]
@@ -3826,17 +3831,17 @@ updateActorTypeA:         push  esi
           jz    LAB_004037ce
           mov   edx, 0000008A9h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_004037ce:     cmp   edi, 00000003Ch
           jge   LAB_004037e2
           mov   edx, 0000008AAh
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_004037e2:     cmp   edi, 000000040h
           jl    LAB_004037f6
           mov   edx, 0000008ABh
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_004037f6:     lea   eax, dword ptr [edi-03Ch]
           cmp   eax, 000000003h
           ja    LAB_004038e9
@@ -3845,21 +3850,21 @@ LAB_00403809:     cmp   word ptr [esi+046h], 000000000h
           jz    LAB_0040381f
           mov   edx, 0000008AFh
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_0040381f:     mov   ecx, 000000064h
-          call  random
+          call  @random@2
           test  ax, ax
           jnz   LAB_004038e9
           mov   ecx, 000000002h
           mov   edi, 00000003Dh
-          call  random
+          call  @random@2
           lea   eax, dword ptr [eax+eax*1-001h]
           mov   ecx, esi
           mov   word ptr [esi+046h], ax
-          call  updateActorPositionWithVelocityMaybe
+          call  @updateActorPositionWithVelocityMaybe@4
           mov   ecx, eax
           mov   edx, edi
-          call  FUN_00402120
+          call  @FUN_00402120@8
           pop   edi
           pop   esi
           ret
@@ -3867,9 +3872,9 @@ LAB_0040385c:     cmp   word ptr [esi+046h], 000000000h
           jnz   LAB_00403872
           mov   edx, 0000008B8h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_00403872:     mov   ecx, 00000000Ah
-          call  random
+          call  @random@2
           test  ax, ax
           jz    LAB_004038a2
           xor   ecx, ecx
@@ -3878,20 +3883,20 @@ LAB_00403872:     mov   ecx, 00000000Ah
           add   ecx, 00000003Eh
           mov   edi, ecx
           mov   ecx, esi
-          call  updateActorPositionWithVelocityMaybe
+          call  @updateActorPositionWithVelocityMaybe@4
           mov   ecx, eax
           mov   edx, edi
-          call  FUN_00402120
+          call  @FUN_00402120@8
           pop   edi
           pop   esi
           ret
 LAB_004038a2:     mov   ecx, esi
           mov   edi, 00000003Ch
           mov   word ptr [esi+046h], 00000h
-          call  updateActorPositionWithVelocityMaybe
+          call  @updateActorPositionWithVelocityMaybe@4
           mov   ecx, eax
           mov   edx, edi
-          call  FUN_00402120
+          call  @FUN_00402120@8
           pop   edi
           pop   esi
           ret
@@ -3903,15 +3908,15 @@ LAB_004038ce:     cmp   word ptr [esi+046h], 000000000h
           jg    LAB_004038e4
           mov   edx, 0000008C8h
 LAB_004038da:     mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_004038e4:     mov   edi, 00000003Dh
 LAB_004038e9:     mov   ecx, esi
-          call  updateActorPositionWithVelocityMaybe
+          call  @updateActorPositionWithVelocityMaybe@4
           mov   edx, edi
           mov   ecx, eax
           pop   edi
           pop   esi
-          jmp   FUN_00402120
+          jmp   @FUN_00402120@8
 LAB_004038fb:
           db 090h
 LAB_004038fc:
@@ -3923,7 +3928,7 @@ DAT_00403908  dword offset LAB_004038ce
           db 090h
           db 090h
           db 090h
-updateActorType3:         push  esi
+@updateActorType3@4:      push  esi
           push  edi
           mov   edi, ecx
           mov   eax, dword ptr [edi+018h]
@@ -3932,21 +3937,21 @@ updateActorType3:         push  esi
           jz    LAB_0040392e
           mov   edx, 0000008E2h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_0040392e:     mov   ecx, edi
-          call  updateActorPositionWithVelocityMaybe
+          call  @updateActorPositionWithVelocityMaybe@4
           mov   edi, eax
           lea   eax, dword ptr [esi-01Fh]
           cmp   eax, 000000008h
           jb    LAB_0040394e
           mov   edx, 0000008E5h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_0040394e:     lea   edx, dword ptr [esi-01Fh]
           mov   ecx, edi
           shl   edx, 004h
           add   edx, offset DAT_0040a4e0        ; <a4e0>
-          call  updateActorVelMaybe
+          call  @updateActorVelMaybe@8
           mov   edi, eax
           mov   eax, esi
           sub   eax, 00000001Fh
@@ -3961,14 +3966,14 @@ LAB_0040394e:     lea   edx, dword ptr [esi-01Fh]
           jl    LAB_00403989
 LAB_0040397a:     mov   edx, 0000008FAh
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_00403989:     inc   esi
           cmp   esi, 000000027h
           jnz   LAB_004039ec
           mov   esi, 000000020h
           mov   ecx, edi
           mov   edx, esi
-          call  FUN_00402120
+          call  @FUN_00402120@8
           pop   edi
           pop   esi
           ret
@@ -3977,23 +3982,23 @@ LAB_004039a0:     cmp   word ptr [edi+044h], 000000000h
           mov   esi, 000000020h
           mov   ecx, edi
           mov   edx, esi
-          call  FUN_00402120
+          call  @FUN_00402120@8
           pop   edi
           pop   esi
           ret
 LAB_004039b8:     mov   ecx, 00000000Ah
-          call  random
+          call  @random@2
           test  ax, ax
           jnz   LAB_004039ec
           mov   esi, 00000001Fh
           mov   ecx, edi
           mov   edx, esi
-          call  FUN_00402120
+          call  @FUN_00402120@8
           pop   edi
           pop   esi
           ret
 LAB_004039d8:     mov   ecx, 00000000Ah
-          call  random
+          call  @random@2
           test  ax, ax
           jnz   LAB_004039ec
           mov   esi, 000000020h
@@ -4001,7 +4006,7 @@ LAB_004039ec:     mov   ecx, edi
           mov   edx, esi
           pop   edi
           pop   esi
-          jmp   FUN_00402120
+          jmp   @FUN_00402120@8
 LAB_004039f7:
           db 090h
           db 090h
@@ -4012,9 +4017,9 @@ LAB_004039f7:
           db 090h
           db 090h
           db 090h
-updateActorVelMaybe endp
+@updateActorVelMaybe@8 endp
 
-FUN_00403a00 proc
+@FUN_00403a00@8 proc
           sub   esp, 00000000Ch
           push  esi
           mov   esi, ecx
@@ -4024,12 +4029,12 @@ FUN_00403a00 proc
           jnz   LAB_00403a1c
           mov   edx, 00000092Eh
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_00403a1c:     test  edi, edi
           jnz   LAB_00403a2f
           mov   edx, 00000092Fh
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_00403a2f:     cmp   dword ptr [esi+018h], 00000000Bh
           jl    LAB_00403a3d
           mov   eax, esi
@@ -4042,11 +4047,11 @@ LAB_00403a3d:     push  ebx
           push  ebp
           mov   bp, word ptr [edi+042h]
           mov   ecx, esi
-          call  FUN_00404070
+          call  @FUN_00404070@4
           mov   ax, word ptr [eax+042h]
           mov   ecx, edi
           mov   word ptr [esp+018h], ax
-          call  FUN_00404070
+          call  @FUN_00404070@4
           mov   ax, word ptr [eax+042h]
           mov   ecx, dword ptr [esp+018h]
           cmp   bx, bp
@@ -4084,7 +4089,7 @@ LAB_00403ad3:     mov   dword ptr [esp+010h], 00000003Ch
           mov   ecx, esi
           mov   edx, dword ptr [esp+010h]
           mov   word ptr [esi+046h], 00000h
-          call  FUN_00402120
+          call  @FUN_00402120@8
           pop   ebp
           pop   ebx
           pop   edi
@@ -4099,22 +4104,22 @@ LAB_00403af4:     cmp   edi, dword ptr [playerActorMaybe]       ; <c72c>
           jz    LAB_00403b19
           mov   edx, 000000959h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_00403b19:     mov   ecx, offset sound_7.soundResource       ; <c6e0>
-          call  playSound
+          call  @playSound@4
           test  byte ptr [edi+04Ch], 001h
           jz    LAB_00403b32
           mov   ecx, edi
-          call  FUN_00402220
+          call  @FUN_00402220@4
           jmp   LAB_00403b34
 LAB_00403b32:     mov   eax, edi
 LAB_00403b34:     mov   ecx, eax
-          call  FUN_00401350
+          call  @FUN_00401350@4
           cmp   dword ptr [esi+00Ch], ebx
           jnz   LAB_00403b4f
           mov   edx, 00000095Ch
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_00403b4f:     mov   ecx, dword ptr [esi+00Ch]
           mov   eax, 000000032h
           mov   dword ptr [esp+010h], eax
@@ -4130,7 +4135,7 @@ LAB_00403b4f:     mov   ecx, dword ptr [esi+00Ch]
           mov   dword ptr [ecx+020h], edx
           mov   edx, dword ptr [esp+010h]
           mov   ecx, esi
-          call  FUN_00402120
+          call  @FUN_00402120@8
           pop   ebp
           pop   ebx
           pop   edi
@@ -4156,12 +4161,12 @@ LAB_00403bcc:     movsx eax, word ptr [esi+048h]
           mov   ecx, 000000001h
           sar   eax, 1h
           mov   word ptr [esi+04Ah], ax
-          call  FUN_00403420
+          call  @FUN_00403420@4
           mov   ecx, offset sound_2.soundResource       ; <c768>
-LAB_00403be8:     call  playSound
+LAB_00403be8:     call  @playSound@4
           mov   edx, dword ptr [esp+010h]
           mov   ecx, esi
-          call  FUN_00402120
+          call  @FUN_00402120@8
           pop   ebp
           pop   ebx
           pop   edi
@@ -4179,10 +4184,10 @@ LAB_00403c00:     mov   eax, dword ptr [esp+018h]
 LAB_00403c15:     cmp   word ptr [edi+010h], 000000052h
           jnz   LAB_00403fc1
           mov   ecx, 0FFFFFFF0h
-          call  FUN_00403420
+          call  @FUN_00403420@4
           mov   edx, dword ptr [esp+010h]
           mov   ecx, esi
-          call  FUN_00402120
+          call  @FUN_00402120@8
           pop   ebp
           pop   ebx
           pop   edi
@@ -4204,7 +4209,7 @@ LAB_00403c3d:     mov   eax, dword ptr [esp+010h]
           sar   eax, 1h
           mov   ecx, esi
           mov   word ptr [esi+048h], ax
-          call  FUN_00402120
+          call  @FUN_00402120@8
           pop   ebp
           pop   ebx
           pop   edi
@@ -4227,12 +4232,12 @@ LAB_00403c84:     mov   eax, dword ptr [esp+018h]
           mov   word ptr [esi+04Ah], ax
 LAB_00403cb4:     mov   ecx, 000000001h
           mov   dword ptr [esp+010h], 00000000Dh
-          call  FUN_00403420
+          call  @FUN_00403420@4
           mov   ecx, offset sound_2.soundResource       ; <c768>
-          call  playSound
+          call  @playSound@4
           mov   edx, dword ptr [esp+010h]
           mov   ecx, esi
-          call  FUN_00402120
+          call  @FUN_00402120@8
           pop   ebp
           pop   ebx
           pop   edi
@@ -4252,16 +4257,16 @@ LAB_00403cfe:     cmp   word ptr [edi+010h], 000000056h
           test  byte ptr [edi+04Ch], 001h
           jz    LAB_00403d18
           mov   ecx, edi
-          call  FUN_00402220
+          call  @FUN_00402220@4
           jmp   LAB_00403d1a
 LAB_00403d18:     mov   eax, edi
 LAB_00403d1a:     mov   ecx, eax
-          call  FUN_00401350
+          call  @FUN_00401350@4
           mov   ecx, 000000064h
-          call  FUN_00403420
+          call  @FUN_00403420@4
           mov   edx, dword ptr [esp+010h]
           mov   ecx, esi
-          call  FUN_00402120
+          call  @FUN_00402120@8
           pop   ebp
           pop   ebx
           pop   edi
@@ -4306,7 +4311,7 @@ LAB_00403d7e:     movsx eax, word ptr [esi+040h]
           sar   eax, 1h
           mov   ecx, esi
           mov   word ptr [esi+048h], ax
-          call  FUN_00402120
+          call  @FUN_00402120@8
           pop   ebp
           pop   ebx
           pop   edi
@@ -4324,10 +4329,10 @@ LAB_00403dcd:     cmp   word ptr [esi+048h], 000000000h
           jnz   LAB_00403e39
           mov   edx, 000000056h
           mov   ecx, edi
-          call  FUN_00402180
+          call  @FUN_00402180@6
           mov   edx, dword ptr [esp+010h]
           mov   ecx, esi
-          call  FUN_00402120
+          call  @FUN_00402120@8
           pop   ebp
           pop   ebx
           pop   edi
@@ -4340,12 +4345,12 @@ LAB_00403dfa:     cmp   word ptr [edi+010h], 000000032h
           mov   edx, 000000038h
           mov   ecx, edi
           mov   dword ptr [edi+018h], 000000009h
-          call  FUN_00402120
+          call  @FUN_00402120@8
           mov   ecx, 000000010h
-          call  FUN_00403420
+          call  @FUN_00403420@4
           mov   edx, dword ptr [esp+010h]
           mov   ecx, esi
-          call  FUN_00402120
+          call  @FUN_00402120@8
           pop   ebp
           pop   ebx
           pop   edi
@@ -4353,12 +4358,12 @@ LAB_00403dfa:     cmp   word ptr [edi+010h], 000000032h
           add   esp, 00000000Ch
           ret
 LAB_00403e39:     mov   ecx, 0FFFFFFE0h
-          call  FUN_00403420
+          call  @FUN_00403420@4
           mov   ecx, offset sound_1.soundResource       ; <c6c0>
-          call  playSound
+          call  @playSound@4
           mov   edx, dword ptr [esp+010h]
           mov   ecx, esi
-          call  FUN_00402120
+          call  @FUN_00402120@8
           pop   ebp
           pop   ebx
           pop   edi
@@ -4368,14 +4373,14 @@ LAB_00403e39:     mov   ecx, 0FFFFFFE0h
 LAB_00403e60:     cmp   dword ptr [esp+014h], 000000009h
           jnz   LAB_00403e97
           mov   ecx, 0000003E8h
-          call  FUN_00403420
+          call  @FUN_00403420@4
           mov   edx, 000000032h
           mov   ecx, edi
           mov   dword ptr [edi+018h], 00000000Dh
-          call  FUN_00402180
+          call  @FUN_00402180@6
           mov   edx, dword ptr [esp+010h]
           mov   ecx, esi
-          call  FUN_00402120
+          call  @FUN_00402120@8
           pop   ebp
           pop   ebx
           pop   edi
@@ -4383,10 +4388,10 @@ LAB_00403e60:     cmp   dword ptr [esp+014h], 000000009h
           add   esp, 00000000Ch
           ret
 LAB_00403e97:     mov   ecx, 000000006h
-          call  FUN_00403420
+          call  @FUN_00403420@4
           mov   edx, dword ptr [esp+010h]
           mov   ecx, esi
-          call  FUN_00402120
+          call  @FUN_00402120@8
           pop   ebp
           pop   ebx
           pop   edi
@@ -4408,10 +4413,10 @@ LAB_00403ed0:     cmp   bx, bp
           sar   eax, 1h
           mov   word ptr [esi+04Ah], ax
           mov   dword ptr [esp+010h], 000000021h
-          call  playSound
+          call  @playSound@4
           mov   edx, dword ptr [esp+010h]
           mov   ecx, esi
-          call  FUN_00402120
+          call  @FUN_00402120@8
           pop   ebp
           pop   ebx
           pop   edi
@@ -4419,7 +4424,7 @@ LAB_00403ed0:     cmp   bx, bp
           add   esp, 00000000Ch
           ret
 LAB_00403f0b:     mov   ecx, 000000014h
-          call  FUN_00403420
+          call  @FUN_00403420@4
 LAB_00403f15:     cmp   bx, bp
           jge   LAB_00403fc1
           mov   ecx, dword ptr [esp+010h]
@@ -4429,7 +4434,7 @@ LAB_00403f15:     cmp   bx, bp
           mov   edx, eax
           mov   ecx, esi
           mov   dword ptr [esp+010h], eax
-          call  FUN_00402120
+          call  @FUN_00402120@8
           pop   ebp
           pop   ebx
           pop   edi
@@ -4442,7 +4447,7 @@ LAB_00403f44:     cmp   dword ptr [esp+010h], 000000019h
           test  eax, eax
           jnz   LAB_00403f5d
           mov   ecx, 000000014h
-          call  FUN_00403420
+          call  @FUN_00403420@4
 LAB_00403f5d:     xor   edx, edx
           mov   ecx, offset sound_6.soundResource       ; <c628>
           cmp   word ptr [edi+044h], dx
@@ -4462,16 +4467,16 @@ LAB_00403f92:     mov   eax, dword ptr [esp+014h]
           test  eax, eax
           jnz   LAB_00403fa4
           mov   ecx, 000000003h
-          call  FUN_00403420
+          call  @FUN_00403420@4
 LAB_00403fa4:     mov   dword ptr [esp+010h], ebx
           mov   ecx, offset sound_3.soundResource       ; <c5d0>
           jmp   LAB_00403be8
 LAB_00403fb2:     mov   edx, 000000948h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_00403fc1:     mov   edx, dword ptr [esp+010h]
           mov   ecx, esi
-          call  FUN_00402120
+          call  @FUN_00402120@8
           pop   ebp
           pop   ebx
           pop   edi
@@ -4542,16 +4547,16 @@ LAB_00404054:
           db 090h
           db 090h
           db 090h
-FUN_00403a00 endp
+@FUN_00403a00@8 endp
 
-FUN_00404070 proc
+@FUN_00404070@4 proc
           push  esi
           mov   esi, ecx
           test  esi, esi
           jnz   LAB_00404086
           mov   edx, 0000003C5h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_00404086:     mov   eax, dword ptr [esi+004h]
           test  eax, eax
           jnz   LAB_0040408f
@@ -4574,9 +4579,9 @@ LAB_00404091:
           db 090h
           db 090h
           db 090h
-FUN_00404070 endp
+@FUN_00404070@4 endp
 
-FUN_004040a0 proc
+@FUN_004040a0@4 proc
           mov   eax, dword ptr [skierScreenYOffset]     ; <c5fc>
           push  ebx
           push  ebp
@@ -4594,16 +4599,16 @@ FUN_004040a0 proc
           jnz   LAB_004040d6
           mov   edx, 000000B0Dh
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_004040d6:     cmp   esi, dword ptr [ebx+004h]
           jbe   LAB_004040ed
           mov   edx, 000000B0Eh
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
           cmp   esi, dword ptr [ebx+004h]
 LAB_004040ed:     jae   LAB_0040411c
 LAB_004040ef:     mov   ecx, esi
-          call  FUN_004041c0
+          call  @FUN_004041c0@4
           mov   ax, word ptr [esi+016h]
           sub   ax, word ptr [DAT_0040c5f2]     ; <c5f2>
           cmp   ax, di
@@ -4611,7 +4616,7 @@ LAB_004040ef:     mov   ecx, esi
           cmp   ax, bp
           jge   LAB_00404112
           mov   ecx, esi
-          call  FUN_00404130
+          call  @FUN_00404130@4
 LAB_00404112:     mov   eax, dword ptr [ebx+004h]
           add   esi, 000000024h
           cmp   esi, eax
@@ -4637,9 +4642,9 @@ LAB_00404121:
           db 090h
           db 090h
           db 090h
-FUN_004040a0 endp
+@FUN_004040a0@4 endp
 
-FUN_00404130 proc
+@FUN_00404130@4 proc
           sub   esp, 000000010h
           push  ebx
           push  ebp
@@ -4650,7 +4655,7 @@ FUN_00404130 proc
           jnz   LAB_0040414c
           mov   edx, 000000A2Ch
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_0040414c:     cmp   dword ptr [esi], 000000000h
           jnz   LAB_004041b0
           mov   bp, word ptr [esi+018h]
@@ -4661,10 +4666,10 @@ LAB_0040414c:     cmp   dword ptr [esi], 000000000h
           push  ebx
           push  edi
           lea   ecx, dword ptr [esp+01Ch]
-          call  FUN_004014b0
+          call  @FUN_004014b0@14
           mov   edx, offset DAT_0040c680        ; <c680>
           lea   ecx, dword ptr [esp+010h]
-          call  doRectsOverlap
+          call  @doRectsOverlap@8
           test  eax, eax
           jz    LAB_004041b0
           mov   dx, word ptr [esi+008h]
@@ -4672,17 +4677,17 @@ LAB_0040414c:     cmp   dword ptr [esi], 000000000h
           jnz   LAB_00404194
           mov   edx, dword ptr [esi+010h]
           mov   ecx, dword ptr [esi+00Ch]
-          call  FUN_004020d0
+          call  @FUN_004020d0@8
           jmp   LAB_0040419c
 LAB_00404194:     mov   ecx, dword ptr [esi+00Ch]
-          call  FUN_004026a0
+          call  @FUN_004026a0@6
 LAB_0040419c:     test  eax, eax
           jz    LAB_004041b0
           push  ebp
           push  ebx
           mov   edx, edi
           mov   ecx, eax
-          call  updateActorPositionMaybe
+          call  @updateActorPositionMaybe@10
           mov   dword ptr [esi], eax
           mov   dword ptr [eax+00Ch], esi
 LAB_004041b0:     mov   eax, dword ptr [esi]
@@ -4699,9 +4704,9 @@ LAB_004041ba:
           db 090h
           db 090h
           db 090h
-FUN_00404130 endp
+@FUN_00404130@4 endp
 
-FUN_004041c0 proc
+@FUN_004041c0@4 proc
           push  esi
           mov   esi, ecx
           test  esi, esi
@@ -4709,7 +4714,7 @@ FUN_004041c0 proc
           jnz   LAB_004041d7
           mov   edx, 000000AE7h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_004041d7:     mov   ax, word ptr [esi+01Ah]
           mov   cx, word ptr [esi+01Ch]
           add   word ptr [esi+014h], ax
@@ -4723,42 +4728,42 @@ LAB_004041d7:     mov   ax, word ptr [esi+01Ah]
           cmp   eax, 000000008h
           jg    LAB_00404207
           mov   ecx, esi
-          call  FUN_00404350
+          call  @FUN_00404350@4
           jmp   LAB_0040421f
 LAB_00404207:     mov   edx, 000000AF9h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
           jmp   LAB_0040421f
 LAB_00404218:     mov   ecx, esi
-          call  FUN_00404290
+          call  @FUN_00404290@4
 LAB_0040421f:     mov   edi, dword ptr [esi]
           test  edi, edi
           jz    LAB_0040427f
           jnz   LAB_00404236
           mov   edx, 000000AFEh
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_00404236:     mov   eax, dword ptr [edi+00Ch]
           test  eax, eax
           jnz   LAB_0040424c
           mov   edx, 000000AFFh
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_0040424c:     cmp   dword ptr [edi+00Ch], esi
           jz    LAB_00404260
           mov   edx, 000000B00h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_00404260:     mov   ax, word ptr [esi+018h]
           mov   cx, word ptr [esi+016h]
           mov   dx, word ptr [esi+014h]
           push  eax
           push  ecx
           mov   ecx, edi
-          call  updateActorPositionMaybe
+          call  @updateActorPositionMaybe@10
           mov   edx, dword ptr [esi+010h]
           mov   ecx, eax
-          call  FUN_00402120
+          call  @FUN_00402120@8
 LAB_0040427f:     pop   edi
           pop   esi
           ret
@@ -4777,21 +4782,21 @@ LAB_00404282:
           db 090h
           db 090h
           db 090h
-FUN_004041c0 endp
+@FUN_004041c0@4 endp
 
-FUN_00404290 proc
+@FUN_00404290@4 proc
           push  esi
           mov   esi, ecx
           test  esi, esi
           jnz   LAB_004042a6
           mov   edx, 000000A49h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_004042a6:     cmp   dword ptr [esi+00Ch], 000000004h
           jz    LAB_004042bb
           mov   edx, 000000A4Ah
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_004042bb:     mov   ax, word ptr [esi+016h]
           cmp   ax, 0FC00h
           jg    LAB_004042da
@@ -4812,7 +4817,7 @@ LAB_004042f5:     cmp   dword ptr [esi], 000000000h
           cmp   dword ptr [esi+010h], 000000027h
           jnz   LAB_0040433f
           mov   ecx, 0000003E8h
-          call  random
+          call  @random@2
           test  ax, ax
           jnz   LAB_0040433f
           mov   ax, word ptr [esi+018h]
@@ -4823,10 +4828,10 @@ LAB_004042f5:     cmp   dword ptr [esi], 000000000h
           push  ecx
           mov   edx, 000000021h
           mov   ecx, 000000003h
-          call  FUN_004020d0
+          call  @FUN_004020d0@8
           mov   ecx, eax
           mov   dx, di
-          call  updateActorPositionMaybe
+          call  @updateActorPositionMaybe@10
           mov   dword ptr [esi+010h], 000000028h
           pop   edi
 LAB_0040433f:     pop   esi
@@ -4847,9 +4852,9 @@ LAB_00404341:
           db 090h
           db 090h
           db 090h
-FUN_00404290 endp
+@FUN_00404290@4 endp
 
-FUN_00404350 proc
+@FUN_00404350@4 proc
           sub   esp, 00000000Ch
           push  ebx
           push  ebp
@@ -4864,7 +4869,7 @@ FUN_00404350 proc
           jnz   LAB_00404378
           mov   edx, 000000A68h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_00404378:     cmp   word ptr [esi+018h], bx
           jle   LAB_00404384
           dec   word ptr [esi+01Eh]
@@ -4950,7 +4955,7 @@ LAB_00404439:     xor   edx, edx
           ret
 LAB_00404457:     mov   edx, 000000A76h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
           mov   dword ptr [esi+010h], ebp
           pop   edi
           pop   esi
@@ -5059,7 +5064,7 @@ LAB_004045be:     cmp   ecx, 0FFFFFFF6h
 LAB_004045c8:     mov   ebx, ecx
           mov   ecx, offset sound_9.soundResource       ; <c6f0>
           mov   dword ptr [esp+010h], eax
-          call  playSound
+          call  @playSound@4
 LAB_004045d8:     movsx edi, word ptr [esp+010h]
           mov   eax, edi
           cdq
@@ -5124,7 +5129,7 @@ LAB_0040466b:     jg    LAB_004046a7
           test  bx, bx
           jg    LAB_004046a7
           mov   ecx, 00000000Ah
-          call  random
+          call  @random@2
           test  ax, ax
           jz    LAB_00404691
           mov   ebp, 00000002Ah
@@ -5170,9 +5175,9 @@ DAT_004046d8  dword offset LAB_00404439
           db 090h
           db 090h
           db 090h
-FUN_00404350 endp
+@FUN_00404350@4 endp
 
-FUN_004046e0 proc
+@FUN_004046e0@4 proc
           push  ecx
           mov   eax, dword ptr [skierScreenYOffset]     ; <c5fc>
           push  ebx
@@ -5191,17 +5196,17 @@ FUN_004046e0 proc
           jnz   LAB_00404718
           mov   edx, 000000B21h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_00404718:     cmp   esi, dword ptr [edi]
           jae   LAB_0040472b
           mov   edx, 000000B22h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_0040472b:     cmp   esi, dword ptr [edi+004h]
           jbe   LAB_0040473f
           mov   edx, 000000B23h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_0040473f:     mov   eax, dword ptr [edi+004h]
           cmp   esi, eax
           mov   dword ptr [esp+010h], eax
@@ -5240,7 +5245,7 @@ LAB_00404798:     movsx eax, word ptr [esi+016h]
           jge   LAB_004047b8
           mov   ecx, esi
           add   esi, 000000024h
-          call  FUN_00404130
+          call  @FUN_00404130@4
           cmp   esi, dword ptr [edi+004h]
           jb    LAB_00404798
 LAB_004047b8:     pop   edi
@@ -5252,13 +5257,13 @@ LAB_004047b8:     pop   edi
 LAB_004047be:
           db 090h
           db 090h
-FUN_004046e0 endp
+@FUN_004046e0@4 endp
 
-timerCallbackFunc proc
+_timerCallbackFunc proc
           mov   eax, dword ptr [inputEnabled]   ; <c67c>
           test  eax, eax
           jz    LAB_004047ce
-          call  timerUpdateFunc
+          call  _timerUpdateFunc
 LAB_004047ce:     mov   eax, 000000001h
           ret   00010h
 LAB_004047d6:
@@ -5272,9 +5277,8 @@ LAB_004047d6:
           db 090h
           db 090h
           db 090h
-timerCallbackFunc endp
+_timerCallbackFunc endp
 
-public _WinMain@16
 _WinMain@16 proc
           mov   eax, dword ptr [esp+00Ch]
           sub   esp, 00000001Ch
@@ -5284,12 +5288,12 @@ _WinMain@16 proc
           test  eax, eax
           jnz   LAB_00404801
           mov   dword ptr [isSoundDisabled], 000000001h ; <c794>
-LAB_00404801:     call  allocateMemory
+LAB_00404801:     call  _allocateMemory
           test  eax, eax
           jnz   LAB_00404810
           add   esp, 00000001Ch
           ret   00010h
-LAB_00404810:     call  resetGame
+LAB_00404810:     call  _resetGame
           test  eax, eax
           jnz   LAB_0040481f
           add   esp, 00000001Ch
@@ -5298,18 +5302,18 @@ LAB_0040481f:     mov   ecx, dword ptr [esp+02Ch]
           mov   edx, dword ptr [esp+024h]
           push  ecx
           mov   ecx, dword ptr [esp+024h]
-          call  initWindows
+          call  @initWindows@12
           test  eax, eax
           jnz   LAB_0040483b
           add   esp, 00000001Ch
           ret   00010h
-LAB_0040483b:     call  FUN_00404a80
+LAB_0040483b:     call  _FUN_00404a80
           test  eax, eax
           jnz   LAB_0040485e
           mov   edx, dword ptr [hSkiMainWnd]    ; <c6c8>
           push  edx
           call  dword ptr [__imp__DestroyWindow@4]      ; <DestroyWindow>
-          call  cleanupSound
+          call  _cleanupSound
           xor   eax, eax
           add   esp, 00000001Ch
           ret   00010h
@@ -5343,7 +5347,7 @@ LAB_00404884:     lea   ecx, dword ptr [esp+00Ch]
           jnz   LAB_00404884
           pop   edi
           pop   ebx
-LAB_004048a5:     call  cleanupSound
+LAB_004048a5:     call  _cleanupSound
           mov   eax, dword ptr [esp+00Ch]
           pop   esi
           add   esp, 00000001Ch
@@ -5362,7 +5366,7 @@ LAB_004048b5:
           db 090h
 _WinMain@16 endp
 
-allocateMemory proc
+_allocateMemory proc
           push  esi
           mov   esi, dword ptr [__imp__LocalAlloc@8]    ; <LocalAlloc>
           push  000000050h
@@ -5402,7 +5406,7 @@ LAB_00404921:     mov   ecx, dword ptr [stringCache]    ; <c674>
           mov   eax, 000000001h
           ret
 LAB_0040493d:     mov   ecx, offset s_insufficient_local_memory ; <c104>
-          call  showErrorMessage
+          call  @showErrorMessage@4
           xor   eax, eax
           ret
 LAB_0040494a:
@@ -5412,14 +5416,14 @@ LAB_0040494a:
           db 090h
           db 090h
           db 090h
-allocateMemory endp
+_allocateMemory endp
 
-showErrorMessage proc
+@showErrorMessage@4 proc
           push  esi
           mov   esi, ecx
           push  000000030h
           mov   ecx, 000000001h
-          call  getCachedString
+          call  @getCachedString@4
           push  eax
           push  esi
           push  000000000h
@@ -5432,21 +5436,21 @@ LAB_0040496b:
           db 090h
           db 090h
           db 090h
-showErrorMessage endp
+@showErrorMessage@4 endp
 
-resetGame proc
+_resetGame proc
           push  esi
           call  dword ptr [__imp__GetTickCount@0]       ; <GetTickCount>
           mov   dword ptr [currentTickCount], eax       ; <c698>
           push  eax
           call  _srand
           add   esp, 000000004h
-          call  FUN_00404a00
+          call  _FUN_00404a00
           xor   esi, esi
           mov   dword ptr [PTR_0040c64c], esi   ; <c64c>
           mov   dword ptr [playerActorMaybe], esi       ; <c72c>
           mov   dword ptr [DAT_0040c6fc], esi   ; <c6fc>
-          call  FUN_00404a70
+          call  _FUN_00404a70
           mov   eax, 000000001h
           mov   dword ptr [DAT_0040c670], esi   ; <c670>
           mov   word ptr [DAT_0040c5f2], si     ; <c5f2>
@@ -5465,9 +5469,9 @@ resetGame proc
           ret
 LAB_004049ff:
           db 090h
-resetGame endp
+_resetGame endp
 
-FUN_00404a00 proc
+_FUN_00404a00 proc
           push  esi
           mov   esi, dword ptr [DAT_0040c648]   ; <c648>
           xor   edx, edx
@@ -5509,9 +5513,9 @@ LAB_00404a64:
           db 090h
           db 090h
           db 090h
-FUN_00404a00 endp
+_FUN_00404a00 endp
 
-FUN_00404a70 proc
+_FUN_00404a70 proc
           mov   word ptr [DAT_0040c702], 00000h ; <c702>
           ret
 LAB_00404a7a:
@@ -5521,26 +5525,26 @@ LAB_00404a7a:
           db 090h
           db 090h
           db 090h
-FUN_00404a70 endp
+_FUN_00404a70 endp
 
-FUN_00404a80 proc
+_FUN_00404a80 proc
           push  000000000h
           push  000000000h
           mov   edx, 000000003h
           xor   ecx, ecx
-          call  FUN_004020d0
+          call  @FUN_004020d0@8
           mov   ecx, eax
           xor   edx, edx
-          call  updateActorPositionMaybe
+          call  @updateActorPositionMaybe@10
           test  eax, eax
           mov   dword ptr [playerActorMaybe], eax       ; <c72c>
           mov   dword ptr [PTR_0040c64c], eax   ; <c64c>
           jnz   LAB_00404aa8
           ret
-LAB_00404aa8:     call  FUN_004051e0
-          call  FUN_00404b50
+LAB_00404aa8:     call  _FUN_004051e0
+          call  _FUN_00404b50
           mov   dword ptr [DAT_0040c650], 000000000h    ; <c650>
-          call  FUN_00404ad0
+          call  _FUN_00404ad0
           mov   eax, 000000001h
           ret
 LAB_00404ac7:
@@ -5553,9 +5557,9 @@ LAB_00404ac7:
           db 090h
           db 090h
           db 090h
-FUN_00404a80 endp
+_FUN_00404a80 endp
 
-FUN_00404ad0 proc
+_FUN_00404ad0 proc
           mov   eax, dword ptr [hSkiMainWnd]    ; <c6c8>
           test  eax, eax
           jz    LAB_00404b4f
@@ -5589,9 +5593,9 @@ LAB_00404b2a:     mov   ecx, dword ptr [updateTimerDurationMillis]      ; <c678>
           push  edx
           call  dword ptr [__imp__SetTimer@16]  ; <SetTimer>
 LAB_00404b4f:     ret
-FUN_00404ad0 endp
+_FUN_00404ad0 endp
 
-FUN_00404b50 proc
+_FUN_00404b50 proc
           sub   esp, 000000024h
           push  ebx
           push  ebp
@@ -5603,7 +5607,7 @@ FUN_00404b50 proc
           mov   word ptr [esp+02Ch], di
           mov   word ptr [esp+02Ah], di
           mov   word ptr [esp+028h], di
-          call  FUN_00405100
+          call  @FUN_00405100@4
           mov   eax, dword ptr [tagRECT_0040c6b0.left]  ; <c6b0>
           mov   edx, dword ptr [skierScreenXOffset]     ; <c704>
           mov   ecx, dword ptr [DAT_0040c640]   ; <c640>
@@ -5627,19 +5631,19 @@ LAB_00404bb1:     mov   eax, dword ptr [tagRECT_0040c6b0.bottom]        ; <c6bc>
           mov   word ptr [esp+026h], 00208h
 LAB_00404bda:     lea   edx, dword ptr [esp+010h]
           mov   ecx, offset DAT_0040c630        ; <c630>
-          call  FUN_00405120
+          call  @FUN_00405120@8
           mov   ebp, 0FFFFFDC0h
           lea   edx, dword ptr [esp+010h]
           mov   ecx, offset DAT_0040c630        ; <c630>
           mov   word ptr [esp+018h], 00039h
           mov   word ptr [esp+024h], bp
           mov   word ptr [esp+026h], 00280h
-          call  FUN_00405120
+          call  @FUN_00405120@8
           lea   edx, dword ptr [esp+010h]
           mov   ecx, offset DAT_0040c630        ; <c630>
           mov   word ptr [esp+018h], 0003Ah
           mov   word ptr [esp+024h], si
-          call  FUN_00405120
+          call  @FUN_00405120@8
           mov   dword ptr [esp+01Ch], 00000000Ch
           mov   esi, 000000001h
           mov   dword ptr [DAT_0040c94c], edi   ; <c94c>
@@ -5662,7 +5666,7 @@ LAB_00404c40:     mov   edx, esi
           lea   edx, dword ptr [esp+010h]
           mov   ecx, offset DAT_0040c630        ; <c630>
           mov   word ptr [esp+024h], ax
-          call  FUN_00405120
+          call  @FUN_00405120@8
           cmp   dword ptr [DAT_0040c94c], edi   ; <c94c>
           jnz   LAB_00404c89
           mov   dword ptr [DAT_0040c94c], eax   ; <c94c>
@@ -5676,14 +5680,14 @@ LAB_00404c89:     add   ebx, 000000140h
           mov   word ptr [esp+018h], 0003Bh
           mov   word ptr [esp+024h], bp
           mov   word ptr [esp+026h], 021C0h
-          call  FUN_00405120
+          call  @FUN_00405120@8
           lea   edx, dword ptr [esp+010h]
           mov   ecx, offset DAT_0040c630        ; <c630>
           mov   word ptr [esp+018h], 0003Ch
           mov   word ptr [esp+024h], 0FEC0h
-          call  FUN_00405120
+          call  @FUN_00405120@8
           mov   ecx, offset DAT_0040c5e0        ; <c5e0>
-          call  FUN_00405100
+          call  @FUN_00405100@4
           mov   edx, dword ptr [tagRECT_0040c6b0.right] ; <c6b8>
           mov   eax, dword ptr [DAT_0040c640]   ; <c640>
           mov   dword ptr [esp+01Ch], esi
@@ -5707,18 +5711,18 @@ LAB_00404d1c:     mov   eax, dword ptr [tagRECT_0040c6b0.bottom]        ; <c6bc>
           mov   word ptr [esp+026h], 00208h
 LAB_00404d45:     lea   edx, dword ptr [esp+010h]
           mov   ecx, offset DAT_0040c5e0        ; <c5e0>
-          call  FUN_00405120
+          call  @FUN_00405120@8
           lea   edx, dword ptr [esp+010h]
           mov   ecx, offset DAT_0040c5e0        ; <c5e0>
           mov   word ptr [esp+018h], 00039h
           mov   word ptr [esp+024h], si
           mov   word ptr [esp+026h], 00280h
-          call  FUN_00405120
+          call  @FUN_00405120@8
           lea   edx, dword ptr [esp+010h]
           mov   ecx, offset DAT_0040c5e0        ; <c5e0>
           mov   word ptr [esp+018h], 0003Ah
           mov   word ptr [esp+024h], 00200h
-          call  FUN_00405120
+          call  @FUN_00405120@8
           mov   esi, 000000001h
           mov   dword ptr [DAT_0040c950], edi   ; <c950>
           mov   ebx, 000000410h
@@ -5742,20 +5746,20 @@ LAB_00404da5:     mov   ecx, esi
           setz  al
           mov   ecx, offset DAT_0040c5e0        ; <c5e0>
           mov   esi, eax
-          call  FUN_00405120
+          call  @FUN_00405120@8
           cmp   dword ptr [DAT_0040c950], edi   ; <c950>
           jnz   LAB_00404df8
           mov   dword ptr [DAT_0040c950], eax   ; <c950>
 LAB_00404df8:     mov   ecx, 00000000Dh
           mov   dword ptr [esp+01Ch], ecx
-          call  FUN_00402850
+          call  @FUN_00402850@4
           mov   ecx, 000000020h
           mov   word ptr [esp+018h], ax
-          call  random
+          call  @random@2
           add   eax, 000000190h
           mov   ecx, 000000190h
           mov   word ptr [esp+024h], ax
-          call  random
+          call  @random@2
           add   ebx, 000000190h
           cmp   bx, bp
           jl    LAB_00404da5
@@ -5766,14 +5770,14 @@ LAB_00404df8:     mov   ecx, 00000000Dh
           mov   word ptr [esp+018h], 0003Bh
           mov   word ptr [esp+024h], 00140h
           mov   word ptr [esp+026h], bp
-          call  FUN_00405120
+          call  @FUN_00405120@8
           lea   edx, dword ptr [esp+010h]
           mov   ecx, offset DAT_0040c5e0        ; <c5e0>
           mov   word ptr [esp+018h], 0003Ch
           mov   word ptr [esp+024h], 00200h
-          call  FUN_00405120
+          call  @FUN_00405120@8
           mov   ecx, offset DAT_0040c658        ; <c658>
-          call  FUN_00405100
+          call  @FUN_00405100@4
           mov   eax, dword ptr [tagRECT_0040c6b0.bottom]        ; <c6bc>
           mov   ebx, dword ptr [skierScreenYOffset]     ; <c5fc>
           sub   eax, ebx
@@ -5788,35 +5792,35 @@ LAB_00404df8:     mov   ecx, 00000000Dh
           mov   word ptr [esp+026h], 00208h
 LAB_00404ec1:     lea   edx, dword ptr [esp+010h]
           mov   ecx, offset DAT_0040c658        ; <c658>
-          call  FUN_00405120
+          call  @FUN_00405120@8
           mov   ebx, 0FFFFFF60h
           lea   edx, dword ptr [esp+010h]
           mov   ecx, offset DAT_0040c658        ; <c658>
           mov   word ptr [esp+018h], 00039h
           mov   word ptr [esp+024h], bx
           mov   word ptr [esp+026h], 00280h
-          call  FUN_00405120
+          call  @FUN_00405120@8
           mov   esi, 0000000A0h
           lea   edx, dword ptr [esp+010h]
           mov   ecx, offset DAT_0040c658        ; <c658>
           mov   word ptr [esp+018h], 0003Ah
           mov   word ptr [esp+024h], si
-          call  FUN_00405120
+          call  @FUN_00405120@8
           lea   edx, dword ptr [esp+010h]
           mov   ecx, offset DAT_0040c658        ; <c658>
           mov   word ptr [esp+018h], 0003Bh
           mov   word ptr [esp+024h], bx
           mov   word ptr [esp+026h], bp
-          call  FUN_00405120
+          call  @FUN_00405120@8
           lea   edx, dword ptr [esp+010h]
           mov   ecx, offset DAT_0040c658        ; <c658>
           mov   word ptr [esp+018h], 0003Ch
           mov   word ptr [esp+024h], si
-          call  FUN_00405120
+          call  @FUN_00405120@8
           mov   ecx, offset DAT_0040c738        ; <c738>
           mov   dword ptr [DAT_0040c968], edi   ; <c968>
           mov   dword ptr [DAT_0040c954], edi   ; <c954>
-          call  FUN_00405100
+          call  @FUN_00405100@4
           mov   esi, 0FFFFFC00h
           mov   ebp, 000000040h
           mov   ebx, 0FFFFFF80h
@@ -5830,12 +5834,12 @@ LAB_00404f72:     lea   edx, dword ptr [esp+010h]
           mov   word ptr [esp+02Eh], di
           mov   word ptr [esp+02Ch], di
           mov   word ptr [esp+02Ah], di
-          call  FUN_00405120
+          call  @FUN_00405120@8
           add   esi, 000000800h
           cmp   si, 05C00h
           jle   LAB_00404f72
           mov   ecx, offset DAT_0040c720        ; <c720>
-          call  FUN_00405100
+          call  @FUN_00405100@4
           mov   esi, 0FFFFFC00h
           mov   ebx, 000000004h
           mov   ebp, 000000002h
@@ -5852,7 +5856,7 @@ LAB_00404fd1:     cmp   si, 0FC00h
           mov   dword ptr [esp+020h], 000000027h
           mov   word ptr [esp+024h], 0FF90h
           mov   word ptr [esp+02Ch], 0FFFEh
-          call  FUN_00405120
+          call  @FUN_00405120@8
 LAB_0040501b:     cmp   si, 05C00h
           jge   LAB_00405044
           lea   edx, dword ptr [esp+010h]
@@ -5860,7 +5864,7 @@ LAB_0040501b:     cmp   si, 05C00h
           mov   dword ptr [esp+020h], 000000029h
           mov   word ptr [esp+024h], 0FF70h
           mov   word ptr [esp+02Ch], bp
-          call  FUN_00405120
+          call  @FUN_00405120@8
 LAB_00405044:     add   esi, 000000800h
           cmp   si, 05C00h
           jle   LAB_00404fd1
@@ -5875,23 +5879,23 @@ LAB_00405044:     add   esi, 000000800h
           mov   word ptr [esp+02Eh], di
           mov   word ptr [esp+02Ch], di
           mov   word ptr [esp+02Ah], di
-          call  FUN_00405120
+          call  @FUN_00405120@8
           lea   edx, dword ptr [esp+010h]
           mov   ecx, offset DAT_0040c720        ; <c720>
           mov   dword ptr [esp+01Ch], 000000008h
           mov   word ptr [esp+024h], 03EBCh
-          call  FUN_00405120
+          call  @FUN_00405120@8
           lea   edx, dword ptr [esp+010h]
           mov   ecx, offset DAT_0040c720        ; <c720>
           mov   dword ptr [esp+01Ch], 000000005h
           mov   word ptr [esp+024h], di
           mov   word ptr [esp+026h], 0F7F4h
-          call  FUN_00405120
+          call  @FUN_00405120@8
           lea   edx, dword ptr [esp+010h]
           mov   ecx, offset DAT_0040c720        ; <c720>
           mov   dword ptr [esp+01Ch], 000000006h
           mov   word ptr [esp+026h], 07D3Ch
-          call  FUN_00405120
+          call  @FUN_00405120@8
           pop   edi
           pop   esi
           pop   ebp
@@ -5907,25 +5911,25 @@ LAB_004050f8:
           db 090h
           db 090h
           db 090h
-FUN_00404b50 endp
+_FUN_00404b50 endp
 
-FUN_00405100 proc
+@FUN_00405100@4 proc
           push  esi
           mov   esi, ecx
           test  esi, esi
           jnz   LAB_00405116
           mov   edx, 000000A12h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_00405116:     mov   dword ptr [esi], 000000000h
           pop   esi
           ret
 LAB_0040511e:
           db 090h
           db 090h
-FUN_00405100 endp
+@FUN_00405100@4 endp
 
-FUN_00405120 proc
+@FUN_00405120@8 proc
           push  ebx
           push  esi
           push  edi
@@ -5943,17 +5947,17 @@ FUN_00405120 proc
           jnz   LAB_0040515b
           mov   edx, 000000A1Bh
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_0040515b:     test  esi, esi
           jnz   LAB_0040516e
           mov   edx, 000000A1Ch
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_0040516e:     cmp   word ptr [DAT_0040c702], 00100h ; <c702>
           jbe   LAB_00405188
           mov   edx, 000000A1Dh
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_00405188:     cmp   dword ptr [edi], 000000000h
           jnz   LAB_00405195
           mov   dword ptr [edi+008h], ebx
@@ -5963,7 +5967,7 @@ LAB_00405195:     cmp   dword ptr [edi+004h], ebx
           jz    LAB_004051a9
           mov   edx, 000000A20h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_004051a9:     mov   eax, dword ptr [edi+004h]
           mov   ecx, 000000009h
           add   eax, 000000024h
@@ -5988,9 +5992,9 @@ LAB_004051db:
           db 090h
           db 090h
           db 090h
-FUN_00405120 endp
+@FUN_00405120@8 endp
 
-FUN_004051e0 proc
+_FUN_004051e0 proc
           push  ecx
           mov   eax, dword ptr [sprites]        ; <c5f8>
           push  esi
@@ -6007,10 +6011,10 @@ FUN_004051e0 proc
           mov   edx, 000000035h
           mov   ecx, 000000011h
           mov   word ptr [esp+010h], ax
-          call  FUN_004026a0
+          call  @FUN_004026a0@6
           mov   ecx, eax
           mov   edx, esi
-          call  updateActorPositionMaybe
+          call  @updateActorPositionMaybe@10
           mov   ecx, dword ptr [sprites]        ; <c5f8>
           mov   eax, dword ptr [esp+008h]
           push  000000000h
@@ -6020,10 +6024,10 @@ FUN_004051e0 proc
           add   eax, edx
           mov   edx, 000000036h
           push  eax
-          call  FUN_004026a0
+          call  @FUN_004026a0@6
           mov   ecx, eax
           mov   edx, esi
-          call  updateActorPositionMaybe
+          call  @updateActorPositionMaybe@10
           mov   eax, dword ptr [sprites]        ; <c5f8>
           mov   cx, word ptr [eax+00000037Ah]
           mov   dx, word ptr [eax+00000038Ah]
@@ -6036,10 +6040,10 @@ LAB_0040526f:     mov   si, word ptr [eax+00000037Ch]
           push  esi
           mov   edx, 000000037h
           mov   ecx, 000000011h
-          call  FUN_004026a0
+          call  @FUN_004026a0@6
           mov   ecx, eax
           mov   edx, edi
-          call  updateActorPositionMaybe
+          call  @updateActorPositionMaybe@10
           mov   eax, dword ptr [sprites]        ; <c5f8>
           mov   edx, 000000038h
           push  000000000h
@@ -6048,10 +6052,10 @@ LAB_0040526f:     mov   si, word ptr [eax+00000037Ch]
           add   esi, ecx
           mov   ecx, 000000011h
           push  esi
-          call  FUN_004026a0
+          call  @FUN_004026a0@6
           mov   ecx, eax
           mov   edx, edi
-          call  updateActorPositionMaybe
+          call  @updateActorPositionMaybe@10
           pop   edi
           pop   esi
           pop   ecx
@@ -6071,9 +6075,9 @@ LAB_004052c2:
           db 090h
           db 090h
           db 090h
-FUN_004051e0 endp
+_FUN_004051e0 endp
 
-initWindows proc
+@initWindows@12 proc
           sub   esp, 00000002Ch
           push  ebx
           push  ebp
@@ -6148,8 +6152,8 @@ LAB_004053a4:     mov   dword ptr [hSkiMainWnd], esi    ; <c6c8>
           pop   ebx
           add   esp, 00000002Ch
           ret   00004h
-LAB_004053b6:     mov   edx, offset timerCallbackFunc   ; <47c0>
-          mov   dword ptr [timerCallbackFuncPtr], offset timerCallbackFunc      ; <c940>
+LAB_004053b6:     mov   edx, offset _timerCallbackFunc  ; <47c0>
+          mov   dword ptr [timerCallbackFuncPtr], offset _timerCallbackFunc     ; <c940>
           test  edx, edx
           jnz   LAB_004053d5
           pop   edi
@@ -6161,42 +6165,42 @@ LAB_004053b6:     mov   edx, offset timerCallbackFunc   ; <47c0>
           ret   00004h
 LAB_004053d5:     cmp   dword ptr [isSoundDisabled], esi        ; <c794>
           jnz   LAB_00405475
-          call  loadSoundFunc
+          call  _loadSoundFunc
           test  eax, eax
           jz    LAB_00405475
           mov   edx, offset sound_1.soundResource       ; <c6c0>
           mov   ecx, 000000001h
-          call  loadSound
+          call  @loadSound@8
           mov   edx, offset sound_2.soundResource       ; <c768>
           mov   ecx, 000000002h
-          call  loadSound
+          call  @loadSound@8
           mov   edx, offset sound_3.soundResource       ; <c5d0>
           mov   ecx, 000000003h
-          call  loadSound
+          call  @loadSound@8
           mov   edx, offset sound_4.soundResource       ; <c718>
           mov   ecx, 000000004h
-          call  loadSound
+          call  @loadSound@8
           mov   edx, offset sound_5.soundResource       ; <c750>
           mov   ecx, 000000005h
-          call  loadSound
+          call  @loadSound@8
           mov   edx, offset sound_6.soundResource       ; <c628>
           mov   ecx, 000000006h
-          call  loadSound
+          call  @loadSound@8
           mov   edx, offset sound_9.soundResource       ; <c6f0>
           mov   ecx, 000000009h
-          call  loadSound
+          call  @loadSound@8
           mov   edx, offset sound_7.soundResource       ; <c6e0>
           mov   ecx, 000000007h
-          call  loadSound
+          call  @loadSound@8
           mov   edx, offset sound_8.soundResource       ; <c608>
           mov   ecx, 000000008h
-          call  loadSound
+          call  @loadSound@8
 LAB_00405475:     cmp   dword ptr [esp+010h], esi
           jnz   LAB_00405532
           push  offset s_iconSki_0040c120       ; <c120>
           push  edi
           mov   dword ptr [esp+01Ch], 000002023h
-          mov   dword ptr [esp+020h], offset skiMainWndProc     ; <5800>
+          mov   dword ptr [esp+020h], offset _skiMainWndProc@16 ; <5800>
           mov   dword ptr [esp+024h], esi
           mov   dword ptr [esp+028h], esi
           mov   dword ptr [esp+02Ch], edi
@@ -6226,7 +6230,7 @@ LAB_00405475:     cmp   dword ptr [esp+010h], esi
           ret   00004h
 LAB_004054f0:     push  000007F00h
           push  esi
-          mov   dword ptr [esp+020h], offset skiStatusWndProc   ; <68d0>
+          mov   dword ptr [esp+020h], offset _skiStatusWndProc@16       ; <68d0>
           mov   dword ptr [esp+030h], esi
           call  ebx
           mov   edx, dword ptr [whiteBrush]     ; <c69c>
@@ -6268,7 +6272,7 @@ LAB_0040554f:     movsx ecx, ax
           sar   eax, 1h
           push  eax
           push  002CF0000h
-          call  getCachedString
+          call  @getCachedString@4
           mov   ebx, dword ptr [__imp__CreateWindowExA@48]      ; <CreateWindowExA>
           push  eax
           push  offset s_skiMain        ; <a190>
@@ -6341,9 +6345,9 @@ LAB_0040561a:
           db 090h
           db 090h
           db 090h
-initWindows endp
+@initWindows@12 endp
 
-loadSoundFunc proc
+_loadSoundFunc proc
           mov   eax, dword ptr [__imp__sndPlaySoundA@8] ; <sndPlaySoundA>
           xor   ecx, ecx
           test  eax, eax
@@ -6364,13 +6368,13 @@ LAB_00405634:
           db 090h
           db 090h
           db 090h
-loadSoundFunc endp
+_loadSoundFunc endp
 
-loadSound proc
+@loadSound@8 proc
           mov   eax, dword ptr [skiFreeHInstance]       ; <c61c>
           push  esi
           and   ecx, 00000FFFFh
-          push  offset s_WAVE ; <c128>
+          push  offset s_WAVE   ; <c128>
           push  ecx
           mov   esi, edx
           push  eax
@@ -6410,9 +6414,9 @@ LAB_00405693:
           db 090h
           db 090h
           db 090h
-loadSound endp
+@loadSound@8 endp
 
-cleanupSound proc
+_cleanupSound proc
           mov   eax, dword ptr [isSoundDisabled]        ; <c794>
           test  eax, eax
           jnz   LAB_00405722
@@ -6428,23 +6432,23 @@ LAB_004056b8:     mov   eax, dword ptr [DAT_0040c78c]   ; <c78c>
           push  eax
           call  dword ptr [__imp__FreeLibrary@4]        ; <FreeLibrary>
 LAB_004056c8:     mov   ecx, offset sound_1.soundResource       ; <c6c0>
-          call  freeSoundResource
+          call  @freeSoundResource@4
           mov   ecx, offset sound_2.soundResource       ; <c768>
-          call  freeSoundResource
+          call  @freeSoundResource@4
           mov   ecx, offset sound_3.soundResource       ; <c5d0>
-          call  freeSoundResource
+          call  @freeSoundResource@4
           mov   ecx, offset sound_4.soundResource       ; <c718>
-          call  freeSoundResource
+          call  @freeSoundResource@4
           mov   ecx, offset sound_5.soundResource       ; <c750>
-          call  freeSoundResource
+          call  @freeSoundResource@4
           mov   ecx, offset sound_6.soundResource       ; <c628>
-          call  freeSoundResource
+          call  @freeSoundResource@4
           mov   ecx, offset sound_9.soundResource       ; <c6f0>
-          call  freeSoundResource
+          call  @freeSoundResource@4
           mov   ecx, offset sound_7.soundResource       ; <c6e0>
-          call  freeSoundResource
+          call  @freeSoundResource@4
           mov   ecx, offset sound_8.soundResource       ; <c608>
-          jmp   freeSoundResource
+          jmp   @freeSoundResource@4
 LAB_00405722:     ret
 LAB_00405723:
           db 090h
@@ -6460,9 +6464,9 @@ LAB_00405723:
           db 090h
           db 090h
           db 090h
-cleanupSound endp
+_cleanupSound endp
 
-freeSoundResource proc
+@freeSoundResource@4 proc
           push  esi
           mov   esi, ecx
           mov   eax, dword ptr [esi+004h]
@@ -6488,16 +6492,16 @@ LAB_00405756:
           db 090h
           db 090h
           db 090h
-freeSoundResource endp
+@freeSoundResource@4 endp
 
-setWindowTitle proc
+_setWindowTitle proc
           mov   eax, dword ptr [isPaused]       ; <c6d0>
           test  eax, eax
           mov   dword ptr [DAT_0040c650], eax   ; <c650>
           jz    LAB_0040579c
-          call  FUN_004057c0
+          call  _FUN_004057c0
           mov   ecx, 000000002h
-          call  getCachedString
+          call  @getCachedString@4
           push  eax
           mov   eax, dword ptr [hSkiMainWnd]    ; <c6c8>
           push  eax
@@ -6509,12 +6513,12 @@ setWindowTitle proc
           call  dword ptr [__imp__InvalidateRect@12]    ; <InvalidateRect>
           ret
 LAB_0040579c:     mov   ecx, 000000001h
-          call  getCachedString
+          call  @getCachedString@4
           mov   edx, dword ptr [hSkiMainWnd]    ; <c6c8>
           push  eax
           push  edx
           call  dword ptr [__imp__SetWindowTextA@8]     ; <SetWindowTextA>
-          jmp   FUN_00404ad0
+          jmp   _FUN_00404ad0
 LAB_004057b9:
           db 090h
           db 090h
@@ -6523,9 +6527,9 @@ LAB_004057b9:
           db 090h
           db 090h
           db 090h
-setWindowTitle endp
+_setWindowTitle endp
 
-FUN_004057c0 proc
+_FUN_004057c0 proc
           mov   eax, dword ptr [hSkiMainWnd]    ; <c6c8>
           test  eax, eax
           jz    LAB_004057f3
@@ -6552,9 +6556,9 @@ LAB_004057f4:
           db 090h
           db 090h
           db 090h
-FUN_004057c0 endp
+_FUN_004057c0 endp
 
-skiMainWndProc proc
+_skiMainWndProc@16 proc
           mov   eax, dword ptr [esp+008h]
           push  esi
           cmp   eax, 000000024h
@@ -6568,41 +6572,41 @@ skiMainWndProc proc
           jmp   dword ptr [edx*4+LAB_004059c4]  ; <59c4>
 LAB_0040582f:     mov   esi, dword ptr [esp+008h]
           mov   ecx, esi
-          call  loadBitmaps
+          call  @loadBitmaps@4
           test  eax, eax
           jnz   LAB_00405845
           or    eax, 0FFFFFFFFh
           pop   esi
           ret   00010h
 LAB_00405845:     mov   ecx, esi
-          call  updateWindowSize
+          call  @updateWindowSize@4
           xor   eax, eax
           pop   esi
           ret   00010h
 LAB_00405852:     mov   ecx, dword ptr [esp+008h]
-          call  handleWindowMoveMessage
+          call  @handleWindowMoveMessage@4
           push  000000000h
           call  dword ptr [__imp__PostQuitMessage@4]    ; <PostQuitMessage>
           xor   eax, eax
           pop   esi
           ret   00010h
 LAB_00405869:     mov   ecx, dword ptr [esp+008h]
-          call  mainWindowPaint
+          call  @mainWindowPaint@4
           xor   eax, eax
           pop   esi
           ret   00010h
 LAB_00405878:     mov   ecx, dword ptr [esp+008h]
-          call  updateWindowSize
+          call  @updateWindowSize@4
           mov   eax, dword ptr [hSkiStatusWnd]  ; <c624>
           test  eax, eax
           jz    LAB_0040588f
-          call  handleWindowSizeMessage
+          call  _handleWindowSizeMessage
 LAB_0040588f:     mov   ecx, dword ptr [esp+010h]
           xor   eax, eax
           cmp   ecx, 000000001h
           setz  al
           mov   dword ptr [isMinimised], eax    ; <c770>
-          call  updateWindowsActiveStatus
+          call  _updateWindowsActiveStatus
           mov   eax, dword ptr [inputEnabled]   ; <c67c>
           test  eax, eax
           jz    LAB_004059bd
@@ -6619,7 +6623,7 @@ LAB_004058c5:     mov   eax, dword ptr [esp+010h]
           mov   edx, dword ptr [esp+008h]
           push  edx
           call  dword ptr [__imp__SetFocus@4]   ; <SetFocus>
-LAB_004058dd:     call  updateWindowsActiveStatus
+LAB_004058dd:     call  _updateWindowsActiveStatus
           xor   eax, eax
           pop   esi
           ret   00010h
@@ -6647,7 +6651,7 @@ LAB_00405915:     cmp   eax, 000000200h
           jz    LAB_004059bd
           mov   edx, dword ptr [esp+014h]
           mov   ecx, dword ptr [esp+010h]
-          call  handleCharMessage
+          call  @handleCharMessage@4
           xor   eax, eax
           pop   esi
           ret   00010h
@@ -6656,7 +6660,7 @@ LAB_0040594d:     mov   eax, dword ptr [inputEnabled]   ; <c67c>
           jz    LAB_004059bd
           mov   edx, dword ptr [esp+014h]
           mov   ecx, dword ptr [esp+010h]
-          call  handleKeydownMessage
+          call  @handleKeydownMessage@4
           xor   eax, eax
           pop   esi
           ret   00010h
@@ -6666,7 +6670,7 @@ LAB_00405969:     mov   eax, dword ptr [inputEnabled]   ; <c67c>
           mov   ecx, dword ptr [esp+014h]
           mov   edx, ecx
           shr   edx, 010h
-          call  handleMouseMoveMessage
+          call  @handleMouseMoveMessage@4
           xor   eax, eax
           pop   esi
           ret   00010h
@@ -6688,7 +6692,7 @@ LAB_00405995:     mov   ecx, dword ptr [esp+014h]
 LAB_004059af:     mov   eax, dword ptr [inputEnabled]   ; <c67c>
           test  eax, eax
           jz    LAB_004059bd
-          call  FUN_004066d0
+          call  _FUN_004066d0
 LAB_004059bd:     xor   eax, eax
           pop   esi
           ret   00010h
@@ -6751,9 +6755,9 @@ LAB_004059e0:
           db 090h
           db 090h
           db 090h
-skiMainWndProc endp
+_skiMainWndProc@16 endp
 
-updateWindowsActiveStatus proc
+_updateWindowsActiveStatus proc
           mov   eax, dword ptr [mainWndActivationFlags] ; <c694>
           test  eax, eax
           jz    LAB_00405a31
@@ -6761,12 +6765,12 @@ updateWindowsActiveStatus proc
           test  eax, eax
           jnz   LAB_00405a31
           mov   dword ptr [inputEnabled], 000000001h    ; <c67c>
-          jmp   FUN_00404ad0
+          jmp   _FUN_00404ad0
 LAB_00405a31:     mov   dword ptr [inputEnabled], 000000000h    ; <c67c>
-          jmp   FUN_004057c0
-updateWindowsActiveStatus endp
+          jmp   _FUN_004057c0
+_updateWindowsActiveStatus endp
 
-loadBitmaps proc
+@loadBitmaps@4 proc
           push  ecx
           call  dword ptr [__imp__GetDC@4]      ; <GetDC>
           xor   edx, edx
@@ -6786,20 +6790,20 @@ LAB_00405a55:     mov   ecx, eax
           mov   dword ptr [DAT_0040c644], edx   ; <c644>
           mov   dword ptr [DAT_0040c75c], edx   ; <c75c>
           mov   dword ptr [DAT_0040c614], edx   ; <c614>
-          call  createBitmapSheets
+          call  @createBitmapSheets@4
           test  eax, eax
           jnz   LAB_00405aa9
           mov   ecx, offset s_bitmap_load_error_message ; <c130>
-          call  showErrorMessage
+          call  @showErrorMessage@4
           xor   eax, eax
           ret
 LAB_00405aa9:     mov   eax, 000000001h
           ret
 LAB_00405aaf:
           db 090h
-loadBitmaps endp
+@loadBitmaps@4 endp
 
-createBitmapSheets proc
+@createBitmapSheets@4 proc
           sub   esp, 000000034h
           mov   eax, dword ptr [sprites]        ; <c5f8>
           push  ebx
@@ -6828,7 +6832,7 @@ createBitmapSheets proc
           mov   edi, 000000001h
           mov   word ptr [edx+00Eh], bx
 LAB_00405b13:     mov   ecx, edi
-          call  loadBitmapResource
+          call  @loadBitmapResource@4
           mov   esi, eax
           cmp   esi, ebx
           jz    LAB_00405e7d
@@ -7039,7 +7043,7 @@ LAB_00405d00:     mov   edx, dword ptr [sprites]        ; <c5f8>
           mov   ecx, ebx
           shl   esi, 004h
           add   esi, edx
-          call  loadBitmapResource
+          call  @loadBitmapResource@4
           test  eax, eax
           mov   dword ptr [esp+018h], eax
           jz    LAB_00405e7d
@@ -7183,9 +7187,9 @@ LAB_00405e94:
           db 090h
           db 090h
           db 090h
-createBitmapSheets endp
+@createBitmapSheets@4 endp
 
-loadBitmapResource proc
+@loadBitmapResource@4 proc
           mov   eax, dword ptr [skiFreeHInstance]       ; <c61c>
           and   ecx, 00000FFFFh
           push  ecx
@@ -7205,14 +7209,14 @@ LAB_00405eb4:
           db 090h
           db 090h
           db 090h
-loadBitmapResource endp
+@loadBitmapResource@4 endp
 
-handleWindowMoveMessage proc
+@handleWindowMoveMessage@4 proc
           mov   eax, dword ptr [mainWindowDC]   ; <c63c>
           push  eax
           push  ecx
           call  dword ptr [__imp__ReleaseDC@8]  ; <ReleaseDC>
-          call  FUN_004057c0
+          call  _FUN_004057c0
           jmp   LAB_00405ee0
 LAB_00405ed7:
           db 090h
@@ -7304,9 +7308,9 @@ LAB_00405f9c:     pop   edi
           ret
 LAB_00405f9f:
           db 090h
-handleWindowMoveMessage endp
+@handleWindowMoveMessage@4 endp
 
-updateWindowSize proc
+@updateWindowSize@4 proc
           push  ebx
           push  ebp
           push  esi
@@ -7331,7 +7335,7 @@ updateWindowSize proc
           mov   edx, esi
           mov   ecx, eax
           sar   ecx, 1h
-          call  FUN_00406060
+          call  @FUN_00406060@4
           mov   ebp, dword ptr [tagRECT_0040c6b0.top]   ; <c6b4>
           mov   esi, dword ptr [tagRECT_0040c6b0.bottom]        ; <c6bc>
           mov   ecx, dword ptr [tagRECT_0040c6b0.right] ; <c6b8>
@@ -7372,9 +7376,9 @@ LAB_00406053:
           db 090h
           db 090h
           db 090h
-updateWindowSize endp
+@updateWindowSize@4 endp
 
-FUN_00406060 proc
+@FUN_00406060@4 proc
           push  ebx
           push  esi
           mov   esi, dword ptr [PTR_0040c618]   ; <c618>
@@ -7391,7 +7395,7 @@ LAB_00406073:     mov   eax, dword ptr [esi+04Ch]
           test  al, 001h
           jz    LAB_0040608b
           mov   ecx, esi
-          call  FUN_00402220
+          call  @FUN_00402220@4
           jmp   LAB_0040608d
 LAB_0040608b:     mov   eax, esi
 LAB_0040608d:     and   dword ptr [eax+04Ch], 0FFFFFFFBh
@@ -7412,9 +7416,9 @@ LAB_004060a9:
           db 090h
           db 090h
           db 090h
-FUN_00406060 endp
+@FUN_00406060@4 endp
 
-mainWindowPaint proc
+@mainWindowPaint@4 proc
           sub   esp, 000000040h
           lea   eax, dword ptr [esp+000h]
           push  esi
@@ -7431,7 +7435,7 @@ mainWindowPaint proc
           call  dword ptr [__imp__FillRect@12]  ; <FillRect>
           lea   edx, dword ptr [esp+00Ch]
           mov   ecx, dword ptr [esp+004h]
-          call  paintActors
+          call  @paintActors@8
           lea   ecx, dword ptr [esp+004h]
           push  ecx
           push  esi
@@ -7449,9 +7453,9 @@ LAB_004060f7:
           db 090h
           db 090h
           db 090h
-mainWindowPaint endp
+@mainWindowPaint@4 endp
 
-paintActors proc
+@paintActors@8 proc
           push  ebp
           mov   ebp, ecx
           push  esi
@@ -7461,12 +7465,12 @@ paintActors proc
           jnz   LAB_0040611a
           mov   edx, 000000543h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_0040611a:     test  edi, edi
           jnz   LAB_0040612d
           mov   edx, 000000544h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_0040612d:     mov   esi, dword ptr [PTR_0040c618]   ; <c618>
           test  esi, esi
           jz    LAB_00406164
@@ -7475,10 +7479,10 @@ LAB_00406137:     test  byte ptr [esi+04Ch], 004h
           lea   eax, dword ptr [esi+020h]
           jmp   LAB_00406149
 LAB_00406142:     mov   ecx, esi
-          call  FUN_00401410
+          call  @FUN_00401410@4
 LAB_00406149:     mov   edx, edi
           mov   ecx, eax
-          call  doRectsOverlap
+          call  @doRectsOverlap@8
           test  eax, eax
           jz    LAB_0040615e
           mov   eax, dword ptr [esi+04Ch]
@@ -7492,10 +7496,10 @@ LAB_00406164:     mov   edx, edi
           mov   ecx, ebp
           pop   esi
           pop   ebp
-          jmp   drawWindow
-paintActors endp
+          jmp   @drawWindow@8
+@paintActors@8 endp
 
-handleKeydownMessage proc
+@handleKeydownMessage@4 proc
           lea   eax, dword ptr [ecx-00Dh]
           push  esi
           cmp   eax, 000000065h
@@ -7510,7 +7514,7 @@ LAB_00406188:     mov   eax, dword ptr [hSkiMainWnd]    ; <c6c8>
           pop   esi
           ret
 LAB_00406198:     pop   esi
-          jmp   setWindowTitle
+          jmp   _setWindowTitle
 LAB_0040619e:     mov   eax, dword ptr [playerActorMaybe]       ; <c72c>
           test  eax, eax
           jnz   LAB_004063a3
@@ -7536,7 +7540,7 @@ LAB_004061f3:     cmp   esi, 000000016h
           jb    LAB_0040620c
           mov   edx, 000000F63h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
           mov   eax, dword ptr [playerActorMaybe]       ; <c72c>
 LAB_0040620c:     mov   esi, dword ptr [esi*8+DAT_0040a258]     ; <a258>
           cmp   esi, 000000007h
@@ -7552,7 +7556,7 @@ LAB_00406236:     cmp   esi, 000000016h
           jb    LAB_0040624f
           mov   edx, 000000F6Bh
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
           mov   eax, dword ptr [playerActorMaybe]       ; <c72c>
 LAB_0040624f:     mov   esi, dword ptr [esi*8+DAT_0040a25c]     ; <a25c>
           cmp   esi, 000000008h
@@ -7633,13 +7637,13 @@ LAB_0040636f:     mov   ecx, dword ptr [eax+01Ch]
           jz    LAB_004063a3
           mov   edx, esi
           mov   ecx, eax
-          call  FUN_00402120
+          call  @FUN_00402120@8
           mov   eax, dword ptr [DAT_0040c610]   ; <c610>
           test  eax, eax
           jz    LAB_004063a3
           mov   ecx, dword ptr [mainWindowDC]   ; <c63c>
           mov   edx, offset tagRECT_0040c6b0.left       ; <c6b0>
-          call  drawWindow
+          call  @drawWindow@8
           mov   dword ptr [DAT_0040c610], 000000000h    ; <c610>
 LAB_004063a3:     pop   esi
           ret
@@ -7874,19 +7878,19 @@ DAT_004064f0  dword offset LAB_0040636f
 DAT_004064f4  dword offset LAB_0040636f
 DAT_004064f8  dword offset LAB_00406293
 DAT_004064fc  dword offset LAB_004062ce
-LAB_00406500:     call  resetGame
+LAB_00406500:     call  _resetGame
           test  eax, eax
           jz    LAB_0040653e
           mov   eax, dword ptr [DAT_0040c650]   ; <c650>
           test  eax, eax
           jz    LAB_00406517
-          call  setWindowTitle
+          call  _setWindowTitle
 LAB_00406517:     mov   eax, dword ptr [hSkiMainWnd]    ; <c6c8>
           push  000000001h
           push  000000000h
           push  eax
           call  dword ptr [__imp__InvalidateRect@12]    ; <InvalidateRect>
-          call  FUN_00404a80
+          call  _FUN_00404a80
           test  eax, eax
           jz    LAB_0040653e
           mov   ecx, dword ptr [hSkiMainWnd]    ; <c6c8>
@@ -7902,9 +7906,9 @@ LAB_0040654c:
           db 090h
           db 090h
           db 090h
-handleKeydownMessage endp
+@handleKeydownMessage@4 endp
 
-handleMouseMoveMessage proc
+@handleMouseMoveMessage@4 proc
           mov   eax, dword ptr [DAT_0040c760]   ; <c760>
           push  esi
           push  edi
@@ -7934,12 +7938,12 @@ LAB_00406571:     mov   eax, dword ptr [playerActorMaybe]       ; <c72c>
           cmp   word ptr [eax+044h], 000000000h
           pop   ebx
           jnz   LAB_004065ab
-          call  getSkierGroundSpriteFromMousePosition
+          call  @getSkierGroundSpriteFromMousePosition@4
           jmp   LAB_004065b0
-LAB_004065ab:     call  getSkierInAirSpriteFromMousePosition
+LAB_004065ab:     call  @getSkierInAirSpriteFromMousePosition@4
 LAB_004065b0:     mov   ecx, dword ptr [playerActorMaybe]       ; <c72c>
           mov   edx, eax
-          call  FUN_00402120
+          call  @FUN_00402120@8
 LAB_004065bd:     mov   word ptr [prevMouseX], di       ; <c700>
           mov   word ptr [prevMouseY], si       ; <c70c>
           pop   edi
@@ -7955,9 +7959,9 @@ LAB_004065d8:
           db 090h
           db 090h
           db 090h
-handleMouseMoveMessage endp
+@handleMouseMoveMessage@4 endp
 
-getSkierGroundSpriteFromMousePosition proc
+@getSkierGroundSpriteFromMousePosition@4 proc
           test  dx, dx
           jle   LAB_00406655
           test  cx, cx
@@ -8023,9 +8027,9 @@ LAB_00406664:
           db 090h
           db 090h
           db 090h
-getSkierGroundSpriteFromMousePosition endp
+@getSkierGroundSpriteFromMousePosition@4 endp
 
-getSkierInAirSpriteFromMousePosition proc
+@getSkierInAirSpriteFromMousePosition@4 proc
           test  cx, cx
           jge   LAB_0040669f
           test  dx, dx
@@ -8074,9 +8078,9 @@ LAB_004066c5:
           db 090h
           db 090h
           db 090h
-getSkierInAirSpriteFromMousePosition endp
+@getSkierInAirSpriteFromMousePosition@4 endp
 
-FUN_004066d0 proc
+_FUN_004066d0 proc
           mov   ecx, dword ptr [playerActorMaybe]       ; <c72c>
           test  ecx, ecx
           jnz   LAB_004066df
@@ -8107,13 +8111,13 @@ LAB_0040672a:     mov   edx, 000000014h
 LAB_00406731:     mov   edx, 000000015h
 LAB_00406736:     cmp   edx, dword ptr [ecx+01Ch]
           jz    LAB_00406763
-          call  FUN_00402120
+          call  @FUN_00402120@8
           mov   eax, dword ptr [DAT_0040c610]   ; <c610>
           test  eax, eax
           jz    LAB_00406763
           mov   ecx, dword ptr [mainWindowDC]   ; <c63c>
           mov   edx, offset tagRECT_0040c6b0.left       ; <c6b0>
-          call  drawWindow
+          call  @drawWindow@8
           mov   dword ptr [DAT_0040c610], 000000000h    ; <c610>
 LAB_00406763:     ret
 LAB_00406764:
@@ -8124,16 +8128,16 @@ DAT_00406770  dword offset LAB_00406736
 DAT_00406774  dword offset LAB_00406736
 DAT_00406778  dword offset LAB_0040671c
 DAT_0040677c  dword offset LAB_00406723
-FUN_004066d0 endp
+_FUN_004066d0 endp
 
-handleCharMessage proc
+@handleCharMessage@4 proc
           lea   eax, dword ptr [ecx-058h]
           cmp   eax, 000000021h
           ja    LAB_0040684a
           xor   ecx, ecx
           mov   cl, byte ptr [eax+LAB_0040686c] ; <686c>
           jmp   dword ptr [ecx*4+LAB_0040684c]  ; <684c>
-LAB_0040679b:     jmp   timerUpdateFunc
+LAB_0040679b:     jmp   _timerUpdateFunc
 LAB_004067a0:     mov   eax, dword ptr [DAT_0040c670]   ; <c670>
           xor   edx, edx
           test  eax, eax
@@ -8142,7 +8146,7 @@ LAB_004067a0:     mov   eax, dword ptr [DAT_0040c670]   ; <c670>
           ret
 LAB_004067b3:     mov   ecx, dword ptr [mainWindowDC]   ; <c63c>
           mov   edx, offset tagRECT_0040c6b0.left       ; <c6b0>
-          jmp   drawWindow
+          jmp   @drawWindow@8
 LAB_004067c3:     mov   ecx, dword ptr [playerActorMaybe]       ; <c72c>
           test  ecx, ecx
           jz    LAB_0040684a
@@ -8152,7 +8156,7 @@ LAB_004067c3:     mov   ecx, dword ptr [playerActorMaybe]       ; <c72c>
           push  edx
           mov   dx, word ptr [ecx+040h]
           add   dx, 000000002h
-          call  updateActorPositionMaybe
+          call  @updateActorPositionMaybe@10
           ret
 LAB_004067e5:     mov   ecx, dword ptr [playerActorMaybe]       ; <c72c>
           test  ecx, ecx
@@ -8163,7 +8167,7 @@ LAB_004067e5:     mov   ecx, dword ptr [playerActorMaybe]       ; <c72c>
           push  edx
           mov   dx, word ptr [ecx+040h]
           sub   dx, 000000002h
-          call  updateActorPositionMaybe
+          call  @updateActorPositionMaybe@10
           ret
 LAB_00406807:     mov   ecx, dword ptr [playerActorMaybe]       ; <c72c>
           test  ecx, ecx
@@ -8174,7 +8178,7 @@ LAB_00406807:     mov   ecx, dword ptr [playerActorMaybe]       ; <c72c>
           push  eax
           push  edx
           mov   dx, word ptr [ecx+040h]
-          call  updateActorPositionMaybe
+          call  @updateActorPositionMaybe@10
           ret
 LAB_00406829:     mov   ecx, dword ptr [playerActorMaybe]       ; <c72c>
           test  ecx, ecx
@@ -8185,7 +8189,7 @@ LAB_00406829:     mov   ecx, dword ptr [playerActorMaybe]       ; <c72c>
           push  eax
           push  edx
           mov   dx, word ptr [ecx+040h]
-          call  updateActorPositionMaybe
+          call  @updateActorPositionMaybe@10
 LAB_0040684a:     ret
 LAB_0040684b:
           db 090h
@@ -8235,9 +8239,9 @@ LAB_0040686c:
           db 006h
           db 090h
           db 090h
-handleCharMessage endp
+@handleCharMessage@4 endp
 
-handleWindowSizeMessage proc
+_handleWindowSizeMessage proc
           mov   cx, word ptr [statusWindowHeight]       ; <c66a>
           mov   eax, dword ptr [statusWindowTotalTextWidth]     ; <c66c>
           add   cx, 000000004h
@@ -8263,9 +8267,9 @@ LAB_004068ca:
           db 090h
           db 090h
           db 090h
-handleWindowSizeMessage endp
+_handleWindowSizeMessage endp
 
-skiStatusWndProc proc
+_skiStatusWndProc@16 proc
           push  esi
           mov   esi, dword ptr [esp+00Ch]
           push  edi
@@ -8277,19 +8281,19 @@ skiStatusWndProc proc
           mov   cl, byte ptr [eax+LAB_0040695c] ; <695c>
           jmp   dword ptr [ecx*4+LAB_00406948]  ; <6948>
 LAB_004068f1:     mov   ecx, dword ptr [esp+00Ch]
-          call  paintStatusWindow
+          call  @paintStatusWindow@4
           pop   edi
           xor   eax, eax
           pop   esi
           ret   00010h
 LAB_00406901:     mov   ecx, dword ptr [esp+00Ch]
-          call  statusWindowReleaseDC
+          call  @statusWindowReleaseDC@4
           pop   edi
           xor   eax, eax
           pop   esi
           ret   00010h
 LAB_00406911:     mov   ecx, edi
-          call  calculateStatusWindowDimensions
+          call  @calculateStatusWindowDimensions@4
           test  eax, eax
           jnz   LAB_00406924
           pop   edi
@@ -8338,9 +8342,9 @@ LAB_0040695c:
           db 090h
           db 090h
           db 090h
-skiStatusWndProc endp
+_skiStatusWndProc@16 endp
 
-paintStatusWindow proc
+@paintStatusWindow@4 proc
           sub   esp, 000000044h
           push  esi
           push  edi
@@ -8358,7 +8362,7 @@ paintStatusWindow proc
           push  ecx
           call  dword ptr [__imp__FrameRect@12] ; <FrameRect>
           mov   ecx, 000000003h
-          call  getCachedString
+          call  @getCachedString@4
           mov   esi, dword ptr [__imp__lstrlenA@4]      ; <lstrlenA>
           push  eax
           call  esi
@@ -8367,12 +8371,12 @@ paintStatusWindow proc
           push  eax
           push  edx
           push  000000002h
-          call  getCachedString
+          call  @getCachedString@4
           mov   ecx, dword ptr [esp+018h]
           mov   edx, eax
-          call  drawText
+          call  @drawText@18
           mov   ecx, 000000004h
-          call  getCachedString
+          call  @getCachedString@4
           push  eax
           call  esi
           mov   ecx, 000000004h
@@ -8380,12 +8384,12 @@ paintStatusWindow proc
           lea   eax, dword ptr [esp+00Ch]
           push  eax
           push  000000002h
-          call  getCachedString
+          call  @getCachedString@4
           mov   ecx, dword ptr [esp+018h]
           mov   edx, eax
-          call  drawText
+          call  @drawText@18
           mov   ecx, 000000005h
-          call  getCachedString
+          call  @getCachedString@4
           push  eax
           call  esi
           lea   ecx, dword ptr [esp+008h]
@@ -8393,12 +8397,12 @@ paintStatusWindow proc
           push  ecx
           push  000000002h
           mov   ecx, 000000005h
-          call  getCachedString
+          call  @getCachedString@4
           mov   ecx, dword ptr [esp+018h]
           mov   edx, eax
-          call  drawText
+          call  @drawText@18
           mov   ecx, 000000006h
-          call  getCachedString
+          call  @getCachedString@4
           push  eax
           call  esi
           lea   edx, dword ptr [esp+008h]
@@ -8406,12 +8410,12 @@ paintStatusWindow proc
           push  eax
           push  edx
           push  000000002h
-          call  getCachedString
+          call  @getCachedString@4
           mov   ecx, dword ptr [esp+018h]
           mov   edx, eax
-          call  drawText
+          call  @drawText@18
           mov   ecx, dword ptr [esp+00Ch]
-          call  formatAndPrintStatusStrings
+          call  @formatAndPrintStatusStrings@4
           lea   eax, dword ptr [esp+00Ch]
           push  eax
           push  edi
@@ -8424,9 +8428,9 @@ LAB_00406a6d:
           db 090h
           db 090h
           db 090h
-paintStatusWindow endp
+@paintStatusWindow@4 endp
 
-calculateStatusWindowDimensions proc
+@calculateStatusWindowDimensions@4 proc
           sub   esp, 000000040h
           push  esi
           xor   esi, esi
@@ -8459,94 +8463,94 @@ LAB_00406ab8:     mov   edx, dword ptr [statusWindowDC] ; <c6cc>
           mov   ecx, 000000003h
           mov   ax, word ptr [esp+00Ch]
           mov   word ptr [textLineHeight], ax   ; <c668>
-          call  getCachedString
+          call  @getCachedString@4
           mov   esi, dword ptr [__imp__lstrlenA@4]      ; <lstrlenA>
           push  eax
           call  esi
           mov   ecx, 000000003h
           push  eax
-          call  getCachedString
+          call  @getCachedString@4
           mov   ecx, dword ptr [statusWindowDC] ; <c6cc>
           lea   edx, dword ptr [esp+008h]
           push  eax
-          call  statusWindowFindLongestTextString
+          call  @statusWindowFindLongestTextString@16
           mov   ecx, 000000004h
-          call  getCachedString
+          call  @getCachedString@4
           push  eax
           call  esi
           mov   ecx, 000000004h
           push  eax
-          call  getCachedString
+          call  @getCachedString@4
           mov   ecx, dword ptr [statusWindowDC] ; <c6cc>
           lea   edx, dword ptr [esp+008h]
           push  eax
-          call  statusWindowFindLongestTextString
+          call  @statusWindowFindLongestTextString@16
           mov   ecx, 000000005h
-          call  getCachedString
+          call  @getCachedString@4
           push  eax
           call  esi
           mov   ecx, 000000005h
           push  eax
-          call  getCachedString
+          call  @getCachedString@4
           mov   ecx, dword ptr [statusWindowDC] ; <c6cc>
           lea   edx, dword ptr [esp+008h]
           push  eax
-          call  statusWindowFindLongestTextString
+          call  @statusWindowFindLongestTextString@16
           mov   ecx, 000000006h
-          call  getCachedString
+          call  @getCachedString@4
           push  eax
           call  esi
           mov   ecx, 000000006h
           push  eax
-          call  getCachedString
+          call  @getCachedString@4
           mov   ecx, dword ptr [statusWindowDC] ; <c6cc>
           lea   edx, dword ptr [esp+008h]
           push  eax
-          call  statusWindowFindLongestTextString
+          call  @statusWindowFindLongestTextString@16
           mov   ecx, 000000007h
-          call  getCachedString
+          call  @getCachedString@4
           push  eax
           call  esi
           mov   ecx, 000000007h
           push  eax
-          call  getCachedString
+          call  @getCachedString@4
           mov   ecx, dword ptr [statusWindowDC] ; <c6cc>
           lea   edx, dword ptr [esp+00Ch]
           push  eax
-          call  statusWindowFindLongestTextString
+          call  @statusWindowFindLongestTextString@16
           mov   ecx, 000000008h
-          call  getCachedString
+          call  @getCachedString@4
           push  eax
           call  esi
           mov   ecx, 000000008h
           push  eax
-          call  getCachedString
+          call  @getCachedString@4
           mov   ecx, dword ptr [statusWindowDC] ; <c6cc>
           lea   edx, dword ptr [esp+00Ch]
           push  eax
-          call  statusWindowFindLongestTextString
+          call  @statusWindowFindLongestTextString@16
           mov   ecx, 000000009h
-          call  getCachedString
+          call  @getCachedString@4
           push  eax
           call  esi
           mov   ecx, 000000009h
           push  eax
-          call  getCachedString
+          call  @getCachedString@4
           mov   ecx, dword ptr [statusWindowDC] ; <c6cc>
           push  eax
           lea   edx, dword ptr [esp+010h]
-          call  statusWindowFindLongestTextString
+          call  @statusWindowFindLongestTextString@16
           mov   ecx, 00000000Ah
-          call  getCachedString
+          call  @getCachedString@4
           push  eax
           call  esi
           mov   ecx, 00000000Ah
           push  eax
-          call  getCachedString
+          call  @getCachedString@4
           mov   ecx, dword ptr [statusWindowDC] ; <c6cc>
           lea   edx, dword ptr [esp+00Ch]
           push  eax
-          call  statusWindowFindLongestTextString
+          call  @statusWindowFindLongestTextString@16
           mov   ecx, dword ptr [textLineHeight] ; <c668>
           mov   eax, dword ptr [esp+004h]
           pop   esi
@@ -8559,9 +8563,9 @@ LAB_00406ab8:     mov   edx, dword ptr [statusWindowDC] ; <c6cc>
           mov   eax, 000000001h
           add   esp, 000000040h
           ret
-calculateStatusWindowDimensions endp
+@calculateStatusWindowDimensions@4 endp
 
-statusWindowFindLongestTextString proc
+@statusWindowFindLongestTextString@16 proc
           sub   esp, 000000008h
           lea   eax, dword ptr [esp+000h]
           push  esi
@@ -8582,9 +8586,9 @@ LAB_00406c78:     pop   esi
           ret   00008h
 LAB_00406c7f:
           db 090h
-statusWindowFindLongestTextString endp
+@statusWindowFindLongestTextString@16 endp
 
-statusWindowReleaseDC proc
+@statusWindowReleaseDC@4 proc
           mov   eax, dword ptr [hSkiStatusWnd]  ; <c624>
           push  esi
           mov   esi, ecx
@@ -8592,7 +8596,7 @@ statusWindowReleaseDC proc
           jz    LAB_00406c9b
           mov   edx, 000001123h
           mov   ecx, offset sourceFilename      ; <c090>
-          call  assertFailed
+          call  @assertFailed@8
 LAB_00406c9b:     mov   eax, dword ptr [statusWindowFont]       ; <c664>
           test  eax, eax
           jz    LAB_00406cb1
@@ -8622,6 +8626,6 @@ LAB_00406cc1:
           db 090h
           db 090h
           db 090h
-statusWindowReleaseDC endp
+@statusWindowReleaseDC@4 endp
 
 end

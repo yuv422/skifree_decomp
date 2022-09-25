@@ -94,242 +94,215 @@ EXTERN __imp__SetWindowPos@28: far
 EXTERN __imp__IsIconic@4: far
 EXTERN __imp__LoadIconA@8: far
 EXTERN __imp__sndPlaySoundA@8: far
-EXTERN s_skiMain: far
-EXTERN s_skiStatus: far
-EXTERN unk_array_0040a1ac: far
-EXTERN DAT_0040a22c: far
-EXTERN DAT_0040a258: far
-EXTERN DAT_0040a25c: far
-EXTERN DAT_0040a308: far
-EXTERN UINT_ARRAY_0040a434: far
-EXTERN DAT_0040a490: far
-EXTERN DAT_0040a4e0: far
-EXTERN DAT_0040a560: far
-EXTERN not_enough_space_for_arg_str: far
-EXTERN floating_point_not_loaded_str: far
-EXTERN microsoft_visual_str: far
-EXTERN s_runtime_error: far
-EXTERN DAT_0040a83c: far
-EXTERN s_program_name_unknown: far
-EXTERN DAT_0040a858: far
-EXTERN DAT_0040a85c: far
-EXTERN DAT_0040a860: far
-EXTERN s_GetLastActivePopup_0040a86c: far
-EXTERN s_GetActiveWindow_0040a880: far
-EXTERN s_MessageBoxA_0040a890: far
-EXTERN s_user32_dll: far
-EXTERN DAT_0040a8a8: far
-EXTERN DWORD_0040a8c0: far
-EXTERN DAT_0040c000: far
-EXTERN DAT_0040c004: far
-EXTERN DAT_0040c008: far
-EXTERN DAT_0040c010: far
-EXTERN DAT_0040c014: far
-EXTERN DAT_0040c018: far
-EXTERN DAT_0040c01c: far
-EXTERN DAT_0040c020: far
-EXTERN DAT_0040c030: far
-EXTERN DAT_0040c044: far
-EXTERN entpack_ini_section_name_ski: far
-EXTERN s_entpack_ini: far
-EXTERN sourceFilename: far
-EXTERN s_Assertion_Failed_0040c0a8: far
-EXTERN s_assertErrorFormat: far
-EXTERN s_out_o_memory: far
-EXTERN iniSsConfigKey: far
-EXTERN DAT_0040c0dc: far
-EXTERN DAT_0040c0e0: far
-EXTERN stylePointsFormatString: far
-EXTERN DAT_0040c0ec: far
-EXTERN iniFsConfigKey: far
-EXTERN iniGsConfigKey: far
-EXTERN s_nosound_0040c0fc: far
-EXTERN s_insufficient_local_memory: far
-EXTERN s_iconSki_0040c120: far
-EXTERN s_WAVE: far
-EXTERN s_bitmap_load_error_message: far
-EXTERN _holdrand: far
-EXTERN DAT_0040c174: far
-EXTERN ___pctype: far
-EXTERN DAT_0040c182: far
-EXTERN DAT_0040c183: far
-EXTERN ___mb_cur_max: far
-EXTERN DAT_0040c390: far
-EXTERN DAT_0040c398: far
-EXTERN DAT_0040c39c: far
-EXTERN DAT_0040c3bc: far
-EXTERN DAT_0040c3c8: far
-EXTERN DAT_0040c408: far
-EXTERN DAT_0040c40c: far
-EXTERN DAT_0040c410: far
-EXTERN DAT_0040c414: far
-EXTERN DAT_0040c424: far
-EXTERN DAT_0040c428: far
-EXTERN DAT_0040c42c: far
-EXTERN DAT_0040c430: far
-EXTERN DAT_0040c438: far
-EXTERN ptr_floating_p_str: far
-EXTERN DAT_0040c440: far
-EXTERN PTR_s_not_enough_space_for_arg: far
-EXTERN __rgctypeflag: far
-EXTERN __rgcode_page_info: far
-EXTERN DAT_0040c4d4: far
-EXTERN DAT_0040c4d8: far
-EXTERN DAT_0040c4dc: far
-EXTERN DAT_0040c4e0: far
-EXTERN DAT_0040c4e1: far
-EXTERN DAT_0040c4e2: far
-EXTERN DAT_0040c4e3: far
-EXTERN DAT_0040c4e8: far
-EXTERN DAT_0040c500: far
-EXTERN DAT_0040c5c0: far
-EXTERN sound_3:Sound
-EXTERN DAT_0040c5d8: far
-EXTERN statusWindowLastUpdateTime: far
-EXTERN DAT_0040c5e0: far
-EXTERN DAT_0040c5ec: far
-EXTERN SHORT_0040c5f0: far
-EXTERN DAT_0040c5f2: far
-EXTERN timerFrameDurationInMillis: far
-EXTERN sprites: far
-EXTERN skierScreenYOffset: far
-EXTERN DAT_0040c600: far
-EXTERN sound_8:Sound
-EXTERN DAT_0040c610: far
-EXTERN DAT_0040c614: far
-EXTERN PTR_0040c618: far
-EXTERN skiFreeHInstance: far
-EXTERN DAT_0040c620: far
-EXTERN hSkiStatusWnd: far
-EXTERN sound_6:Sound
-EXTERN DAT_0040c630: far
-EXTERN mainWindowDC: far
-EXTERN DAT_0040c640: far
-EXTERN DAT_0040c644: far
-EXTERN DAT_0040c648: far
-EXTERN PTR_0040c64c: far
-EXTERN DAT_0040c650: far
-EXTERN DAT_0040c658: far
-EXTERN statusWindowFont: far
-EXTERN textLineHeight: far
-EXTERN statusWindowHeight: far
-EXTERN statusWindowTotalTextWidth: far
-EXTERN statusWindowLabelWidth: far
-EXTERN DAT_0040c670: far
-EXTERN stringCache: far
-EXTERN updateTimerDurationMillis: far
-EXTERN inputEnabled: far
-EXTERN DAT_0040c680: far
-EXTERN DAT_0040c684: far
-EXTERN DAT_0040c688: far
-EXTERN DAT_0040c68c: far
-EXTERN DAT_0040c690: far
-EXTERN mainWndActivationFlags: far
-EXTERN currentTickCount: far
-EXTERN whiteBrush: far
-EXTERN SCREEN_WIDTH: far
-EXTERN DAT_0040c6a4: far
-EXTERN stylePoints: far
-EXTERN tagRECT_0040c6b0:tagRECT
-EXTERN sound_1:Sound
-EXTERN hSkiMainWnd: far
-EXTERN statusWindowDC: far
-EXTERN isPaused: far
-EXTERN DAT_0040c6d4: far
-EXTERN DAT_0040c6d8: far
-EXTERN sound_7:Sound
-EXTERN DAT_0040c6e8: far
-EXTERN DAT_0040c6ec: far
-EXTERN sound_9:Sound
-EXTERN DAT_0040c6f8: far
-EXTERN DAT_0040c6fc: far
-EXTERN prevMouseX: far
-EXTERN DAT_0040c702: far
-EXTERN skierScreenXOffset: far
-EXTERN prevTickCount: far
-EXTERN prevMouseY: far
-EXTERN DAT_0040c710: far
-EXTERN DAT_0040c714: far
-EXTERN sound_4:Sound
-EXTERN DAT_0040c720: far
-EXTERN playerActorMaybe: far
-EXTERN DAT_0040c730: far
-EXTERN DAT_0040c738: far
-EXTERN DAT_0040c744: far
-EXTERN DAT_0040c748: far
-EXTERN SCREEN_HEIGHT: far
-EXTERN sound_5:Sound
-EXTERN DAT_0040c758: far
-EXTERN DAT_0040c75c: far
-EXTERN DAT_0040c760: far
-EXTERN sound_2:Sound
-EXTERN isMinimised: far
-EXTERN DAT_0040c778: far
-EXTERN statusWindowNameStrPtr: far
-EXTERN DAT_0040c78c: far
-EXTERN sndPlaySoundAFuncPtr: far
-EXTERN isSoundDisabled: far
-EXTERN _aenvptr: far
-EXTERN _error_mode: far
-EXTERN _osver: far
-EXTERN _winver: far
-EXTERN _winmajor: far
-EXTERN _winminor: far
-EXTERN DAT_0040c7c0: far
-EXTERN DAT_0040c7c4: far
-EXTERN DAT_0040c7cc: far
-EXTERN DAT_0040c7dc: far
-EXTERN _exitFlag: far
-EXTERN ___C_Termination_Done: far
-EXTERN ___C_Exit_Done: far
-EXTERN DAT_0040c7f0: far
-EXTERN DAT_0040c7f4: far
-EXTERN DAT_0040c8f8: far
-EXTERN DAT_0040c8fc: far
-EXTERN DAT_0040c900: far
-EXTERN DAT_0040c904: far
-EXTERN DAT_0040c908: far
-EXTERN DAT_0040c90c: far
-EXTERN DAT_0040c910: far
-EXTERN DAT_0040c91c: far
-EXTERN DAT_0040c92c: far
-EXTERN DAT_0040c934: far
-EXTERN DAT_0040c938: far
-EXTERN DAT_0040c93c: far
-EXTERN timerCallbackFuncPtr: far
-EXTERN elapsedTime: far
-EXTERN DAT_0040c948: far
-EXTERN DAT_0040c94c: far
-EXTERN DAT_0040c950: far
-EXTERN DAT_0040c954: far
-EXTERN DAT_0040c958: far
-EXTERN DAT_0040c95c: far
-EXTERN DAT_0040c960: far
-EXTERN DAT_0040c964: far
-EXTERN DAT_0040c968: far
-EXTERN __sbh_sizeHeaderList: far
-EXTERN __sbh_indGroupDefer: far
-EXTERN __sbh_pHeaderScan: far
-EXTERN __sbh_pHeaderDefer: far
-EXTERN __sbh_cntHeaderList: far
-EXTERN __sbh_pHeaderList: far
-EXTERN __mbcodepage: far
-EXTERN DAT_0040c990: far
-EXTERN DAT_0040c994: far
-EXTERN DAT_0040c998: far
-EXTERN __ismbcodepage: far
-EXTERN DAT_0040c9a0: far
-EXTERN __mbctype: far
-EXTERN DAT_0040cb47: far
-EXTERN DAT_0040cb48: far
-EXTERN __mblcid: far
-EXTERN _crtheap: far
-EXTERN DAT_0040cbc0: far
-EXTERN DAT_0040cbc4: far
-EXTERN DAT_0040ccc0: far
-EXTERN DAT_0040ccc4: far
-EXTERN _mbctype_initialized: far
-EXTERN DAT_0040cccc: far
-EXTERN DAT_0040ccd0: far
-EXTERN DAT_0040ccd4: far
-EXTERN _acmdln: far
+EXTERN C s_skiMain: far
+EXTERN C s_skiStatus: far
+EXTERN C unk_array_0040a1ac: far
+EXTERN C DAT_0040a22c: far
+EXTERN C DAT_0040a258: far
+EXTERN C DAT_0040a25c: far
+EXTERN C DAT_0040a308: far
+EXTERN C UINT_ARRAY_0040a434: far
+EXTERN C DAT_0040a490: far
+EXTERN C DAT_0040a4e0: far
+EXTERN C DAT_0040a560: far
+EXTERN C not_enough_space_for_arg_str: far
+EXTERN C floating_point_not_loaded_str: far
+EXTERN C microsoft_visual_str: far
+EXTERN C s_runtime_error: far
+EXTERN C DAT_0040a83c: far
+EXTERN C s_program_name_unknown: far
+EXTERN C DAT_0040a858: far
+EXTERN C DAT_0040a85c: far
+EXTERN C DAT_0040a860: far
+EXTERN C s_GetLastActivePopup_0040a86c: far
+EXTERN C s_GetActiveWindow_0040a880: far
+EXTERN C s_MessageBoxA_0040a890: far
+EXTERN C s_user32_dll: far
+EXTERN C DAT_0040a8a8: far
+EXTERN C DWORD_0040a8c0: far
+EXTERN C DAT_0040c000: far
+EXTERN C DAT_0040c004: far
+EXTERN C DAT_0040c008: far
+EXTERN C DAT_0040c010: far
+EXTERN C DAT_0040c014: far
+EXTERN C DAT_0040c018: far
+EXTERN C DAT_0040c01c: far
+EXTERN C DAT_0040c020: far
+EXTERN C DAT_0040c030: far
+EXTERN C DAT_0040c044: far
+EXTERN C entpack_ini_section_name_ski: far
+EXTERN C s_entpack_ini: far
+EXTERN C sourceFilename: far
+EXTERN C s_Assertion_Failed_0040c0a8: far
+EXTERN C s_assertErrorFormat: far
+EXTERN C s_out_o_memory: far
+EXTERN C iniSsConfigKey: far
+EXTERN C DAT_0040c0dc: far
+EXTERN C DAT_0040c0e0: far
+EXTERN C stylePointsFormatString: far
+EXTERN C DAT_0040c0ec: far
+EXTERN C iniFsConfigKey: far
+EXTERN C iniGsConfigKey: far
+EXTERN C s_nosound_0040c0fc: far
+EXTERN C s_insufficient_local_memory: far
+EXTERN C s_iconSki_0040c120: far
+EXTERN C s_WAVE: far
+EXTERN C s_bitmap_load_error_message: far
+EXTERN C DAT_0040c174: far
+EXTERN C DAT_0040c182: far
+EXTERN C DAT_0040c183: far
+EXTERN C DAT_0040c390: far
+EXTERN C DAT_0040c398: far
+EXTERN C DAT_0040c39c: far
+EXTERN C DAT_0040c3bc: far
+EXTERN C DAT_0040c3c8: far
+EXTERN C DAT_0040c408: far
+EXTERN C DAT_0040c40c: far
+EXTERN C DAT_0040c410: far
+EXTERN C DAT_0040c414: far
+EXTERN C DAT_0040c424: far
+EXTERN C DAT_0040c428: far
+EXTERN C DAT_0040c42c: far
+EXTERN C DAT_0040c430: far
+EXTERN C DAT_0040c438: far
+EXTERN C ptr_floating_p_str: far
+EXTERN C DAT_0040c440: far
+EXTERN C PTR_s_not_enough_space_for_arg: far
+EXTERN C DAT_0040c4d4: far
+EXTERN C DAT_0040c4d8: far
+EXTERN C DAT_0040c4dc: far
+EXTERN C DAT_0040c4e0: far
+EXTERN C DAT_0040c4e1: far
+EXTERN C DAT_0040c4e2: far
+EXTERN C DAT_0040c4e3: far
+EXTERN C DAT_0040c4e8: far
+EXTERN C DAT_0040c500: far
+EXTERN C DAT_0040c5c0: far
+EXTERN C sound_3:Sound
+EXTERN C DAT_0040c5d8: far
+EXTERN C statusWindowLastUpdateTime: far
+EXTERN C DAT_0040c5e0: far
+EXTERN C DAT_0040c5ec: far
+EXTERN C SHORT_0040c5f0: far
+EXTERN C DAT_0040c5f2: far
+EXTERN C timerFrameDurationInMillis: far
+EXTERN C sprites: far
+EXTERN C skierScreenYOffset: far
+EXTERN C DAT_0040c600: far
+EXTERN C sound_8:Sound
+EXTERN C DAT_0040c610: far
+EXTERN C DAT_0040c614: far
+EXTERN C PTR_0040c618: far
+EXTERN C skiFreeHInstance: far
+EXTERN C DAT_0040c620: far
+EXTERN C hSkiStatusWnd: far
+EXTERN C sound_6:Sound
+EXTERN C DAT_0040c630: far
+EXTERN C mainWindowDC: far
+EXTERN C DAT_0040c640: far
+EXTERN C DAT_0040c644: far
+EXTERN C DAT_0040c648: far
+EXTERN C PTR_0040c64c: far
+EXTERN C DAT_0040c650: far
+EXTERN C DAT_0040c658: far
+EXTERN C statusWindowFont: far
+EXTERN C textLineHeight: far
+EXTERN C statusWindowHeight: far
+EXTERN C statusWindowTotalTextWidth: far
+EXTERN C statusWindowLabelWidth: far
+EXTERN C DAT_0040c670: far
+EXTERN C stringCache: far
+EXTERN C updateTimerDurationMillis: far
+EXTERN C inputEnabled: far
+EXTERN C DAT_0040c680: far
+EXTERN C DAT_0040c684: far
+EXTERN C DAT_0040c688: far
+EXTERN C DAT_0040c68c: far
+EXTERN C DAT_0040c690: far
+EXTERN C mainWndActivationFlags: far
+EXTERN C currentTickCount: far
+EXTERN C whiteBrush: far
+EXTERN C SCREEN_WIDTH: far
+EXTERN C DAT_0040c6a4: far
+EXTERN C stylePoints: far
+EXTERN C tagRECT_0040c6b0:tagRECT
+EXTERN C sound_1:Sound
+EXTERN C hSkiMainWnd: far
+EXTERN C statusWindowDC: far
+EXTERN C isPaused: far
+EXTERN C DAT_0040c6d4: far
+EXTERN C DAT_0040c6d8: far
+EXTERN C sound_7:Sound
+EXTERN C DAT_0040c6e8: far
+EXTERN C DAT_0040c6ec: far
+EXTERN C sound_9:Sound
+EXTERN C DAT_0040c6f8: far
+EXTERN C DAT_0040c6fc: far
+EXTERN C prevMouseX: far
+EXTERN C DAT_0040c702: far
+EXTERN C skierScreenXOffset: far
+EXTERN C prevTickCount: far
+EXTERN C prevMouseY: far
+EXTERN C DAT_0040c710: far
+EXTERN C DAT_0040c714: far
+EXTERN C sound_4:Sound
+EXTERN C DAT_0040c720: far
+EXTERN C playerActorMaybe: far
+EXTERN C DAT_0040c730: far
+EXTERN C DAT_0040c738: far
+EXTERN C DAT_0040c744: far
+EXTERN C DAT_0040c748: far
+EXTERN C SCREEN_HEIGHT: far
+EXTERN C sound_5:Sound
+EXTERN C DAT_0040c758: far
+EXTERN C DAT_0040c75c: far
+EXTERN C DAT_0040c760: far
+EXTERN C sound_2:Sound
+EXTERN C isMinimised: far
+EXTERN C DAT_0040c778: far
+EXTERN C statusWindowNameStrPtr: far
+EXTERN C DAT_0040c78c: far
+EXTERN C sndPlaySoundAFuncPtr: far
+EXTERN C isSoundDisabled: far
+EXTERN C DAT_0040c7c0: far
+EXTERN C DAT_0040c7c4: far
+EXTERN C DAT_0040c7cc: far
+EXTERN C DAT_0040c7dc: far
+EXTERN C DAT_0040c7f0: far
+EXTERN C DAT_0040c7f4: far
+EXTERN C DAT_0040c8f8: far
+EXTERN C DAT_0040c8fc: far
+EXTERN C DAT_0040c900: far
+EXTERN C DAT_0040c904: far
+EXTERN C DAT_0040c908: far
+EXTERN C DAT_0040c90c: far
+EXTERN C DAT_0040c910: far
+EXTERN C DAT_0040c91c: far
+EXTERN C DAT_0040c92c: far
+EXTERN C DAT_0040c934: far
+EXTERN C DAT_0040c938: far
+EXTERN C DAT_0040c93c: far
+EXTERN C timerCallbackFuncPtr: far
+EXTERN C elapsedTime: far
+EXTERN C DAT_0040c948: far
+EXTERN C DAT_0040c94c: far
+EXTERN C DAT_0040c950: far
+EXTERN C DAT_0040c954: far
+EXTERN C DAT_0040c958: far
+EXTERN C DAT_0040c95c: far
+EXTERN C DAT_0040c960: far
+EXTERN C DAT_0040c964: far
+EXTERN C DAT_0040c968: far
+EXTERN C DAT_0040c990: far
+EXTERN C DAT_0040c994: far
+EXTERN C DAT_0040c998: far
+EXTERN C DAT_0040c9a0: far
+EXTERN C DAT_0040cb47: far
+EXTERN C DAT_0040cb48: far
+EXTERN C DAT_0040cbc0: far
+EXTERN C DAT_0040cbc4: far
+EXTERN C DAT_0040ccc0: far
+EXTERN C DAT_0040ccc4: far
+EXTERN C DAT_0040cccc: far
+EXTERN C DAT_0040ccd0: far
+EXTERN C DAT_0040ccd4: far
