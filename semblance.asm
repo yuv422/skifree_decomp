@@ -6355,6 +6355,7 @@ LAB_0040561a:
           db 090h
 @initWindows@12 endp
 
+COMMENT ~
 _loadSoundFunc proc
           mov   eax, dword ptr [__imp__sndPlaySoundA@8] ; <sndPlaySoundA>
           xor   ecx, ecx
@@ -6377,7 +6378,9 @@ LAB_00405634:
           db 090h
           db 090h
 _loadSoundFunc endp
+~
 
+COMMENT ~
 @loadSound@8 proc
           mov   eax, dword ptr [skiFreeHInstance]       ; <c61c>
           push  esi
@@ -6423,6 +6426,7 @@ LAB_00405693:
           db 090h
           db 090h
 @loadSound@8 endp
+~
 
 _cleanupSound proc
           mov   eax, dword ptr [isSoundDisabled]        ; <c794>

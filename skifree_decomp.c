@@ -32,6 +32,11 @@ typedef struct Actor {
     UINT flags;
 } Actor;
 
+typedef struct {
+    HGLOBAL soundResource;
+    LPVOID soundData;
+} Sound;
+
 #define NUM_ACTORS 100
 #define NUM_SPRITES 90
 #define NUM_STRINGS 20
@@ -63,6 +68,8 @@ extern Sprite *sprites;
 extern Actor *actors;
 extern void *PTR_0040c758;
 extern int isSoundDisabled;
+extern BOOL (WINAPI *sndPlaySoundAFuncPtr)(LPCSTR, UINT);
+
 
 void __fastcall assertFailedDialog(LPCSTR lpCaption, LPCSTR lpText) {
     int iVar1;
@@ -173,4 +180,29 @@ int __fastcall showErrorMessage(LPCSTR text) {
 
     lpCaption = getCachedString(IDS_TITLE);
     return MessageBoxA(NULL, text, lpCaption, 0x30);
+}
+
+BOOL loadSoundFunc() {
+    sndPlaySoundAFuncPtr = sndPlaySoundA;
+    return (sndPlaySoundA != NULL);
+}
+
+BOOL __fastcall loadSound(UINT resourceId, Sound *sound) {
+    HRSRC hResInfo;
+    HGLOBAL pvVar1;
+    LPVOID pvVar2;
+
+    hResInfo = FindResourceA(skiFreeHInstance, MAKEINTRESOURCE(resourceId),"WAVE");
+    sound->soundResource = hResInfo;
+    if (hResInfo != NULL) {
+        pvVar1 = LoadResource(skiFreeHInstance,hResInfo);
+        sound->soundResource = pvVar1;
+    }
+    if (sound->soundResource != NULL) {
+        pvVar2 = LockResource(sound->soundResource);
+        sound->soundData = pvVar2;
+        return TRUE;
+    }
+    sound->soundData = NULL;
+    return FALSE;
 }
