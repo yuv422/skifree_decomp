@@ -7,3 +7,6 @@ _allocateMemory
 _WinMain@16
 @loadSound@8
 _loadSoundFunc
+_timerUpdateFunc
+_timerCallbackFunc
+@initWindows@12

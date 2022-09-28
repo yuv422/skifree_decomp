@@ -16,7 +16,7 @@
 00401cf0:@getCachedString@4
 00401d70:@formatElapsedTime@8
 00401e20:@drawText@18
-00401e50:_FUN_00401e50
+00401e50:_updateGameState
 004020b0:@random@2
 004020d0:@FUN_004020d0@8
 00402120:@FUN_00402120@8
@@ -377,7 +377,7 @@
 0040c600:DAT_0040c600
 0040c608:sound_8.soundResource
 0040c60c:sound_8.soundData
-0040c610:DAT_0040c610
+0040c610:redrawRequired
 0040c614:DAT_0040c614
 0040c618:PTR_0040c618
 0040c61c:skiFreeHInstance
@@ -413,10 +413,10 @@
 0040c6a0:SCREEN_WIDTH
 0040c6a4:DAT_0040c6a4
 0040c6a8:stylePoints
-0040c6b0:tagRECT_0040c6b0.left
-0040c6b4:tagRECT_0040c6b0.top
-0040c6b8:tagRECT_0040c6b0.right
-0040c6bc:tagRECT_0040c6b0.bottom
+0040c6b0:windowClientRect.left
+0040c6b4:windowClientRect.top
+0040c6b8:windowClientRect.right
+0040c6bc:windowClientRect.bottom
 0040c6c0:sound_1.soundResource
 0040c6c4:sound_1.soundData
 0040c6c8:hSkiMainWnd

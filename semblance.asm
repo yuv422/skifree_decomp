@@ -6,6 +6,7 @@ include data_extern.inc
 include c_funcs.inc
 assume fs:nothing
 option noscoped
+COMMENT ~
 _timerUpdateFunc proc
           call  dword ptr [__imp__GetTickCount@0]       ; <GetTickCount>
           mov   ecx, dword ptr [currentTickCount]       ; <c698>
@@ -14,20 +15,21 @@ _timerUpdateFunc proc
           mov   dword ptr [prevTickCount], ecx  ; <c708>
           mov   dword ptr [timerFrameDurationInMillis], edx     ; <c5f4>
           mov   dword ptr [currentTickCount], eax       ; <c698>
-          call  _FUN_00401e50
+          call  _updateGameState
           mov   ecx, dword ptr [mainWindowDC]   ; <c63c>
-          mov   edx, offset tagRECT_0040c6b0.left       ; <c6b0>
+          mov   edx, offset windowClientRect.left       ; <c6b0>
           call  @drawWindow@8
           mov   eax, dword ptr [currentTickCount]       ; <c698>
           mov   edx, dword ptr [statusWindowLastUpdateTime]     ; <c5dc>
           sub   eax, edx
-          mov   dword ptr [DAT_0040c610], 000000001h    ; <c610>
+          mov   dword ptr [redrawRequired], 000000001h  ; <c610>
           cmp   eax, 000000147h
           jle   LAB_0040105f
           mov   ecx, dword ptr [statusWindowDC] ; <c6cc>
           jmp   @formatAndPrintStatusStrings@4
 LAB_0040105f:     ret
 _timerUpdateFunc endp
+~
 
 @drawWindow@8 proc
           sub   esp, 000000008h
@@ -1389,7 +1391,7 @@ LAB_00401e4a:
           db 090h
 @drawText@18 endp
 
-_FUN_00401e50 proc
+_updateGameState proc
           mov   ax, word ptr [DAT_0040c640]     ; <c640>
           mov   cx, word ptr [DAT_0040c5f2]     ; <c5f2>
           sub   word ptr [DAT_0040c714], ax     ; <c714>
@@ -1566,7 +1568,7 @@ LAB_00402084:     mov   ecx, 00000029Ah
 LAB_004020ae:     ret
 LAB_004020af:
           db 090h
-_FUN_00401e50 endp
+_updateGameState endp
 
 @random@2 proc
           push  esi
@@ -2071,15 +2073,15 @@ LAB_004024ee:
           jmp   dword ptr [edi*4+LAB_004025b0]  ; <25b0>
 LAB_00402528:     test  edi, edi
           jnz   LAB_00402537
-          mov   edx, dword ptr [tagRECT_0040c6b0.left]  ; <c6b0>
+          mov   edx, dword ptr [windowClientRect.left]  ; <c6b0>
           lea   eax, dword ptr [edx-03Ch]
           jmp   LAB_0040253f
-LAB_00402537:     mov   eax, dword ptr [tagRECT_0040c6b0.right] ; <c6b8>
+LAB_00402537:     mov   eax, dword ptr [windowClientRect.right] ; <c6b8>
           add   eax, 00000003Ch
 LAB_0040253f:     add   word ptr [esi], ax
           mov   ecx, dword ptr [DAT_0040c6d8]   ; <c6d8>
           call  @random@2
-          mov   edx, dword ptr [tagRECT_0040c6b0.top]   ; <c6b4>
+          mov   edx, dword ptr [windowClientRect.top]   ; <c6b4>
           add   eax, edx
           pop   edi
           add   word ptr [ebx], ax
@@ -2088,18 +2090,18 @@ LAB_0040253f:     add   word ptr [esi], ax
           ret   00004h
 LAB_0040255e:     mov   ecx, dword ptr [SHORT_0040c5f0] ; <c5f0>
           call  @random@2
-          add   eax, dword ptr [tagRECT_0040c6b0.left]  ; <c6b0>
+          add   eax, dword ptr [windowClientRect.left]  ; <c6b0>
           add   word ptr [esi], ax
           cmp   edi, 000000002h
           jnz   LAB_00402589
-          mov   ecx, dword ptr [tagRECT_0040c6b0.top]   ; <c6b4>
+          mov   ecx, dword ptr [windowClientRect.top]   ; <c6b4>
           pop   edi
           pop   esi
           lea   eax, dword ptr [ecx-03Ch]
           add   word ptr [ebx], ax
           pop   ebx
           ret   00004h
-LAB_00402589:     mov   edx, dword ptr [tagRECT_0040c6b0.bottom]        ; <c6bc>
+LAB_00402589:     mov   edx, dword ptr [windowClientRect.bottom]        ; <c6bc>
           pop   edi
           pop   esi
           lea   eax, dword ptr [edx+03Ch]
@@ -5261,6 +5263,7 @@ LAB_004047be:
           db 090h
 @FUN_004046e0@4 endp
 
+COMMENT ~
 _timerCallbackFunc proc
           mov   eax, dword ptr [inputEnabled]   ; <c67c>
           test  eax, eax
@@ -5280,6 +5283,7 @@ LAB_004047d6:
           db 090h
           db 090h
 _timerCallbackFunc endp
+~
 
 COMMENT ~
 _WinMain@16 proc
@@ -5472,7 +5476,7 @@ _resetGame proc
           mov   dword ptr [DAT_0040c958], esi   ; <c958>
           mov   dword ptr [elapsedTime], esi    ; <c944>
           mov   dword ptr [updateTimerDurationMillis], 000000028h       ; <c678>
-          mov   dword ptr [DAT_0040c610], eax   ; <c610>
+          mov   dword ptr [redrawRequired], eax ; <c610>
           pop   esi
           ret
 LAB_004049ff:
@@ -5616,7 +5620,7 @@ _FUN_00404b50 proc
           mov   word ptr [esp+02Ah], di
           mov   word ptr [esp+028h], di
           call  @FUN_00405100@4
-          mov   eax, dword ptr [tagRECT_0040c6b0.left]  ; <c6b0>
+          mov   eax, dword ptr [windowClientRect.left]  ; <c6b0>
           mov   edx, dword ptr [skierScreenXOffset]     ; <c704>
           mov   ecx, dword ptr [DAT_0040c640]   ; <c640>
           sub   eax, edx
@@ -5628,7 +5632,7 @@ _FUN_00404b50 proc
           mov   word ptr [esp+024h], ax
           jge   LAB_00404bb1
           mov   word ptr [esp+024h], si
-LAB_00404bb1:     mov   eax, dword ptr [tagRECT_0040c6b0.bottom]        ; <c6bc>
+LAB_00404bb1:     mov   eax, dword ptr [windowClientRect.bottom]        ; <c6bc>
           mov   ebp, dword ptr [skierScreenYOffset]     ; <c5fc>
           sub   eax, ebp
           add   ax, word ptr [DAT_0040c5f2]     ; <c5f2>
@@ -5696,7 +5700,7 @@ LAB_00404c89:     add   ebx, 000000140h
           call  @FUN_00405120@8
           mov   ecx, offset DAT_0040c5e0        ; <c5e0>
           call  @FUN_00405100@4
-          mov   edx, dword ptr [tagRECT_0040c6b0.right] ; <c6b8>
+          mov   edx, dword ptr [windowClientRect.right] ; <c6b8>
           mov   eax, dword ptr [DAT_0040c640]   ; <c640>
           mov   dword ptr [esp+01Ch], esi
           mov   esi, dword ptr [skierScreenXOffset]     ; <c704>
@@ -5708,7 +5712,7 @@ LAB_00404c89:     add   ebx, 000000140h
           mov   word ptr [esp+024h], ax
           jle   LAB_00404d1c
           mov   word ptr [esp+024h], si
-LAB_00404d1c:     mov   eax, dword ptr [tagRECT_0040c6b0.bottom]        ; <c6bc>
+LAB_00404d1c:     mov   eax, dword ptr [windowClientRect.bottom]        ; <c6bc>
           mov   ebp, dword ptr [skierScreenYOffset]     ; <c5fc>
           sub   eax, ebp
           add   ax, word ptr [DAT_0040c5f2]     ; <c5f2>
@@ -5786,7 +5790,7 @@ LAB_00404df8:     mov   ecx, 00000000Dh
           call  @FUN_00405120@8
           mov   ecx, offset DAT_0040c658        ; <c658>
           call  @FUN_00405100@4
-          mov   eax, dword ptr [tagRECT_0040c6b0.bottom]        ; <c6bc>
+          mov   eax, dword ptr [windowClientRect.bottom]        ; <c6bc>
           mov   ebx, dword ptr [skierScreenYOffset]     ; <c5fc>
           sub   eax, ebx
           mov   dword ptr [esp+01Ch], esi
@@ -6085,6 +6089,7 @@ LAB_004052c2:
           db 090h
 _FUN_004051e0 endp
 
+COMMENT ~
 @initWindows@12 proc
           sub   esp, 00000002Ch
           push  ebx
@@ -6354,6 +6359,7 @@ LAB_0040561a:
           db 090h
           db 090h
 @initWindows@12 endp
+~
 
 COMMENT ~
 _loadSoundFunc proc
@@ -7327,17 +7333,17 @@ LAB_00405f9f:
           push  ebp
           push  esi
           push  edi
-          push  offset tagRECT_0040c6b0.left    ; <c6b0>
+          push  offset windowClientRect.left    ; <c6b0>
           push  ecx
           mov   dword ptr [DAT_0040c760], 000000000h    ; <c760>
           call  dword ptr [__imp__GetClientRect@8]      ; <GetClientRect>
-          mov   eax, dword ptr [tagRECT_0040c6b0.top]   ; <c6b4>
-          mov   ecx, dword ptr [tagRECT_0040c6b0.bottom]        ; <c6bc>
+          mov   eax, dword ptr [windowClientRect.top]   ; <c6b4>
+          mov   ecx, dword ptr [windowClientRect.bottom]        ; <c6bc>
           add   ecx, eax
           mov   eax, 055555556h
           imul  ecx
-          mov   eax, dword ptr [tagRECT_0040c6b0.left]  ; <c6b0>
-          mov   ecx, dword ptr [tagRECT_0040c6b0.right] ; <c6b8>
+          mov   eax, dword ptr [windowClientRect.left]  ; <c6b0>
+          mov   ecx, dword ptr [windowClientRect.right] ; <c6b8>
           mov   esi, edx
           add   eax, ecx
           shr   edx, 01Fh
@@ -7348,10 +7354,10 @@ LAB_00405f9f:
           mov   ecx, eax
           sar   ecx, 1h
           call  @FUN_00406060@4
-          mov   ebp, dword ptr [tagRECT_0040c6b0.top]   ; <c6b4>
-          mov   esi, dword ptr [tagRECT_0040c6b0.bottom]        ; <c6bc>
-          mov   ecx, dword ptr [tagRECT_0040c6b0.right] ; <c6b8>
-          mov   edi, dword ptr [tagRECT_0040c6b0.left]  ; <c6b0>
+          mov   ebp, dword ptr [windowClientRect.top]   ; <c6b4>
+          mov   esi, dword ptr [windowClientRect.bottom]        ; <c6bc>
+          mov   ecx, dword ptr [windowClientRect.right] ; <c6b8>
+          mov   edi, dword ptr [windowClientRect.left]  ; <c6b0>
           lea   eax, dword ptr [ebp-078h]
           mov   dword ptr [DAT_0040c684], eax   ; <c684>
           lea   eax, dword ptr [esi+078h]
@@ -7650,13 +7656,13 @@ LAB_0040636f:     mov   ecx, dword ptr [eax+01Ch]
           mov   edx, esi
           mov   ecx, eax
           call  @FUN_00402120@8
-          mov   eax, dword ptr [DAT_0040c610]   ; <c610>
+          mov   eax, dword ptr [redrawRequired] ; <c610>
           test  eax, eax
           jz    LAB_004063a3
           mov   ecx, dword ptr [mainWindowDC]   ; <c63c>
-          mov   edx, offset tagRECT_0040c6b0.left       ; <c6b0>
+          mov   edx, offset windowClientRect.left       ; <c6b0>
           call  @drawWindow@8
-          mov   dword ptr [DAT_0040c610], 000000000h    ; <c610>
+          mov   dword ptr [redrawRequired], 000000000h  ; <c610>
 LAB_004063a3:     pop   esi
           ret
 LAB_004063a5:
@@ -8124,13 +8130,13 @@ LAB_00406731:     mov   edx, 000000015h
 LAB_00406736:     cmp   edx, dword ptr [ecx+01Ch]
           jz    LAB_00406763
           call  @FUN_00402120@8
-          mov   eax, dword ptr [DAT_0040c610]   ; <c610>
+          mov   eax, dword ptr [redrawRequired] ; <c610>
           test  eax, eax
           jz    LAB_00406763
           mov   ecx, dword ptr [mainWindowDC]   ; <c63c>
-          mov   edx, offset tagRECT_0040c6b0.left       ; <c6b0>
+          mov   edx, offset windowClientRect.left       ; <c6b0>
           call  @drawWindow@8
-          mov   dword ptr [DAT_0040c610], 000000000h    ; <c610>
+          mov   dword ptr [redrawRequired], 000000000h  ; <c610>
 LAB_00406763:     ret
 LAB_00406764:
 DAT_00406764  dword offset LAB_00406715
@@ -8157,7 +8163,7 @@ LAB_004067a0:     mov   eax, dword ptr [DAT_0040c670]   ; <c670>
           mov   dword ptr [DAT_0040c670], edx   ; <c670>
           ret
 LAB_004067b3:     mov   ecx, dword ptr [mainWindowDC]   ; <c63c>
-          mov   edx, offset tagRECT_0040c6b0.left       ; <c6b0>
+          mov   edx, offset windowClientRect.left       ; <c6b0>
           jmp   @drawWindow@8
 LAB_004067c3:     mov   ecx, dword ptr [playerActorPtrMaybe]    ; <c72c>
           test  ecx, ecx
@@ -8259,11 +8265,11 @@ _handleWindowSizeMessage proc
           add   cx, 000000004h
           add   eax, 000000004h
           movsx edx, cx
-          mov   ecx, dword ptr [tagRECT_0040c6b0.top]   ; <c6b4>
+          mov   ecx, dword ptr [windowClientRect.top]   ; <c6b4>
           push  000000001h
           movsx eax, ax
           push  edx
-          mov   edx, dword ptr [tagRECT_0040c6b0.right] ; <c6b8>
+          mov   edx, dword ptr [windowClientRect.right] ; <c6b8>
           push  eax
           sub   edx, eax
           mov   eax, dword ptr [hSkiStatusWnd]  ; <c624>

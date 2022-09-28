@@ -41,9 +41,12 @@ typedef struct {
 #define NUM_SPRITES 90
 #define NUM_STRINGS 20
 
+int __fastcall initWindows(HINSTANCE param_1, HINSTANCE param_2, int param_3);
 void __fastcall assertFailed(char *srcFilename, int lineNumber);
 int __fastcall showErrorMessage(LPCSTR text);
 int allocateMemory();
+BOOL loadSoundFunc();
+BOOL __fastcall loadSound(UINT resourceId, Sound *sound);
 
 
 #define ski_assert(exp, src, line) (void)( (exp) || (assertFailed(src, line), 0) )
@@ -53,14 +56,22 @@ extern char s_Assertion_Failed_0040c0a8[];
 extern char s_insufficient_local_memory[];
 extern char s_nosound_0040c0fc[];
 
+//
+// ASM Functions
+//
 extern void setWindowTitle();
 extern void cleanupSound();
 extern int setupGame();
 extern int resetGame();
-extern int __fastcall initWindows(HINSTANCE param_1, HINSTANCE param_2, int param_3);
+extern void updateGameState();
+extern void __fastcall drawWindow(HDC hdc, RECT *rect);
+extern void __fastcall formatAndPrintStatusStrings(HDC windowDC);
+extern LRESULT CALLBACK skiMainWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+extern LRESULT CALLBACK skiStatusWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 extern char sourceFilename[];
 extern HWND hSkiMainWnd;
+extern HWND hSkiStatusWnd;
 extern char **stringCache;
 extern HINSTANCE skiFreeHInstance;
 extern char s_out_o_memory[];
@@ -68,8 +79,54 @@ extern Sprite *sprites;
 extern Actor *actors;
 extern void *PTR_0040c758;
 extern int isSoundDisabled;
-extern BOOL (WINAPI *sndPlaySoundAFuncPtr)(LPCSTR, UINT);
+extern USHORT SCREEN_WIDTH;
+extern USHORT SCREEN_HEIGHT;
+extern HBRUSH whiteBrush;
+extern BOOL isPaused;
+extern BOOL isMinimised;
+extern UINT mainWndActivationFlags;
+extern BOOL inputEnabled;
+extern int skierScreenXOffset;
+extern int skierScreenYOffset;
+extern BOOL redrawRequired;
+extern DWORD timerFrameDurationInMillis;
+extern DWORD currentTickCount;
+extern DWORD prevTickCount;
+extern DWORD statusWindowLastUpdateTime;
+extern RECT windowClientRect;
+extern HDC mainWindowDC;
+extern HDC statusWindowDC;
+extern Sound sound_1;
+extern Sound sound_2;
+extern Sound sound_3;
+extern Sound sound_4;
+extern Sound sound_5;
+extern Sound sound_6;
+extern Sound sound_7;
+extern Sound sound_8;
+extern Sound sound_9;
+extern LPCSTR statusWindowNameStrPtr;
 
+
+extern BOOL (WINAPI *sndPlaySoundAFuncPtr)(LPCSTR, UINT);
+extern int (*timerCallbackFuncPtr)();
+
+void timerUpdateFunc() {
+    DWORD ticks;
+
+    ticks = GetTickCount();
+    timerFrameDurationInMillis = ticks - currentTickCount;
+    prevTickCount = currentTickCount;
+    currentTickCount = ticks;
+    updateGameState();
+    drawWindow(mainWindowDC,&windowClientRect);
+    redrawRequired = TRUE;
+    if (0x147 < (int)(currentTickCount - statusWindowLastUpdateTime)) {
+        formatAndPrintStatusStrings(statusWindowDC);
+        return;
+    }
+    redrawRequired = TRUE;
+}
 
 void __fastcall assertFailedDialog(LPCSTR lpCaption, LPCSTR lpText) {
     int iVar1;
@@ -115,6 +172,13 @@ char * __fastcall getCachedString(UINT stringIdx) {
         lstrcpyA(stringCache[stringIdx],buf);
     }
     return stringCache[stringIdx];
+}
+
+int timerCallbackFunc() {
+    if (inputEnabled != 0) {
+        timerUpdateFunc();
+    }
+    return 1;
 }
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
@@ -180,6 +244,124 @@ int __fastcall showErrorMessage(LPCSTR text) {
 
     lpCaption = getCachedString(IDS_TITLE);
     return MessageBoxA(NULL, text, lpCaption, 0x30);
+}
+
+
+/* WARNING: Removing unreachable block (ram,0x004053c9) */
+
+BOOL __fastcall initWindows(HINSTANCE hInstance,HINSTANCE hPrevInstance,int nCmdShow) {
+    ATOM AVar1;
+    short windowWidth;
+    HDC hdc;
+    UINT uVar2;
+    BOOL BVar3;
+    int nHeight;
+    int X;
+    char *lpWindowName;
+    int nWidth;
+    DWORD dwStyle;
+    int Y;
+    HWND hWndParent;
+    HINSTANCE hInstance_00;
+    LPVOID lpParam;
+    WNDCLASSA wndClass;
+
+    hdc = GetDC(NULL);
+    if (hdc == NULL) {
+        return 0;
+    }
+    uVar2 = GetDeviceCaps(hdc,HORZRES);
+    SCREEN_WIDTH = SCREEN_WIDTH & 0xffff0000U | uVar2 & 0xffff;
+    uVar2 = GetDeviceCaps(hdc,VERTRES);
+    SCREEN_HEIGHT = SCREEN_HEIGHT & 0xffff0000U | uVar2 & 0xffff;
+    ReleaseDC((HWND)0x0,hdc);
+    skiFreeHInstance = hInstance;
+    whiteBrush = (HBRUSH)GetStockObject(0);
+    hSkiMainWnd = (HWND)0x0;
+    hSkiStatusWnd = (HWND)0x0;
+    isPaused = 0;
+    isMinimised = 1;
+    mainWndActivationFlags = 0;
+    inputEnabled = 0;
+    skierScreenXOffset = 0;
+    skierScreenYOffset = 0;
+    hSkiMainWnd = FindWindowA("SkiMain",(LPCSTR)0x0);
+    if (hSkiMainWnd != (HWND)0x0) {
+        SetWindowPos(hSkiMainWnd,(HWND)0x0,0,0,0,0,3);
+        BVar3 = IsIconic(hSkiMainWnd);
+        if (BVar3 != 0) {
+            OpenIcon(hSkiMainWnd);
+        }
+        hSkiMainWnd = (HWND)0x0;
+        return 0;
+    }
+    timerCallbackFuncPtr = timerCallbackFunc;
+    if ((isSoundDisabled == 0) && (BVar3 = loadSoundFunc(), BVar3 != 0)) {
+        loadSound(1,&sound_1);
+        loadSound(2,&sound_2);
+        loadSound(3,&sound_3);
+        loadSound(4,&sound_4);
+        loadSound(5,&sound_5);
+        loadSound(6,&sound_6);
+        loadSound(9,&sound_9);
+        loadSound(7,&sound_7);
+        loadSound(8,&sound_8);
+    }
+    if (hPrevInstance == (HINSTANCE)0x0) {
+        wndClass.style = 0x2023;
+        wndClass.lpfnWndProc = skiMainWndProc;
+        wndClass.cbClsExtra = 0;
+        wndClass.cbWndExtra = 0;
+        wndClass.hInstance = hInstance;
+        wndClass.hIcon = LoadIconA(hInstance,"iconSki");
+        wndClass.hCursor = LoadCursorA((HINSTANCE)0x0,(LPCSTR)0x7f00);
+        wndClass.hbrBackground = whiteBrush;
+        wndClass.lpszMenuName = (LPCSTR)0x0;
+        wndClass.lpszClassName = "SkiMain";
+        AVar1 = RegisterClassA(&wndClass);
+        if (AVar1 == 0) {
+            return 0;
+        }
+        wndClass.lpfnWndProc = skiStatusWndProc;
+        wndClass.hIcon = (HICON)0x0;
+        wndClass.hCursor = LoadCursorA((HINSTANCE)0x0,(LPCSTR)0x7f00);
+        wndClass.lpszClassName = "SkiStatus";
+        wndClass.hbrBackground = whiteBrush;
+        AVar1 = RegisterClassA(&wndClass);
+        if (AVar1 == 0) {
+            return 0;
+        }
+    }
+    windowWidth = (short)SCREEN_WIDTH;
+    if ((short)SCREEN_HEIGHT <= (short)SCREEN_WIDTH) {
+        windowWidth = (short)SCREEN_HEIGHT;
+    }
+    nWidth = (int)windowWidth;
+    lpParam = (LPVOID)0x0;
+    nHeight = (int)(short)SCREEN_HEIGHT;
+    hWndParent = (HWND)0x0;
+    Y = 0;
+    X = ((short)SCREEN_WIDTH - nWidth) / 2;
+    dwStyle = 0x2cf0000;
+    hInstance_00 = hInstance;
+    lpWindowName = getCachedString(1);
+    hSkiMainWnd = CreateWindowExA(0,"SkiMain",lpWindowName,dwStyle,X,Y,nWidth,nHeight,hWndParent,NULL
+            ,hInstance_00,lpParam);
+    if (hSkiMainWnd != (HWND)0x0) {
+        hSkiStatusWnd =
+                CreateWindowExA(0,"SkiStatus",statusWindowNameStrPtr,0x40000000,0,0,0,0,hSkiMainWnd,
+                                (HMENU)0x0,hInstance,(LPVOID)0x0);
+        if (hSkiStatusWnd != (HWND)0x0) {
+            ShowWindow(hSkiMainWnd,nCmdShow);
+            UpdateWindow(hSkiMainWnd);
+            ShowWindow(hSkiStatusWnd,1);
+            UpdateWindow(hSkiStatusWnd);
+            return 1;
+        }
+        DestroyWindow(hSkiMainWnd);
+        return 0;
+    }
+    return 0;
 }
 
 BOOL loadSoundFunc() {

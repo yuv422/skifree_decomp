@@ -6,6 +6,7 @@ extern @showErrorMessage@4: proc
 extern _allocateMemory: proc
 extern @loadSound@8: proc
 extern _loadSoundFunc: proc
+extern _timerUpdateFunc: proc
 
 ; exports
 ; public _WinMain@16

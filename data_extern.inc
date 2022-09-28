@@ -189,7 +189,7 @@ EXTERN C sprites: far
 EXTERN C skierScreenYOffset: far
 EXTERN C DAT_0040c600: far
 EXTERN C sound_8:Sound
-EXTERN C DAT_0040c610: far
+EXTERN C redrawRequired: far
 EXTERN C DAT_0040c614: far
 EXTERN C PTR_0040c618: far
 EXTERN C skiFreeHInstance: far
@@ -224,7 +224,7 @@ EXTERN C whiteBrush: far
 EXTERN C SCREEN_WIDTH: far
 EXTERN C DAT_0040c6a4: far
 EXTERN C stylePoints: far
-EXTERN C tagRECT_0040c6b0:tagRECT
+EXTERN C windowClientRect:tagRECT
 EXTERN C sound_1:Sound
 EXTERN C hSkiMainWnd: far
 EXTERN C statusWindowDC: far

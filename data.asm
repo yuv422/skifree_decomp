@@ -223,8 +223,8 @@ DAT_0040c600 byte 4 DUP (00h)
 db 4 DUP (00h)
 PUBLIC C sound_8
 sound_8 byte 8 DUP (00h)
-PUBLIC C DAT_0040c610
-DAT_0040c610 byte 4 DUP (00h)
+PUBLIC C redrawRequired
+redrawRequired byte 4 DUP (00h)
 PUBLIC C DAT_0040c614
 DAT_0040c614 byte 4 DUP (00h)
 PUBLIC C PTR_0040c618
@@ -300,8 +300,8 @@ DAT_0040c6a4 byte 4 DUP (00h)
 PUBLIC C stylePoints
 stylePoints byte 4 DUP (00h)
 db 4 DUP (00h)
-PUBLIC C tagRECT_0040c6b0
-tagRECT_0040c6b0 byte 16 DUP (00h)
+PUBLIC C windowClientRect
+windowClientRect byte 16 DUP (00h)
 PUBLIC C sound_1
 sound_1 byte 8 DUP (00h)
 PUBLIC C hSkiMainWnd
