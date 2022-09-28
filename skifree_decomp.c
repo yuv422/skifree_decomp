@@ -174,6 +174,23 @@ char * __fastcall getCachedString(UINT stringIdx) {
     return stringCache[stringIdx];
 }
 
+void __fastcall formatElapsedTime(int totalMillis, LPSTR outputString) {
+    int iVar1;
+    char *pcVar2;
+    UINT uVar3;
+    UINT uVar4;
+    UINT uVar5;
+    UINT uVar6;
+
+    uVar6 = (totalMillis % 1000 & 0xffffU) / 10;
+    uVar5 = (totalMillis / 1000) % 60 & 0xffff;
+    iVar1 = (totalMillis / 1000) / 60;
+    uVar3 = iVar1 % 60 & 0xffff;
+    uVar4 = iVar1 / 60 & 0xffff;
+    pcVar2 = getCachedString(IDS_TIME_FORMAT);
+    wsprintfA(outputString,pcVar2,uVar4,uVar3,uVar5,uVar6);
+}
+
 int timerCallbackFunc() {
     if (inputEnabled != 0) {
         timerUpdateFunc();

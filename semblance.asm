@@ -1295,6 +1295,7 @@ LAB_00401d6b:
 @getCachedString@4 endp
 ~
 
+COMMENT ~
 @formatElapsedTime@8 proc
           push  ebx
           mov   ebx, edx
@@ -1365,6 +1366,7 @@ LAB_00401e1e:
           db 090h
           db 090h
 @formatElapsedTime@8 endp
+~
 
 @drawText@18 proc
           mov   eax, dword ptr [esp+00Ch]

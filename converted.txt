@@ -10,3 +10,4 @@ _loadSoundFunc
 _timerUpdateFunc
 _timerCallbackFunc
 @initWindows@12
+@formatElapsedTime@8
