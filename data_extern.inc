@@ -258,7 +258,7 @@ EXTERN C DAT_0040c75c: far
 EXTERN C DAT_0040c760: far
 EXTERN C sound_2:Sound
 EXTERN C isMinimised: far
-EXTERN C DAT_0040c778: far
+EXTERN C statusBorderRect: far
 EXTERN C statusWindowNameStrPtr: far
 EXTERN C DAT_0040c78c: far
 EXTERN C sndPlaySoundAFuncPtr: far

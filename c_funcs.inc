@@ -8,6 +8,11 @@ extern @loadSound@8: proc
 extern _loadSoundFunc: proc
 extern _timerUpdateFunc: proc
 extern @formatElapsedTime@8: proc
+extern @calculateStatusWindowDimensions@4: proc
+extern @statusWindowReleaseDC@4: proc
+extern @paintStatusWindow@4: proc
+extern @drawText@20: proc
+extern @random@4: proc
 
 ; exports
 ; public _WinMain@16

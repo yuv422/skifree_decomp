@@ -47,6 +47,7 @@ int __fastcall showErrorMessage(LPCSTR text);
 int allocateMemory();
 BOOL loadSoundFunc();
 BOOL __fastcall loadSound(UINT resourceId, Sound *sound);
+void __fastcall statusWindowFindLongestTextString(HDC hdc, short *maxLength, LPCSTR textStr, int textLength);
 
 
 #define ski_assert(exp, src, line) (void)( (exp) || (assertFailed(src, line), 0) )
@@ -94,6 +95,7 @@ extern DWORD currentTickCount;
 extern DWORD prevTickCount;
 extern DWORD statusWindowLastUpdateTime;
 extern RECT windowClientRect;
+extern RECT statusBorderRect;
 extern HDC mainWindowDC;
 extern HDC statusWindowDC;
 extern Sound sound_1;
@@ -106,6 +108,11 @@ extern Sound sound_7;
 extern Sound sound_8;
 extern Sound sound_9;
 extern LPCSTR statusWindowNameStrPtr;
+extern HGDIOBJ statusWindowFont;
+extern short textLineHeight;
+extern short statusWindowHeight;
+extern short statusWindowTotalTextWidth;
+extern short statusWindowLabelWidth;
 
 
 extern BOOL (WINAPI *sndPlaySoundAFuncPtr)(LPCSTR, UINT);
@@ -189,6 +196,11 @@ void __fastcall formatElapsedTime(int totalMillis, LPSTR outputString) {
     uVar4 = iVar1 / 60 & 0xffff;
     pcVar2 = getCachedString(IDS_TIME_FORMAT);
     wsprintfA(outputString,pcVar2,uVar4,uVar3,uVar5,uVar6);
+}
+
+void __fastcall drawText(HDC hdc, LPCSTR textStr, short x, short *y, int textLen) {
+    TextOutA(hdc,(int)x,(int)*y,textStr,textLen);
+    *y = *y + textLineHeight;
 }
 
 int timerCallbackFunc() {
@@ -404,4 +416,124 @@ BOOL __fastcall loadSound(UINT resourceId, Sound *sound) {
     }
     sound->soundData = NULL;
     return FALSE;
+}
+
+USHORT __fastcall random(short maxValue) {
+    return (USHORT)rand() % maxValue;
+}
+
+void __fastcall statusWindowFindLongestTextString(HDC hdc, short *maxLength, LPCSTR textStr, int textLength) {
+    SIZE size;
+    GetTextExtentPoint32A(hdc,textStr,textLength,&size);
+    if (*maxLength < size.cx) {
+        *maxLength = (short)size.cx;
+    }
+}
+
+void __fastcall paintStatusWindow(HWND hWnd) {
+    HBRUSH hbr;
+    char *str;
+    int len;
+    int *piVar1;
+    int y;
+    PAINTSTRUCT paint;
+
+    y = 2;
+    BeginPaint(hWnd,&paint);
+    hbr = (HBRUSH)GetStockObject(4);
+    FrameRect(paint.hdc, &statusBorderRect, hbr);
+    str = getCachedString(IDS_TIME);
+    len = lstrlenA(str);
+    piVar1 = &y;
+
+    str = getCachedString(IDS_TIME);
+    drawText(paint.hdc,str,2,(short *)piVar1,len);
+    str = getCachedString(IDS_DIST);
+    len = lstrlenA(str);
+    piVar1 = &y;
+
+    str = getCachedString(IDS_DIST);
+    drawText(paint.hdc,str,2,(short *)piVar1,len);
+    str = getCachedString(IDS_SPEED);
+    len = lstrlenA(str);
+    piVar1 = &y;
+
+    str = getCachedString(IDS_SPEED);
+    drawText(paint.hdc,str,2,(short *)piVar1,len);
+    str = getCachedString(IDS_STYLE);
+    len = lstrlenA(str);
+    piVar1 = &y;
+
+    str = getCachedString(IDS_STYLE);
+    drawText(paint.hdc,str,2,(short *)piVar1,len);
+    formatAndPrintStatusStrings(paint.hdc);
+    EndPaint(hWnd,&paint);
+}
+
+BOOL __fastcall calculateStatusWindowDimensions(HWND hWnd) {
+    char *str;
+    int len;
+    short maxKeyLength;
+    short maxValueLength;
+    TEXTMETRIC textMetric;
+
+    maxKeyLength = 0;
+    maxValueLength = 0;
+    statusWindowDC = GetDC(hWnd);
+    if (statusWindowDC == NULL) {
+        return 0;
+    }
+    statusWindowFont = GetStockObject(OEM_FIXED_FONT);
+    if (statusWindowFont != NULL) {
+        statusWindowFont = SelectObject(statusWindowDC,statusWindowFont);
+    }
+    GetTextMetricsA(statusWindowDC,&textMetric);
+    textLineHeight = (short)textMetric.tmHeight;
+    str = getCachedString(IDS_TIME);
+    len = lstrlenA(str);
+    str = getCachedString(IDS_TIME);
+    statusWindowFindLongestTextString(statusWindowDC,&maxKeyLength,str,len);
+    str = getCachedString(IDS_DIST);
+    len = lstrlenA(str);
+    str = getCachedString(IDS_DIST);
+    statusWindowFindLongestTextString(statusWindowDC,&maxKeyLength,str,len);
+    str = getCachedString(IDS_SPEED);
+    len = lstrlenA(str);
+    str = getCachedString(IDS_SPEED);
+    statusWindowFindLongestTextString(statusWindowDC,&maxKeyLength,str,len);
+    str = getCachedString(IDS_STYLE);
+    len = lstrlenA(str);
+    str = getCachedString(IDS_STYLE);
+    statusWindowFindLongestTextString(statusWindowDC,&maxKeyLength,str,len);
+    str = getCachedString(IDS_TIME_BLANK);
+    len = lstrlenA(str);
+    str = getCachedString(IDS_TIME_BLANK);
+    statusWindowFindLongestTextString(statusWindowDC,&maxValueLength,str,len);
+    str = getCachedString(IDS_DIST_BLANK);
+    len = lstrlenA(str);
+    str = getCachedString(IDS_DIST_BLANK);
+    statusWindowFindLongestTextString(statusWindowDC,&maxValueLength,str,len);
+    str = getCachedString(IDS_SPEED_BLANK);
+    len = lstrlenA(str);
+    str = getCachedString(IDS_SPEED_BLANK);
+    statusWindowFindLongestTextString(statusWindowDC,&maxValueLength,str,len);
+    str = getCachedString(IDS_STYLE_BLANK);
+    len = lstrlenA(str);
+    str = getCachedString(IDS_STYLE_BLANK);
+    statusWindowFindLongestTextString(statusWindowDC,&maxValueLength,str,len);
+    statusWindowHeight = (short)(textLineHeight * 4); //TODO is this correct?
+//    _textLineHeight = _textLineHeight & 0xffff | (uint)(ushort)((short)_textLineHeight * 4) << 0x10;
+    statusWindowTotalTextWidth = (short)maxValueLength + (short)maxKeyLength;
+    statusWindowLabelWidth = (short)maxKeyLength;
+    return 1;
+}
+
+void __fastcall statusWindowReleaseDC(HWND hWnd) {
+    if (hWnd != hSkiStatusWnd) {
+        assertFailed(sourceFilename,4387);
+    }
+    if (statusWindowFont) {
+        SelectObject(statusWindowDC,statusWindowFont);
+    }
+    ReleaseDC(hWnd, statusWindowDC);
 }

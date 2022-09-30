@@ -11,3 +11,9 @@ _timerUpdateFunc
 _timerCallbackFunc
 @initWindows@12
 @formatElapsedTime@8
+@statusWindowFindLongestTextString@16
+@calculateStatusWindowDimensions@4
+@statusWindowReleaseDC@4
+@drawText@20
+@random@4
+@paintStatusWindow@4

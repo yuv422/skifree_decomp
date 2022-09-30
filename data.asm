@@ -378,8 +378,8 @@ sound_2 byte 8 DUP (00h)
 PUBLIC C isMinimised
 isMinimised byte 4 DUP (00h)
 db 4 DUP (00h)
-PUBLIC C DAT_0040c778
-DAT_0040c778 byte 00h
+PUBLIC C statusBorderRect
+statusBorderRect byte 00h
 db 15 DUP (00h)
 PUBLIC C statusWindowNameStrPtr
 statusWindowNameStrPtr byte 00h
