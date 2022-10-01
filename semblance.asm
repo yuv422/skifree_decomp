@@ -6444,6 +6444,7 @@ LAB_00405693:
 @loadSound@8 endp
 ~
 
+COMMENT ~
 _cleanupSound proc
           mov   eax, dword ptr [isSoundDisabled]        ; <c794>
           test  eax, eax
@@ -6493,7 +6494,9 @@ LAB_00405723:
           db 090h
           db 090h
 _cleanupSound endp
+~
 
+COMMENT ~
 @freeSoundResource@4 proc
           push  esi
           mov   esi, ecx
@@ -6521,6 +6524,7 @@ LAB_00405756:
           db 090h
           db 090h
 @freeSoundResource@4 endp
+~
 
 COMMENT ~
 _togglePausedState proc

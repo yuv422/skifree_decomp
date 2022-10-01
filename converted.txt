@@ -25,3 +25,5 @@ _handleWindowSizeMessage
 _startGameTimer
 _togglePausedState
 _pauseGame
+_cleanupSound
+@freeSoundResource@4

@@ -55,6 +55,8 @@ LRESULT CALLBACK skiStatusWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM
 void __fastcall paintActors(HDC hdc, RECT *paintRect);
 void pauseGame();
 void togglePausedState();
+void __fastcall freeSoundResource(Sound *sound);
+void cleanupSound();
 
 
 
@@ -68,7 +70,6 @@ extern char s_nosound_0040c0fc[];
 //
 // ASM Functions
 //
-extern void cleanupSound();
 extern int setupGame();
 extern int resetGame();
 extern void updateGameState();
@@ -127,6 +128,7 @@ extern BOOL isGameTimerRunning;
 extern BOOL isSsGameMode;
 extern BOOL isGsGameMode;
 extern int updateTimerDurationMillis;
+extern void *DAT_0040c78c;
 
 
 extern BOOL (WINAPI *sndPlaySoundAFuncPtr)(LPCSTR, UINT);
@@ -441,6 +443,36 @@ void startGameTimer() {
             timedGameRelated = timedGameRelated + (currentTickCount - pauseStartTickCount);
         }
         SetTimer(hSkiMainWnd,0x29a,updateTimerDurationMillis & 0xffff,timerCallbackFuncPtr);
+    }
+}
+
+void cleanupSound() {
+    if (isSoundDisabled == 0) {
+        if (sndPlaySoundAFuncPtr != NULL) {
+            (*sndPlaySoundAFuncPtr)(0,0);
+        }
+        if (DAT_0040c78c != NULL) {
+            FreeLibrary(DAT_0040c78c);
+        }
+        freeSoundResource(&sound_1);
+        freeSoundResource(&sound_2);
+        freeSoundResource(&sound_3);
+        freeSoundResource(&sound_4);
+        freeSoundResource(&sound_5);
+        freeSoundResource(&sound_6);
+        freeSoundResource(&sound_9);
+        freeSoundResource(&sound_7);
+        freeSoundResource(&sound_8);
+    }
+}
+
+void __fastcall freeSoundResource(Sound *sound) {
+    if (sound->soundData != NULL) {
+        sound->soundData = NULL;
+    }
+    if (sound->soundResource != NULL) {
+        FreeResource(sound->soundResource);
+        sound->soundResource = NULL;
     }
 }
 
