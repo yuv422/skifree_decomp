@@ -48,6 +48,11 @@ int allocateMemory();
 BOOL loadSoundFunc();
 BOOL __fastcall loadSound(UINT resourceId, Sound *sound);
 void __fastcall statusWindowFindLongestTextString(HDC hdc, short *maxLength, LPCSTR textStr, int textLength);
+void __fastcall paintStatusWindow(HWND hWnd);
+BOOL __fastcall calculateStatusWindowDimensions(HWND hWnd);
+void __fastcall statusWindowReleaseDC(HWND hWnd);
+LRESULT CALLBACK skiStatusWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+
 
 
 #define ski_assert(exp, src, line) (void)( (exp) || (assertFailed(src, line), 0) )
@@ -68,7 +73,6 @@ extern void updateGameState();
 extern void __fastcall drawWindow(HDC hdc, RECT *rect);
 extern void __fastcall formatAndPrintStatusStrings(HDC windowDC);
 extern LRESULT CALLBACK skiMainWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-extern LRESULT CALLBACK skiStatusWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 extern char sourceFilename[];
 extern HWND hSkiMainWnd;
@@ -422,12 +426,43 @@ USHORT __fastcall random(short maxValue) {
     return (USHORT)rand() % maxValue;
 }
 
+void handleWindowSizeMessage(void) {
+    int nWidth;
+
+    nWidth = (int)(short)((short)statusWindowTotalTextWidth + 4);
+    MoveWindow(hSkiStatusWnd,windowClientRect.right - nWidth,windowClientRect.top,nWidth,
+               (int)(short)(statusWindowHeight + 4),1);
+}
+
 void __fastcall statusWindowFindLongestTextString(HDC hdc, short *maxLength, LPCSTR textStr, int textLength) {
     SIZE size;
     GetTextExtentPoint32A(hdc,textStr,textLength,&size);
     if (*maxLength < size.cx) {
         *maxLength = (short)size.cx;
     }
+}
+
+LRESULT CALLBACK skiStatusWndProc(HWND hWnd,UINT msg,WPARAM wParam,LPARAM lParam) {
+    switch(msg) {
+        case WM_CREATE:
+            if (calculateStatusWindowDimensions(hWnd) == 0) {
+                return -1;
+            }
+            GetClientRect(hWnd,(LPRECT)&statusBorderRect);
+            break;
+        case WM_DESTROY:
+            statusWindowReleaseDC(hWnd);
+            return 0;
+        case WM_SIZE:
+            GetClientRect(hWnd,(LPRECT)&statusBorderRect);
+            break;
+        case WM_PAINT:
+            paintStatusWindow(hWnd);
+            return 0;
+        default:
+            break;
+    }
+    return DefWindowProcA(hWnd, msg, wParam, lParam);
 }
 
 void __fastcall paintStatusWindow(HWND hWnd) {

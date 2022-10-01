@@ -1137,21 +1137,21 @@ LAB_00401b7d:     pop   edi
           jmp   LAB_00401bd4
 LAB_00401bd2:     xor   ebp, ebp
 LAB_00401bd4:     mov   di, word ptr [eax+042h]
-          mov   eax, dword ptr [DAT_0040c95c]   ; <c95c>
+          mov   eax, dword ptr [isSsGameMode]   ; <c95c>
           test  eax, eax
           jz    LAB_00401bec
           mov   eax, 0000021C0h
           sub   eax, edi
           mov   edi, eax
           jmp   LAB_00401c12
-LAB_00401bec:     mov   eax, dword ptr [DAT_0040c954]   ; <c954>
+LAB_00401bec:     mov   eax, dword ptr [isFsGameMode]   ; <c954>
           test  eax, eax
           jz    LAB_00401c00
           mov   ecx, 000004100h
           sub   ecx, edi
           mov   edi, ecx
           jmp   LAB_00401c12
-LAB_00401c00:     mov   eax, dword ptr [DAT_0040c958]   ; <c958>
+LAB_00401c00:     mov   eax, dword ptr [isGsGameMode]   ; <c958>
           test  eax, eax
           jz    LAB_00401c12
           mov   edx, 000004100h
@@ -2615,7 +2615,7 @@ LAB_00402ac9:     mov   edi, dword ptr [edi*4+UINT_ARRAY_0040a434]      ; <a434>
           cmp   edi, 000000011h
           jnz   LAB_00402ae6
           mov   ecx, 0FFFFFFC0h
-          call  @FUN_00403420@4
+          call  @addStylePoints@4
           mov   ecx, offset sound_1.soundResource       ; <c6c0>
           jmp   LAB_00402aeb
 LAB_00402ae6:     mov   ecx, offset sound_4.soundResource       ; <c718>
@@ -2637,19 +2637,19 @@ LAB_00402b17:     mov   ecx, 000000008h
 LAB_00402b1e:     mov   ecx, 000000004h
           jmp   LAB_00402b2a
 LAB_00402b25:     mov   ecx, 000000002h
-LAB_00402b2a:     call  @FUN_00403420@4
+LAB_00402b2a:     call  @addStylePoints@4
 LAB_00402b2f:     push  ebp
           mov   edx, ebx
           mov   ecx, esi
-          call  @FUN_00402c60@12
+          call  @updateSsGameMode@12
           mov   edx, ebx
           mov   ecx, esi
           push  ebp
-          call  @FUN_00403180@12
+          call  @updateFsGameMode@12
           mov   edx, ebx
           mov   ecx, esi
           push  ebp
-          call  @FUN_00403250@12
+          call  @updateGsGameMode@12
           mov   eax, esi
           pop   edi
           pop   esi
@@ -2803,7 +2803,7 @@ LAB_00402c5d:
           db 090h
 @updateActorPositionWithVelocityMaybe@4 endp
 
-@FUN_00402c60@12 proc
+@updateSsGameMode@12 proc
           mov   eax, dword ptr [playerActorPtrMaybe]    ; <c72c>
           push  ebx
           push  ebp
@@ -2821,7 +2821,7 @@ LAB_00402c5d:
           mov   edx, 0000006FCh
           mov   ecx, offset sourceFilename      ; <c090>
           call  @assertFailed@8
-LAB_00402c94:     cmp   dword ptr [DAT_0040c95c], edi   ; <c95c>
+LAB_00402c94:     cmp   dword ptr [isSsGameMode], edi   ; <c95c>
           jz    LAB_00402da7
           mov   ecx, dword ptr [currentTickCount]       ; <c698>
           mov   edx, dword ptr [DAT_0040c948]   ; <c948>
@@ -2838,7 +2838,7 @@ LAB_00402c94:     cmp   dword ptr [DAT_0040c95c], edi   ; <c95c>
           push  eax
           call  @FUN_00402e30@20
           mov   ecx, dword ptr [DAT_0040c948]   ; <c948>
-          mov   dword ptr [DAT_0040c95c], edi   ; <c95c>
+          mov   dword ptr [isSsGameMode], edi   ; <c95c>
           sub   eax, ecx
           mov   dword ptr [DAT_0040c964], 000000001h    ; <c964>
           mov   dword ptr [elapsedTime], eax    ; <c944>
@@ -2854,7 +2854,7 @@ LAB_00402c94:     cmp   dword ptr [DAT_0040c95c], edi   ; <c95c>
           ret   00004h
 LAB_00402d11:     cmp   si, 00280h
           jg    LAB_00402d25
-          mov   dword ptr [DAT_0040c95c], edi   ; <c95c>
+          mov   dword ptr [isSsGameMode], edi   ; <c95c>
           pop   edi
           pop   esi
           pop   ebp
@@ -2920,7 +2920,7 @@ LAB_00402da7:     mov   ax, word ptr [esp+014h]
           push  000000280h
           push  edi
           push  esi
-          mov   dword ptr [DAT_0040c95c], 000000001h    ; <c95c>
+          mov   dword ptr [isSsGameMode], 000000001h    ; <c95c>
           call  @FUN_00402e30@20
           mov   ecx, dword ptr [currentTickCount]       ; <c698>
           mov   edx, dword ptr [DAT_0040c94c]   ; <c94c>
@@ -2946,7 +2946,7 @@ LAB_00402e24:
           db 090h
           db 090h
           db 090h
-@FUN_00402c60@12 endp
+@updateSsGameMode@12 endp
 
 @FUN_00402e30@20 proc
           push  ebx
@@ -3284,7 +3284,7 @@ LAB_00403172:
           db 090h
 @FUN_00403130@8 endp
 
-@FUN_00403180@12 proc
+@updateFsGameMode@12 proc
           mov   eax, dword ptr [playerActorPtrMaybe]    ; <c72c>
           push  ebx
           push  esi
@@ -3300,12 +3300,12 @@ LAB_00403172:
           mov   edx, 00000072Fh
           mov   ecx, offset sourceFilename      ; <c090>
           call  @assertFailed@8
-LAB_004031b1:     mov   eax, dword ptr [DAT_0040c954]   ; <c954>
+LAB_004031b1:     mov   eax, dword ptr [isFsGameMode]   ; <c954>
           test  eax, eax
           jz    LAB_00403209
           cmp   si, 04100h
           jle   LAB_004031f2
-          mov   dword ptr [DAT_0040c954], 000000000h    ; <c954>
+          mov   dword ptr [isFsGameMode], 000000000h    ; <c954>
           mov   dword ptr [DAT_0040c968], 000000001h    ; <c968>
           call  _FUN_00402e80
           mov   edx, dword ptr [stylePoints]    ; <c6a8>
@@ -3320,7 +3320,7 @@ LAB_004031f2:     cmp   si, 00280h
           jg    LAB_00403249
           pop   edi
           pop   esi
-          mov   dword ptr [DAT_0040c954], 000000000h    ; <c954>
+          mov   dword ptr [isFsGameMode], 000000000h    ; <c954>
           pop   ebx
           ret   00004h
 LAB_00403209:     mov   ax, word ptr [esp+010h]
@@ -3340,16 +3340,16 @@ LAB_00403209:     mov   ax, word ptr [esp+010h]
           jl    LAB_00403249
           cmp   ax, 000A0h
           jg    LAB_00403249
-          mov   dword ptr [DAT_0040c954], 000000001h    ; <c954>
+          mov   dword ptr [isFsGameMode], 000000001h    ; <c954>
 LAB_00403249:     pop   edi
           pop   esi
           pop   ebx
           ret   00004h
 LAB_0040324f:
           db 090h
-@FUN_00403180@12 endp
+@updateFsGameMode@12 endp
 
-@FUN_00403250@12 proc
+@updateGsGameMode@12 proc
           mov   eax, dword ptr [playerActorPtrMaybe]    ; <c72c>
           push  ebx
           push  ebp
@@ -3367,7 +3367,7 @@ LAB_0040324f:
           mov   edx, 00000074Eh
           mov   ecx, offset sourceFilename      ; <c090>
           call  @assertFailed@8
-LAB_00403284:     cmp   dword ptr [DAT_0040c958], edi   ; <c958>
+LAB_00403284:     cmp   dword ptr [isGsGameMode], edi   ; <c958>
           jz    LAB_00403397
           mov   ecx, dword ptr [currentTickCount]       ; <c698>
           mov   edx, dword ptr [DAT_0040c948]   ; <c948>
@@ -3384,7 +3384,7 @@ LAB_00403284:     cmp   dword ptr [DAT_0040c958], edi   ; <c958>
           push  eax
           call  @FUN_00402e30@20
           mov   ecx, dword ptr [DAT_0040c948]   ; <c948>
-          mov   dword ptr [DAT_0040c958], edi   ; <c958>
+          mov   dword ptr [isGsGameMode], edi   ; <c958>
           sub   eax, ecx
           mov   dword ptr [DAT_0040c960], 000000001h    ; <c960>
           mov   dword ptr [elapsedTime], eax    ; <c944>
@@ -3400,7 +3400,7 @@ LAB_00403284:     cmp   dword ptr [DAT_0040c958], edi   ; <c958>
           ret   00004h
 LAB_00403301:     cmp   si, 00280h
           jg    LAB_00403315
-          mov   dword ptr [DAT_0040c958], edi   ; <c958>
+          mov   dword ptr [isGsGameMode], edi   ; <c958>
           pop   edi
           pop   esi
           pop   ebp
@@ -3466,7 +3466,7 @@ LAB_00403397:     mov   ax, word ptr [esp+014h]
           push  000000280h
           push  edi
           push  esi
-          mov   dword ptr [DAT_0040c958], 000000001h    ; <c958>
+          mov   dword ptr [isGsGameMode], 000000001h    ; <c958>
           call  @FUN_00402e30@20
           mov   ecx, dword ptr [currentTickCount]       ; <c698>
           mov   edx, dword ptr [DAT_0040c950]   ; <c950>
@@ -3492,15 +3492,15 @@ LAB_00403414:
           db 090h
           db 090h
           db 090h
-@FUN_00403250@12 endp
+@updateGsGameMode@12 endp
 
-@FUN_00403420@4 proc
-          mov   eax, dword ptr [DAT_0040c954]   ; <c954>
+@addStylePoints@4 proc
+          mov   eax, dword ptr [isFsGameMode]   ; <c954>
           test  eax, eax
           jz    LAB_0040342f
           add   dword ptr [stylePoints], ecx    ; <c6a8>
 LAB_0040342f:     ret
-@FUN_00403420@4 endp
+@addStylePoints@4 endp
 
 @updateActorVelMaybe@8 proc
           push  ecx
@@ -4171,7 +4171,7 @@ LAB_00403bcc:     movsx eax, word ptr [esi+048h]
           mov   ecx, 000000001h
           sar   eax, 1h
           mov   word ptr [esi+04Ah], ax
-          call  @FUN_00403420@4
+          call  @addStylePoints@4
           mov   ecx, offset sound_2.soundResource       ; <c768>
 LAB_00403be8:     call  @playSound@4
           mov   edx, dword ptr [esp+010h]
@@ -4194,7 +4194,7 @@ LAB_00403c00:     mov   eax, dword ptr [esp+018h]
 LAB_00403c15:     cmp   word ptr [edi+010h], 000000052h
           jnz   LAB_00403fc1
           mov   ecx, 0FFFFFFF0h
-          call  @FUN_00403420@4
+          call  @addStylePoints@4
           mov   edx, dword ptr [esp+010h]
           mov   ecx, esi
           call  @FUN_00402120@8
@@ -4242,7 +4242,7 @@ LAB_00403c84:     mov   eax, dword ptr [esp+018h]
           mov   word ptr [esi+04Ah], ax
 LAB_00403cb4:     mov   ecx, 000000001h
           mov   dword ptr [esp+010h], 00000000Dh
-          call  @FUN_00403420@4
+          call  @addStylePoints@4
           mov   ecx, offset sound_2.soundResource       ; <c768>
           call  @playSound@4
           mov   edx, dword ptr [esp+010h]
@@ -4273,7 +4273,7 @@ LAB_00403d18:     mov   eax, edi
 LAB_00403d1a:     mov   ecx, eax
           call  @FUN_00401350@4
           mov   ecx, 000000064h
-          call  @FUN_00403420@4
+          call  @addStylePoints@4
           mov   edx, dword ptr [esp+010h]
           mov   ecx, esi
           call  @FUN_00402120@8
@@ -4357,7 +4357,7 @@ LAB_00403dfa:     cmp   word ptr [edi+010h], 000000032h
           mov   dword ptr [edi+018h], 000000009h
           call  @FUN_00402120@8
           mov   ecx, 000000010h
-          call  @FUN_00403420@4
+          call  @addStylePoints@4
           mov   edx, dword ptr [esp+010h]
           mov   ecx, esi
           call  @FUN_00402120@8
@@ -4368,7 +4368,7 @@ LAB_00403dfa:     cmp   word ptr [edi+010h], 000000032h
           add   esp, 00000000Ch
           ret
 LAB_00403e39:     mov   ecx, 0FFFFFFE0h
-          call  @FUN_00403420@4
+          call  @addStylePoints@4
           mov   ecx, offset sound_1.soundResource       ; <c6c0>
           call  @playSound@4
           mov   edx, dword ptr [esp+010h]
@@ -4383,7 +4383,7 @@ LAB_00403e39:     mov   ecx, 0FFFFFFE0h
 LAB_00403e60:     cmp   dword ptr [esp+014h], 000000009h
           jnz   LAB_00403e97
           mov   ecx, 0000003E8h
-          call  @FUN_00403420@4
+          call  @addStylePoints@4
           mov   edx, 000000032h
           mov   ecx, edi
           mov   dword ptr [edi+018h], 00000000Dh
@@ -4398,7 +4398,7 @@ LAB_00403e60:     cmp   dword ptr [esp+014h], 000000009h
           add   esp, 00000000Ch
           ret
 LAB_00403e97:     mov   ecx, 000000006h
-          call  @FUN_00403420@4
+          call  @addStylePoints@4
           mov   edx, dword ptr [esp+010h]
           mov   ecx, esi
           call  @FUN_00402120@8
@@ -4434,7 +4434,7 @@ LAB_00403ed0:     cmp   bx, bp
           add   esp, 00000000Ch
           ret
 LAB_00403f0b:     mov   ecx, 000000014h
-          call  @FUN_00403420@4
+          call  @addStylePoints@4
 LAB_00403f15:     cmp   bx, bp
           jge   LAB_00403fc1
           mov   ecx, dword ptr [esp+010h]
@@ -4457,7 +4457,7 @@ LAB_00403f44:     cmp   dword ptr [esp+010h], 000000019h
           test  eax, eax
           jnz   LAB_00403f5d
           mov   ecx, 000000014h
-          call  @FUN_00403420@4
+          call  @addStylePoints@4
 LAB_00403f5d:     xor   edx, edx
           mov   ecx, offset sound_6.soundResource       ; <c628>
           cmp   word ptr [edi+044h], dx
@@ -4477,7 +4477,7 @@ LAB_00403f92:     mov   eax, dword ptr [esp+014h]
           test  eax, eax
           jnz   LAB_00403fa4
           mov   ecx, 000000003h
-          call  @FUN_00403420@4
+          call  @addStylePoints@4
 LAB_00403fa4:     mov   dword ptr [esp+010h], ebx
           mov   ecx, offset sound_3.soundResource       ; <c5d0>
           jmp   LAB_00403be8
@@ -5477,9 +5477,9 @@ _resetGame proc
           mov   word ptr [DAT_0040c714], si     ; <c714>
           mov   dword ptr [stylePoints], esi    ; <c6a8>
           mov   dword ptr [DAT_0040c964], esi   ; <c964>
-          mov   dword ptr [DAT_0040c95c], esi   ; <c95c>
+          mov   dword ptr [isSsGameMode], esi   ; <c95c>
           mov   dword ptr [DAT_0040c960], esi   ; <c960>
-          mov   dword ptr [DAT_0040c958], esi   ; <c958>
+          mov   dword ptr [isGsGameMode], esi   ; <c958>
           mov   dword ptr [elapsedTime], esi    ; <c944>
           mov   dword ptr [updateTimerDurationMillis], 000000028h       ; <c678>
           mov   dword ptr [redrawRequired], eax ; <c610>
@@ -5589,11 +5589,11 @@ _FUN_00404ad0 proc
           jnz   LAB_00404b4f
           mov   dword ptr [isPaused], 000000001h        ; <c6d0>
           call  dword ptr [__imp__GetTickCount@0]       ; <GetTickCount>
-          mov   ecx, dword ptr [DAT_0040c95c]   ; <c95c>
+          mov   ecx, dword ptr [isSsGameMode]   ; <c95c>
           mov   dword ptr [currentTickCount], eax       ; <c698>
           test  ecx, ecx
           jnz   LAB_00404b14
-          mov   ecx, dword ptr [DAT_0040c958]   ; <c958>
+          mov   ecx, dword ptr [isGsGameMode]   ; <c958>
           test  ecx, ecx
           jz    LAB_00404b2a
 LAB_00404b14:     mov   edx, dword ptr [DAT_0040c600]   ; <c600>
@@ -5837,7 +5837,7 @@ LAB_00404ec1:     lea   edx, dword ptr [esp+010h]
           call  @FUN_00405120@8
           mov   ecx, offset DAT_0040c738        ; <c738>
           mov   dword ptr [DAT_0040c968], edi   ; <c968>
-          mov   dword ptr [DAT_0040c954], edi   ; <c954>
+          mov   dword ptr [isFsGameMode], edi   ; <c954>
           call  @FUN_00405100@4
           mov   esi, 0FFFFFC00h
           mov   ebp, 000000040h
@@ -8265,6 +8265,7 @@ LAB_0040686c:
           db 090h
 @handleCharMessage@4 endp
 
+COMMENT ~
 _handleWindowSizeMessage proc
           mov   cx, word ptr [statusWindowHeight]       ; <c66a>
           mov   eax, dword ptr [statusWindowTotalTextWidth]     ; <c66c>
@@ -8292,7 +8293,9 @@ LAB_004068ca:
           db 090h
           db 090h
 _handleWindowSizeMessage endp
+~
 
+COMMENT ~
 _skiStatusWndProc@16 proc
           push  esi
           mov   esi, dword ptr [esp+00Ch]
@@ -8367,6 +8370,7 @@ LAB_0040695c:
           db 090h
           db 090h
 _skiStatusWndProc@16 endp
+~
 
 COMMENT ~
 @paintStatusWindow@4 proc

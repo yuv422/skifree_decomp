@@ -17,3 +17,5 @@ _timerCallbackFunc
 @drawText@20
 @random@4
 @paintStatusWindow@4
+_skiStatusWndProc@16
+_handleWindowSizeMessage
