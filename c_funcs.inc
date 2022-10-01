@@ -11,6 +11,8 @@ extern @formatElapsedTime@8: proc
 extern @drawText@20: proc
 extern @random@4: proc
 extern _handleWindowSizeMessage: proc
+extern @mainWindowPaint@4: proc
+extern @updateActorSpriteRect@4: proc
 
 ; exports
 ; public _WinMain@16

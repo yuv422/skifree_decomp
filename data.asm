@@ -227,8 +227,8 @@ PUBLIC C redrawRequired
 redrawRequired byte 4 DUP (00h)
 PUBLIC C DAT_0040c614
 DAT_0040c614 byte 4 DUP (00h)
-PUBLIC C PTR_0040c618
-PTR_0040c618 byte 4 DUP (00h)
+PUBLIC C actorListPtr
+actorListPtr byte 4 DUP (00h)
 PUBLIC C skiFreeHInstance
 skiFreeHInstance byte 4 DUP (00h)
 PUBLIC C DAT_0040c620

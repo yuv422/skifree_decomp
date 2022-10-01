@@ -50,7 +50,7 @@ LAB_00401084:     test  ebp, ebp
           mov   edx, 0000004F9h
           mov   ecx, offset sourceFilename      ; <c090>
           call  @assertFailed@8
-LAB_00401097:     mov   esi, dword ptr [PTR_0040c618]   ; <c618>
+LAB_00401097:     mov   esi, dword ptr [actorListPtr]   ; <c618>
           test  esi, esi
           jz    LAB_00401125
           mov   ebx, 0FFFFFFFEh
@@ -72,14 +72,14 @@ LAB_004010aa:     test  byte ptr [esi+04Ch], 00Bh
           lea   ebp, dword ptr [edi+020h]
           jmp   LAB_004010de
 LAB_004010d5:     mov   ecx, edi
-          call  @FUN_00401410@4
+          call  @updateActorSpriteRect@4
           mov   ebp, eax
 LAB_004010de:     test  byte ptr [esi+04Ch], 004h
           jz    LAB_004010e9
           lea   eax, dword ptr [esi+020h]
           jmp   LAB_004010f0
 LAB_004010e9:     mov   ecx, esi
-          call  @FUN_00401410@4
+          call  @updateActorSpriteRect@4
 LAB_004010f0:     mov   edx, ebp
           mov   ecx, eax
           call  @FUN_004012f0@8
@@ -97,7 +97,7 @@ LAB_00401115:     mov   esi, dword ptr [esi]
           test  esi, esi
           jnz   LAB_004010aa
           mov   ebp, dword ptr [esp+010h]
-          mov   esi, dword ptr [PTR_0040c618]   ; <c618>
+          mov   esi, dword ptr [actorListPtr]   ; <c618>
 LAB_00401125:     test  esi, esi
           mov   bl, 010h
           jz    LAB_00401190
@@ -112,7 +112,7 @@ LAB_00401139:     test  al, 004h
           lea   edi, dword ptr [esi+020h]
           jmp   LAB_0040114b
 LAB_00401142:     mov   ecx, esi
-          call  @FUN_00401410@4
+          call  @updateActorSpriteRect@4
           mov   edi, eax
 LAB_0040114b:     mov   edx, ebp
           mov   ecx, edi
@@ -138,7 +138,7 @@ LAB_0040114b:     mov   edx, ebp
 LAB_0040118a:     mov   esi, dword ptr [esi]
           test  esi, esi
           jnz   LAB_0040112b
-LAB_00401190:     mov   esi, dword ptr [PTR_0040c618]   ; <c618>
+LAB_00401190:     mov   esi, dword ptr [actorListPtr]   ; <c618>
           test  esi, esi
           mov   edi, esi
           jz    LAB_00401212
@@ -158,7 +158,7 @@ LAB_0040119c:     test  byte ptr [edi+04Ch], bl
 LAB_004011be:     mov   edx, esi
           mov   ecx, edi
           call  @FUN_00401a60@8
-LAB_004011c7:     mov   esi, dword ptr [PTR_0040c618]   ; <c618>
+LAB_004011c7:     mov   esi, dword ptr [actorListPtr]   ; <c618>
 LAB_004011cd:     test  esi, esi
           jz    LAB_004011ec
           cmp   edi, esi
@@ -172,7 +172,7 @@ LAB_004011cd:     test  esi, esi
           jnz   LAB_004011be
 LAB_004011e8:     mov   esi, dword ptr [esi]
           jmp   LAB_004011cd
-LAB_004011ec:     mov   esi, dword ptr [PTR_0040c618]   ; <c618>
+LAB_004011ec:     mov   esi, dword ptr [actorListPtr]   ; <c618>
 LAB_004011f2:     mov   edi, dword ptr [edi]
           test  edi, edi
           jnz   LAB_0040119c
@@ -186,7 +186,7 @@ LAB_004011fc:     test  byte ptr [esi+04Ch], bl
 LAB_0040120c:     mov   esi, dword ptr [esi]
           test  esi, esi
           jnz   LAB_004011fc
-LAB_00401212:     mov   esi, dword ptr [PTR_0040c618]   ; <c618>
+LAB_00401212:     mov   esi, dword ptr [actorListPtr]   ; <c618>
           test  esi, esi
           jz    LAB_0040122f
 LAB_0040121c:     test  byte ptr [esi+04Ch], 002h
@@ -375,11 +375,11 @@ LAB_00401384:
 _FUN_00401390 proc
           push  ebp
           push  esi
-          mov   esi, dword ptr [PTR_0040c618]   ; <c618>
+          mov   esi, dword ptr [actorListPtr]   ; <c618>
           xor   ebp, ebp
           push  edi
           cmp   esi, ebp
-          mov   edi, offset PTR_0040c618        ; <c618>
+          mov   edi, offset actorListPtr        ; <c618>
           jz    LAB_00401401
 LAB_004013a4:     test  byte ptr [esi+04Ch], 008h
           jz    LAB_004013f9
@@ -427,7 +427,8 @@ LAB_00401405:
           db 090h
 _FUN_00401390 endp
 
-@FUN_00401410@4 proc
+COMMENT ~
+@updateActorSpriteRect@4 proc
           push  esi
           mov   esi, ecx
           test  esi, esi
@@ -466,7 +467,7 @@ LAB_00401479:     mov   cx, word ptr [esi+044h]
           mov   edx, dword ptr [esi+014h]
           push  eax
           mov   ecx, edi
-          call  @FUN_004014b0@20
+          call  @updateRectForSpriteAtLocation@20
           mov   eax, dword ptr [esi+04Ch]
           or    al, 004h
           mov   dword ptr [esi+04Ch], eax
@@ -489,9 +490,10 @@ LAB_004014a2:
           db 090h
           db 090h
           db 090h
-@FUN_00401410@4 endp
+@updateActorSpriteRect@4 endp
+~
 
-@FUN_004014b0@20 proc
+@updateRectForSpriteAtLocation@20 proc
           push  ebx
           push  ebp
           push  esi
@@ -544,7 +546,7 @@ LAB_004014e6:     mov   ax, word ptr [skierScreenYOffset]       ; <c5fc>
           ret   0000Ch
 LAB_0040153f:
           db 090h
-@FUN_004014b0@20 endp
+@updateRectForSpriteAtLocation@20 endp
 
 @drawActor@8 proc
           sub   esp, 000000040h
@@ -639,7 +641,7 @@ LAB_0040163d:     test  ecx, ecx
           lea   eax, dword ptr [esi+020h]
           jmp   LAB_00401658
 LAB_00401651:     mov   ecx, esi
-          call  @FUN_00401410@4
+          call  @updateActorSpriteRect@4
 LAB_00401658:     movsx edx, word ptr [edi+008h]
           mov   ecx, dword ptr [edi]
           push  0008800C6h
@@ -723,7 +725,7 @@ LAB_00401703:     mov   eax, dword ptr [ebp+000h]
           add   esi, 000000020h
           jmp   LAB_00401747
 LAB_0040173e:     mov   ecx, esi
-          call  @FUN_00401410@4
+          call  @updateActorSpriteRect@4
           mov   esi, eax
 LAB_00401747:     movsx eax, word ptr [esp+01Ch]
           mov   edx, dword ptr [esi+008h]
@@ -1402,7 +1404,7 @@ _updateGameState proc
           sub   word ptr [DAT_0040c5d8], cx     ; <c5d8>
           push  ebx
           push  esi
-          mov   esi, dword ptr [PTR_0040c618]   ; <c618>
+          mov   esi, dword ptr [actorListPtr]   ; <c618>
           push  edi
           test  esi, esi
           jz    LAB_00401ef4
@@ -1430,7 +1432,7 @@ LAB_00401ea3:     mov   eax, dword ptr [esi+04Ch]
           lea   eax, dword ptr [esi+020h]
           jmp   LAB_00401ec2
 LAB_00401ebb:     mov   ecx, esi
-          call  @FUN_00401410@4
+          call  @updateActorSpriteRect@4
 LAB_00401ec2:     mov   edx, offset DAT_0040c680        ; <c680>
           mov   ecx, eax
           call  @doRectsOverlap@8
@@ -1457,7 +1459,7 @@ LAB_00401ef4:     mov   ecx, offset DAT_0040c630        ; <c630>
           mov   ecx, offset DAT_0040c720        ; <c720>
           call  @FUN_004040a0@4
           call  _FUN_00401390
-          mov   edi, dword ptr [PTR_0040c618]   ; <c618>
+          mov   edi, dword ptr [actorListPtr]   ; <c618>
           test  edi, edi
           jz    LAB_00401fc5
           push  ebp
@@ -1469,10 +1471,10 @@ LAB_00401f3a:     mov   eax, dword ptr [edi+04Ch]
           lea   ebx, dword ptr [edi+020h]
           jmp   LAB_00401f53
 LAB_00401f4a:     mov   ecx, edi
-          call  @FUN_00401410@4
+          call  @updateActorSpriteRect@4
           mov   ebx, eax
 LAB_00401f53:     mov   ebp, dword ptr [edi+04Ch]
-          mov   esi, dword ptr [PTR_0040c618]   ; <c618>
+          mov   esi, dword ptr [actorListPtr]   ; <c618>
           shl   ebp, 01Ah
           sar   ebp, 01Fh
           test  esi, esi
@@ -1491,7 +1493,7 @@ LAB_00401f79:     test  al, 004h
           lea   eax, dword ptr [esi+020h]
           jmp   LAB_00401f89
 LAB_00401f82:     mov   ecx, esi
-          call  @FUN_00401410@4
+          call  @updateActorSpriteRect@4
 LAB_00401f89:     mov   edx, eax
           mov   ecx, ebx
           call  @doRectsOverlap@8
@@ -1810,10 +1812,10 @@ LAB_004022a2:     test  ebx, ebx
           pop   ebx
           pop   ecx
           ret
-LAB_004022d9:     mov   edx, dword ptr [PTR_0040c618]   ; <c618>
+LAB_004022d9:     mov   edx, dword ptr [actorListPtr]   ; <c618>
           mov   eax, ebx
           mov   dword ptr [ebx], edx
-          mov   dword ptr [PTR_0040c618], ebx   ; <c618>
+          mov   dword ptr [actorListPtr], ebx   ; <c618>
           pop   ebp
           pop   ebx
           pop   ecx
@@ -2018,7 +2020,7 @@ LAB_00402468:
           push  edi
           mov   edi, edx
           sub   edi, esi
-          mov   esi, dword ptr [PTR_0040c618]   ; <c618>
+          mov   esi, dword ptr [actorListPtr]   ; <c618>
           mov   bx, bp
           mov   dword ptr [esp+010h], edx
           sub   bx, word ptr [DAT_0040c5f2]     ; <c5f2>
@@ -4676,7 +4678,7 @@ LAB_0040414c:     cmp   dword ptr [esi], 000000000h
           push  ebx
           push  edi
           lea   ecx, dword ptr [esp+01Ch]
-          call  @FUN_004014b0@20
+          call  @updateRectForSpriteAtLocation@20
           mov   edx, offset DAT_0040c680        ; <c680>
           lea   ecx, dword ptr [esp+010h]
           call  @doRectsOverlap@8
@@ -5493,7 +5495,7 @@ _setupActorList proc
           push  esi
           mov   esi, dword ptr [actors] ; <c648>
           xor   edx, edx
-          mov   dword ptr [PTR_0040c618], 000000000h    ; <c618>
+          mov   dword ptr [actorListPtr], 000000000h    ; <c618>
           mov   dword ptr [DAT_0040c744], esi   ; <c744>
           mov   ecx, 000000001h
           xor   eax, eax
@@ -7405,7 +7407,7 @@ LAB_00406053:
 @FUN_00406060@8 proc
           push  ebx
           push  esi
-          mov   esi, dword ptr [PTR_0040c618]   ; <c618>
+          mov   esi, dword ptr [actorListPtr]   ; <c618>
           push  edi
           test  esi, esi
           mov   di, dx
@@ -7442,6 +7444,7 @@ LAB_004060a9:
           db 090h
 @FUN_00406060@8 endp
 
+COMMENT ~
 @mainWindowPaint@4 proc
           sub   esp, 000000040h
           lea   eax, dword ptr [esp+000h]
@@ -7478,7 +7481,9 @@ LAB_004060f7:
           db 090h
           db 090h
 @mainWindowPaint@4 endp
+~
 
+COMMENT ~
 @paintActors@8 proc
           push  ebp
           mov   ebp, ecx
@@ -7495,7 +7500,7 @@ LAB_0040611a:     test  edi, edi
           mov   edx, 000000544h
           mov   ecx, offset sourceFilename      ; <c090>
           call  @assertFailed@8
-LAB_0040612d:     mov   esi, dword ptr [PTR_0040c618]   ; <c618>
+LAB_0040612d:     mov   esi, dword ptr [actorListPtr]   ; <c618>
           test  esi, esi
           jz    LAB_00406164
 LAB_00406137:     test  byte ptr [esi+04Ch], 004h
@@ -7503,7 +7508,7 @@ LAB_00406137:     test  byte ptr [esi+04Ch], 004h
           lea   eax, dword ptr [esi+020h]
           jmp   LAB_00406149
 LAB_00406142:     mov   ecx, esi
-          call  @FUN_00401410@4
+          call  @updateActorSpriteRect@4
 LAB_00406149:     mov   edx, edi
           mov   ecx, eax
           call  @doRectsOverlap@8
@@ -7522,6 +7527,7 @@ LAB_00406164:     mov   edx, edi
           pop   ebp
           jmp   @drawWindow@8
 @paintActors@8 endp
+~
 
 @handleKeydownMessage@4 proc
           lea   eax, dword ptr [ecx-00Dh]

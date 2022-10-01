@@ -191,7 +191,7 @@ EXTERN C DAT_0040c600: far
 EXTERN C sound_8:Sound
 EXTERN C redrawRequired: far
 EXTERN C DAT_0040c614: far
-EXTERN C PTR_0040c618: far
+EXTERN C actorListPtr: far
 EXTERN C skiFreeHInstance: far
 EXTERN C DAT_0040c620: far
 EXTERN C hSkiStatusWnd: far

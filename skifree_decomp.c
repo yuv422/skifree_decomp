@@ -52,10 +52,11 @@ void __fastcall paintStatusWindow(HWND hWnd);
 BOOL __fastcall calculateStatusWindowDimensions(HWND hWnd);
 void __fastcall statusWindowReleaseDC(HWND hWnd);
 LRESULT CALLBACK skiStatusWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+void __fastcall paintActors(HDC hdc, RECT *paintRect);
 
 
 
-#define ski_assert(exp, src, line) (void)( (exp) || (assertFailed(src, line), 0) )
+
 
 extern char s_assertErrorFormat[];
 extern char s_Assertion_Failed_0040c0a8[];
@@ -73,6 +74,7 @@ extern void updateGameState();
 extern void __fastcall drawWindow(HDC hdc, RECT *rect);
 extern void __fastcall formatAndPrintStatusStrings(HDC windowDC);
 extern LRESULT CALLBACK skiMainWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+extern void __fastcall updateRectForSpriteAtLocation(RECT *rect, Sprite *sprite, short newX, short newY, short param_5);
 
 extern char sourceFilename[];
 extern HWND hSkiMainWnd;
@@ -82,6 +84,7 @@ extern HINSTANCE skiFreeHInstance;
 extern char s_out_o_memory[];
 extern Sprite *sprites;
 extern Actor *actors;
+extern Actor *actorListPtr;
 extern void *PTR_0040c758;
 extern int isSoundDisabled;
 extern USHORT SCREEN_WIDTH;
@@ -122,6 +125,8 @@ extern short statusWindowLabelWidth;
 extern BOOL (WINAPI *sndPlaySoundAFuncPtr)(LPCSTR, UINT);
 extern int (*timerCallbackFuncPtr)();
 
+#define ski_assert(exp, line) (void)( (exp) || (assertFailed(sourceFilename, line), 0) ) // TODO remove need for src param.
+
 void timerUpdateFunc() {
     DWORD ticks;
 
@@ -157,8 +162,8 @@ void __fastcall assertFailed(char *srcFilename, int lineNumber) {
 }
 
 int __fastcall doRectsOverlap(RECT *rect1, RECT *rect2) {
-    ski_assert(rect1 != NULL, sourceFilename, 352);
-    ski_assert(rect2 != NULL, sourceFilename, 353);
+    ski_assert(rect1 != NULL, 352);
+    ski_assert(rect2 != NULL, 353);
 
     if ((((rect2->left < rect1->right) && (rect1->left < rect2->right)) &&
          (rect2->top < rect1->bottom)) && (rect1->top < rect2->bottom)) {
@@ -432,6 +437,54 @@ void handleWindowSizeMessage(void) {
     nWidth = (int)(short)((short)statusWindowTotalTextWidth + 4);
     MoveWindow(hSkiStatusWnd,windowClientRect.right - nWidth,windowClientRect.top,nWidth,
                (int)(short)(statusWindowHeight + 4),1);
+}
+
+RECT * __fastcall updateActorSpriteRect(Actor *actor) {
+    if (actor == (Actor *)0x0) {
+        assertFailed(sourceFilename,931);
+    }
+    if ((actor->flags & 4) != 0) {
+        assertFailed(sourceFilename,932);
+    }
+    if (actor->spriteIdx2 == 0) {
+        assertFailed(sourceFilename,933);
+    }
+    if (sprites + actor->spriteIdx2 != actor->spritePtr) {
+        assertFailed(sourceFilename,934);
+    }
+    updateRectForSpriteAtLocation(&actor->someRect,actor->spritePtr,actor->xPosMaybe,actor->yPosMaybe,actor->isInAir);
+    actor->flags = actor->flags | 4;
+    return &actor->someRect;
+}
+
+void __fastcall mainWindowPaint(HWND param_1) {
+    PAINTSTRUCT paint;
+
+    BeginPaint(param_1,&paint);
+    FillRect(paint.hdc,&paint.rcPaint,whiteBrush);
+    paintActors(paint.hdc,&paint.rcPaint);
+    EndPaint(param_1,&paint);
+}
+
+void __fastcall paintActors(HDC hdc, RECT *paintRect) {
+    Actor *actor;
+    RECT *rect;
+
+    ski_assert(hdc != NULL, 1347);
+    ski_assert(paintRect != NULL, 1348);
+
+    for (actor = actorListPtr; actor != NULL; actor = actor->next) {
+        if ((actor->flags & 4) == 0) {
+            rect = updateActorSpriteRect(actor);
+        }
+        else {
+            rect = &actor->someRect;
+        }
+        if (doRectsOverlap(rect, paintRect)) {
+            actor->flags = actor->flags & 0xfffffffe;
+        }
+    }
+    drawWindow(hdc,paintRect);
 }
 
 void __fastcall statusWindowFindLongestTextString(HDC hdc, short *maxLength, LPCSTR textStr, int textLength) {

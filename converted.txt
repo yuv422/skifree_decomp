@@ -19,3 +19,6 @@ _timerCallbackFunc
 @paintStatusWindow@4
 _skiStatusWndProc@16
 _handleWindowSizeMessage
+@paintActors@8
+@updateActorSpriteRect@4
+@mainWindowPaint@4
