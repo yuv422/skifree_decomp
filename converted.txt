@@ -22,3 +22,6 @@ _handleWindowSizeMessage
 @paintActors@8
 @updateActorSpriteRect@4
 @mainWindowPaint@4
+_startGameTimer
+_togglePausedState
+_pauseGame

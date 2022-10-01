@@ -223,7 +223,7 @@ COMMENT ~
           lea   edx, dword ptr [esp+000h]
           mov   ecx, offset s_Assertion_Failed_0040c0a8 ; <c0a8>
           call  @assertFailedDialog@8
-          call  _setWindowTitle
+          call  _togglePausedState
           add   esp, 000000020h
           ret
 LAB_0040126f:
@@ -2826,7 +2826,7 @@ LAB_00402c5d:
 LAB_00402c94:     cmp   dword ptr [isSsGameMode], edi   ; <c95c>
           jz    LAB_00402da7
           mov   ecx, dword ptr [currentTickCount]       ; <c698>
-          mov   edx, dword ptr [DAT_0040c948]   ; <c948>
+          mov   edx, dword ptr [timedGameRelated]       ; <c948>
           mov   eax, ecx
           sub   eax, edx
           cmp   si, 021C0h
@@ -2839,7 +2839,7 @@ LAB_00402c94:     cmp   dword ptr [isSsGameMode], edi   ; <c95c>
           mov   edx, dword ptr [prevTickCount]  ; <c708>
           push  eax
           call  @FUN_00402e30@20
-          mov   ecx, dword ptr [DAT_0040c948]   ; <c948>
+          mov   ecx, dword ptr [timedGameRelated]       ; <c948>
           mov   dword ptr [isSsGameMode], edi   ; <c95c>
           sub   eax, ecx
           mov   dword ptr [DAT_0040c964], 000000001h    ; <c964>
@@ -2886,10 +2886,10 @@ LAB_00402d6c:     cmp   dx, 000000018h
           jnz   LAB_00402d8c
           cmp   ax, word ptr [ecx+014h]
           jge   LAB_00402d8c
-LAB_00402d78:     mov   eax, dword ptr [DAT_0040c948]   ; <c948>
+LAB_00402d78:     mov   eax, dword ptr [timedGameRelated]       ; <c948>
           mov   edi, 00000001Ah
           sub   eax, 000001388h
-          mov   dword ptr [DAT_0040c948], eax   ; <c948>
+          mov   dword ptr [timedGameRelated], eax       ; <c948>
 LAB_00402d8c:     mov   edx, edi
           call  @FUN_00403130@8
           mov   eax, dword ptr [DAT_0040c6f8]   ; <c6f8>
@@ -2926,7 +2926,7 @@ LAB_00402da7:     mov   ax, word ptr [esp+014h]
           call  @FUN_00402e30@20
           mov   ecx, dword ptr [currentTickCount]       ; <c698>
           mov   edx, dword ptr [DAT_0040c94c]   ; <c94c>
-          mov   dword ptr [DAT_0040c948], eax   ; <c948>
+          mov   dword ptr [timedGameRelated], eax       ; <c948>
           sub   eax, ecx
           mov   dword ptr [elapsedTime], eax    ; <c944>
           mov   dword ptr [DAT_0040c6f8], edx   ; <c6f8>
@@ -3372,7 +3372,7 @@ LAB_0040324f:
 LAB_00403284:     cmp   dword ptr [isGsGameMode], edi   ; <c958>
           jz    LAB_00403397
           mov   ecx, dword ptr [currentTickCount]       ; <c698>
-          mov   edx, dword ptr [DAT_0040c948]   ; <c948>
+          mov   edx, dword ptr [timedGameRelated]       ; <c948>
           mov   eax, ecx
           sub   eax, edx
           cmp   si, 04100h
@@ -3385,7 +3385,7 @@ LAB_00403284:     cmp   dword ptr [isGsGameMode], edi   ; <c958>
           mov   edx, dword ptr [prevTickCount]  ; <c708>
           push  eax
           call  @FUN_00402e30@20
-          mov   ecx, dword ptr [DAT_0040c948]   ; <c948>
+          mov   ecx, dword ptr [timedGameRelated]       ; <c948>
           mov   dword ptr [isGsGameMode], edi   ; <c958>
           sub   eax, ecx
           mov   dword ptr [DAT_0040c960], 000000001h    ; <c960>
@@ -3432,10 +3432,10 @@ LAB_0040335c:     cmp   dx, 000000018h
           jnz   LAB_0040337c
           cmp   ax, word ptr [ecx+014h]
           jge   LAB_0040337c
-LAB_00403368:     mov   eax, dword ptr [DAT_0040c948]   ; <c948>
+LAB_00403368:     mov   eax, dword ptr [timedGameRelated]       ; <c948>
           mov   edi, 00000001Ah
           sub   eax, 000001388h
-          mov   dword ptr [DAT_0040c948], eax   ; <c948>
+          mov   dword ptr [timedGameRelated], eax       ; <c948>
 LAB_0040337c:     mov   edx, edi
           call  @FUN_00403130@8
           mov   eax, dword ptr [DAT_0040c6f8]   ; <c6f8>
@@ -3472,7 +3472,7 @@ LAB_00403397:     mov   ax, word ptr [esp+014h]
           call  @FUN_00402e30@20
           mov   ecx, dword ptr [currentTickCount]       ; <c698>
           mov   edx, dword ptr [DAT_0040c950]   ; <c950>
-          mov   dword ptr [DAT_0040c948], eax   ; <c948>
+          mov   dword ptr [timedGameRelated], eax       ; <c948>
           sub   eax, ecx
           mov   dword ptr [elapsedTime], eax    ; <c944>
           mov   dword ptr [DAT_0040c6f8], edx   ; <c6f8>
@@ -5563,8 +5563,8 @@ _setupGame proc
           ret
 LAB_00404aa8:     call  _FUN_004051e0
           call  _FUN_00404b50
-          mov   dword ptr [DAT_0040c650], 000000000h    ; <c650>
-          call  _FUN_00404ad0
+          mov   dword ptr [isPaused], 000000000h        ; <c650>
+          call  _startGameTimer
           mov   eax, 000000001h
           ret
 LAB_00404ac7:
@@ -5579,17 +5579,18 @@ LAB_00404ac7:
           db 090h
 _setupGame endp
 
-_FUN_00404ad0 proc
+COMMENT ~
+_startGameTimer proc
           mov   eax, dword ptr [hSkiMainWnd]    ; <c6c8>
           test  eax, eax
           jz    LAB_00404b4f
-          mov   eax, dword ptr [isPaused]       ; <c6d0>
+          mov   eax, dword ptr [isGameTimerRunning]     ; <c6d0>
           test  eax, eax
           jnz   LAB_00404b4f
-          mov   eax, dword ptr [DAT_0040c650]   ; <c650>
+          mov   eax, dword ptr [isPaused]       ; <c650>
           test  eax, eax
           jnz   LAB_00404b4f
-          mov   dword ptr [isPaused], 000000001h        ; <c6d0>
+          mov   dword ptr [isGameTimerRunning], 000000001h      ; <c6d0>
           call  dword ptr [__imp__GetTickCount@0]       ; <GetTickCount>
           mov   ecx, dword ptr [isSsGameMode]   ; <c95c>
           mov   dword ptr [currentTickCount], eax       ; <c698>
@@ -5598,11 +5599,11 @@ _FUN_00404ad0 proc
           mov   ecx, dword ptr [isGsGameMode]   ; <c958>
           test  ecx, ecx
           jz    LAB_00404b2a
-LAB_00404b14:     mov   edx, dword ptr [DAT_0040c600]   ; <c600>
-          mov   ecx, dword ptr [DAT_0040c948]   ; <c948>
+LAB_00404b14:     mov   edx, dword ptr [pauseStartTickCount]    ; <c600>
+          mov   ecx, dword ptr [timedGameRelated]       ; <c948>
           sub   eax, edx
           add   ecx, eax
-          mov   dword ptr [DAT_0040c948], ecx   ; <c948>
+          mov   dword ptr [timedGameRelated], ecx       ; <c948>
 LAB_00404b2a:     mov   ecx, dword ptr [updateTimerDurationMillis]      ; <c678>
           mov   eax, dword ptr [timerCallbackFuncPtr]   ; <c940>
           mov   edx, dword ptr [hSkiMainWnd]    ; <c6c8>
@@ -5613,7 +5614,8 @@ LAB_00404b2a:     mov   ecx, dword ptr [updateTimerDurationMillis]      ; <c678>
           push  edx
           call  dword ptr [__imp__SetTimer@16]  ; <SetTimer>
 LAB_00404b4f:     ret
-_FUN_00404ad0 endp
+_startGameTimer endp
+~
 
 _FUN_00404b50 proc
           sub   esp, 000000024h
@@ -6139,7 +6141,7 @@ LAB_004052f8:     mov   ebp, dword ptr [__imp__GetDeviceCaps@8] ; <GetDeviceCaps
           push  esi
           push  offset s_skiMain        ; <a190>
           mov   dword ptr [hSkiStatusWnd], esi  ; <c624>
-          mov   dword ptr [isPaused], esi       ; <c6d0>
+          mov   dword ptr [isGameTimerRunning], esi     ; <c6d0>
           mov   dword ptr [isMinimised], 000000001h     ; <c770>
           mov   dword ptr [mainWndActivationFlags], esi ; <c694>
           mov   dword ptr [inputEnabled], esi   ; <c67c>
@@ -6520,12 +6522,13 @@ LAB_00405756:
           db 090h
 @freeSoundResource@4 endp
 
-_setWindowTitle proc
-          mov   eax, dword ptr [isPaused]       ; <c6d0>
+COMMENT ~
+_togglePausedState proc
+          mov   eax, dword ptr [isGameTimerRunning]     ; <c6d0>
           test  eax, eax
-          mov   dword ptr [DAT_0040c650], eax   ; <c650>
+          mov   dword ptr [isPaused], eax       ; <c650>
           jz    LAB_0040579c
-          call  _FUN_004057c0
+          call  _pauseGame
           mov   ecx, 000000002h
           call  @getCachedString@4
           push  eax
@@ -6544,7 +6547,7 @@ LAB_0040579c:     mov   ecx, 000000001h
           push  eax
           push  edx
           call  dword ptr [__imp__SetWindowTextA@8]     ; <SetWindowTextA>
-          jmp   _FUN_00404ad0
+          jmp   _startGameTimer
 LAB_004057b9:
           db 090h
           db 090h
@@ -6553,21 +6556,23 @@ LAB_004057b9:
           db 090h
           db 090h
           db 090h
-_setWindowTitle endp
+_togglePausedState endp
+~
 
-_FUN_004057c0 proc
+COMMENT ~
+_pauseGame proc
           mov   eax, dword ptr [hSkiMainWnd]    ; <c6c8>
           test  eax, eax
           jz    LAB_004057f3
-          mov   ecx, dword ptr [isPaused]       ; <c6d0>
+          mov   ecx, dword ptr [isGameTimerRunning]     ; <c6d0>
           test  ecx, ecx
           jz    LAB_004057f3
           push  00000029Ah
           push  eax
-          mov   dword ptr [isPaused], 000000000h        ; <c6d0>
+          mov   dword ptr [isGameTimerRunning], 000000000h      ; <c6d0>
           call  dword ptr [__imp__KillTimer@8]  ; <KillTimer>
           mov   eax, dword ptr [currentTickCount]       ; <c698>
-          mov   dword ptr [DAT_0040c600], eax   ; <c600>
+          mov   dword ptr [pauseStartTickCount], eax    ; <c600>
 LAB_004057f3:     ret
 LAB_004057f4:
           db 090h
@@ -6582,7 +6587,8 @@ LAB_004057f4:
           db 090h
           db 090h
           db 090h
-_FUN_004057c0 endp
+_pauseGame endp
+~
 
 _skiMainWndProc@16 proc
           mov   eax, dword ptr [esp+008h]
@@ -6791,9 +6797,9 @@ _updateWindowsActiveStatus proc
           test  eax, eax
           jnz   LAB_00405a31
           mov   dword ptr [inputEnabled], 000000001h    ; <c67c>
-          jmp   _FUN_00404ad0
+          jmp   _startGameTimer
 LAB_00405a31:     mov   dword ptr [inputEnabled], 000000000h    ; <c67c>
-          jmp   _FUN_004057c0
+          jmp   _pauseGame
 _updateWindowsActiveStatus endp
 
 @loadBitmaps@4 proc
@@ -7242,7 +7248,7 @@ LAB_00405eb4:
           push  eax
           push  ecx
           call  dword ptr [__imp__ReleaseDC@8]  ; <ReleaseDC>
-          call  _FUN_004057c0
+          call  _pauseGame
           jmp   LAB_00405ee0
 LAB_00405ed7:
           db 090h
@@ -7544,7 +7550,7 @@ LAB_00406188:     mov   eax, dword ptr [hSkiMainWnd]    ; <c6c8>
           pop   esi
           ret
 LAB_00406198:     pop   esi
-          jmp   _setWindowTitle
+          jmp   _togglePausedState
 LAB_0040619e:     mov   eax, dword ptr [playerActorPtrMaybe]    ; <c72c>
           test  eax, eax
           jnz   LAB_004063a3
@@ -7911,10 +7917,10 @@ DAT_004064fc  dword offset LAB_004062ce
 LAB_00406500:     call  _resetGame
           test  eax, eax
           jz    LAB_0040653e
-          mov   eax, dword ptr [DAT_0040c650]   ; <c650>
+          mov   eax, dword ptr [isPaused]       ; <c650>
           test  eax, eax
           jz    LAB_00406517
-          call  _setWindowTitle
+          call  _togglePausedState
 LAB_00406517:     mov   eax, dword ptr [hSkiMainWnd]    ; <c6c8>
           push  000000001h
           push  000000000h

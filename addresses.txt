@@ -68,7 +68,7 @@
 00404a00:_setupActorList
 00404a70:_FUN_00404a70
 00404a80:_setupGame
-00404ad0:_FUN_00404ad0
+00404ad0:_startGameTimer
 00404b50:_FUN_00404b50
 00405100:@FUN_00405100@4
 00405120:@FUN_00405120@8
@@ -78,8 +78,8 @@
 00405640:@loadSound@8
 004056a0:_cleanupSound
 00405730:@freeSoundResource@4
-00405760:_setWindowTitle
-004057c0:_FUN_004057c0
+00405760:_togglePausedState
+004057c0:_pauseGame
 00405800:_skiMainWndProc@16
 00405a10:_updateWindowsActiveStatus
 00405a40:@loadBitmaps@4
@@ -374,7 +374,7 @@
 0040c5f4:timerFrameDurationInMillis
 0040c5f8:sprites
 0040c5fc:skierScreenYOffset
-0040c600:DAT_0040c600
+0040c600:pauseStartTickCount
 0040c608:sound_8.soundResource
 0040c60c:sound_8.soundData
 0040c610:redrawRequired
@@ -391,7 +391,7 @@
 0040c644:DAT_0040c644
 0040c648:actors
 0040c64c:PTR_0040c64c
-0040c650:DAT_0040c650
+0040c650:isPaused
 0040c658:DAT_0040c658
 0040c664:statusWindowFont
 0040c668:textLineHeight
@@ -421,7 +421,7 @@
 0040c6c4:sound_1.soundData
 0040c6c8:hSkiMainWnd
 0040c6cc:statusWindowDC
-0040c6d0:isPaused
+0040c6d0:isGameTimerRunning
 0040c6d4:DAT_0040c6d4
 0040c6d8:DAT_0040c6d8
 0040c6e0:sound_7.soundResource
@@ -490,7 +490,7 @@
 0040c93c:DAT_0040c93c
 0040c940:timerCallbackFuncPtr
 0040c944:elapsedTime
-0040c948:DAT_0040c948
+0040c948:timedGameRelated
 0040c94c:DAT_0040c94c
 0040c950:DAT_0040c950
 0040c954:isFsGameMode

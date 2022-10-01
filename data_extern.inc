@@ -187,7 +187,7 @@ EXTERN C DAT_0040c5f2: far
 EXTERN C timerFrameDurationInMillis: far
 EXTERN C sprites: far
 EXTERN C skierScreenYOffset: far
-EXTERN C DAT_0040c600: far
+EXTERN C pauseStartTickCount: far
 EXTERN C sound_8:Sound
 EXTERN C redrawRequired: far
 EXTERN C DAT_0040c614: far
@@ -202,7 +202,7 @@ EXTERN C DAT_0040c640: far
 EXTERN C DAT_0040c644: far
 EXTERN C actors: far
 EXTERN C PTR_0040c64c: far
-EXTERN C DAT_0040c650: far
+EXTERN C isPaused: far
 EXTERN C DAT_0040c658: far
 EXTERN C statusWindowFont: far
 EXTERN C textLineHeight: far
@@ -228,7 +228,7 @@ EXTERN C windowClientRect:tagRECT
 EXTERN C sound_1:Sound
 EXTERN C hSkiMainWnd: far
 EXTERN C statusWindowDC: far
-EXTERN C isPaused: far
+EXTERN C isGameTimerRunning: far
 EXTERN C DAT_0040c6d4: far
 EXTERN C DAT_0040c6d8: far
 EXTERN C sound_7:Sound
@@ -283,7 +283,7 @@ EXTERN C DAT_0040c938: far
 EXTERN C DAT_0040c93c: far
 EXTERN C timerCallbackFuncPtr: far
 EXTERN C elapsedTime: far
-EXTERN C DAT_0040c948: far
+EXTERN C timedGameRelated: far
 EXTERN C DAT_0040c94c: far
 EXTERN C DAT_0040c950: far
 EXTERN C isFsGameMode: far

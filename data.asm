@@ -218,8 +218,8 @@ sprites byte 4 DUP (00h)
 PUBLIC C skierScreenYOffset
 skierScreenYOffset byte 2 DUP (00h)
 db 2 DUP (00h)
-PUBLIC C DAT_0040c600
-DAT_0040c600 byte 4 DUP (00h)
+PUBLIC C pauseStartTickCount
+pauseStartTickCount byte 4 DUP (00h)
 db 4 DUP (00h)
 PUBLIC C sound_8
 sound_8 byte 8 DUP (00h)
@@ -250,8 +250,8 @@ PUBLIC C actors
 actors byte 4 DUP (00h)
 PUBLIC C PTR_0040c64c
 PTR_0040c64c byte 4 DUP (00h)
-PUBLIC C DAT_0040c650
-DAT_0040c650 byte 4 DUP (00h)
+PUBLIC C isPaused
+isPaused byte 4 DUP (00h)
 db 4 DUP (00h)
 PUBLIC C DAT_0040c658
 DAT_0040c658 byte 00h
@@ -308,8 +308,8 @@ PUBLIC C hSkiMainWnd
 hSkiMainWnd byte 4 DUP (00h)
 PUBLIC C statusWindowDC
 statusWindowDC byte 4 DUP (00h)
-PUBLIC C isPaused
-isPaused byte 4 DUP (00h)
+PUBLIC C isGameTimerRunning
+isGameTimerRunning byte 4 DUP (00h)
 PUBLIC C DAT_0040c6d4
 DAT_0040c6d4 byte 4 DUP (00h)
 PUBLIC C DAT_0040c6d8
@@ -457,8 +457,8 @@ PUBLIC C timerCallbackFuncPtr
 timerCallbackFuncPtr byte 4 DUP (00h)
 PUBLIC C elapsedTime
 elapsedTime byte 4 DUP (00h)
-PUBLIC C DAT_0040c948
-DAT_0040c948 byte 4 DUP (00h)
+PUBLIC C timedGameRelated
+timedGameRelated byte 4 DUP (00h)
 PUBLIC C DAT_0040c94c
 DAT_0040c94c byte 4 DUP (00h)
 PUBLIC C DAT_0040c950

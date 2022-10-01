@@ -53,6 +53,8 @@ BOOL __fastcall calculateStatusWindowDimensions(HWND hWnd);
 void __fastcall statusWindowReleaseDC(HWND hWnd);
 LRESULT CALLBACK skiStatusWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 void __fastcall paintActors(HDC hdc, RECT *paintRect);
+void pauseGame();
+void togglePausedState();
 
 
 
@@ -66,7 +68,6 @@ extern char s_nosound_0040c0fc[];
 //
 // ASM Functions
 //
-extern void setWindowTitle();
 extern void cleanupSound();
 extern int setupGame();
 extern int resetGame();
@@ -100,7 +101,9 @@ extern BOOL redrawRequired;
 extern DWORD timerFrameDurationInMillis;
 extern DWORD currentTickCount;
 extern DWORD prevTickCount;
+extern DWORD pauseStartTickCount;
 extern DWORD statusWindowLastUpdateTime;
+extern DWORD timedGameRelated;
 extern RECT windowClientRect;
 extern RECT statusBorderRect;
 extern HDC mainWindowDC;
@@ -120,10 +123,14 @@ extern short textLineHeight;
 extern short statusWindowHeight;
 extern short statusWindowTotalTextWidth;
 extern short statusWindowLabelWidth;
+extern BOOL isGameTimerRunning;
+extern BOOL isSsGameMode;
+extern BOOL isGsGameMode;
+extern int updateTimerDurationMillis;
 
 
 extern BOOL (WINAPI *sndPlaySoundAFuncPtr)(LPCSTR, UINT);
-extern int (*timerCallbackFuncPtr)();
+extern void (CALLBACK* timerCallbackFuncPtr)(HWND, UINT, UINT, DWORD);
 
 #define ski_assert(exp, line) (void)( (exp) || (assertFailed(sourceFilename, line), 0) ) // TODO remove need for src param.
 
@@ -158,7 +165,7 @@ void __fastcall assertFailed(char *srcFilename, int lineNumber) {
 
     wsprintfA(local_20, s_assertErrorFormat, srcFilename, lineNumber);
     assertFailedDialog(s_Assertion_Failed_0040c0a8,local_20);
-    setWindowTitle();
+    togglePausedState();
 }
 
 int __fastcall doRectsOverlap(RECT *rect1, RECT *rect2) {
@@ -212,11 +219,10 @@ void __fastcall drawText(HDC hdc, LPCSTR textStr, short x, short *y, int textLen
     *y = *y + textLineHeight;
 }
 
-int timerCallbackFunc() {
+void CALLBACK timerCallbackFunc(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime) {
     if (inputEnabled != 0) {
         timerUpdateFunc();
     }
-    return 1;
 }
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
@@ -425,6 +431,41 @@ BOOL __fastcall loadSound(UINT resourceId, Sound *sound) {
     }
     sound->soundData = NULL;
     return FALSE;
+}
+
+void startGameTimer() {
+    if (hSkiMainWnd && !isGameTimerRunning && !isPaused) {
+        isGameTimerRunning = TRUE;
+        currentTickCount = GetTickCount();
+        if ((isSsGameMode != 0) || (isGsGameMode != 0)) {
+            timedGameRelated = timedGameRelated + (currentTickCount - pauseStartTickCount);
+        }
+        SetTimer(hSkiMainWnd,0x29a,updateTimerDurationMillis & 0xffff,timerCallbackFuncPtr);
+    }
+}
+
+void togglePausedState() {
+    char *str;
+
+    isPaused = isGameTimerRunning;
+    if (isGameTimerRunning != 0) {
+        pauseGame();
+        str = getCachedString(IDS_PAUSED);
+        SetWindowTextA(hSkiMainWnd,str);
+        InvalidateRect(hSkiMainWnd,NULL,0);
+        return;
+    }
+    str = getCachedString(IDS_TITLE);
+    SetWindowTextA(hSkiMainWnd,str);
+    startGameTimer();
+}
+
+void pauseGame() {
+    if (hSkiMainWnd != NULL && isGameTimerRunning) {
+        isGameTimerRunning = FALSE;
+        KillTimer(hSkiMainWnd,0x29a);
+        pauseStartTickCount = currentTickCount;
+    }
 }
 
 USHORT __fastcall random(short maxValue) {

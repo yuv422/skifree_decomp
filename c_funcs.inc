@@ -13,6 +13,9 @@ extern @random@4: proc
 extern _handleWindowSizeMessage: proc
 extern @mainWindowPaint@4: proc
 extern @updateActorSpriteRect@4: proc
+extern _startGameTimer: proc
+extern _togglePausedState: proc
+extern _pauseGame: proc
 
 ; exports
 ; public _WinMain@16
