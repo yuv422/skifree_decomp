@@ -1778,6 +1778,7 @@ LAB_00402276:
           db 090h
 @FUN_00402220@4 endp
 
+COMMENT ~
 @addActor@8 proc
           push  ecx
           push  ebx
@@ -1846,6 +1847,7 @@ LAB_00402302:
           db 090h
           db 090h
 @addActor@8 endp
+~
 
 @FUN_00402310@4 proc
           cmp   cx, 00000001Bh
@@ -7232,6 +7234,7 @@ LAB_00405e94:
           db 090h
 @createBitmapSheets@4 endp
 
+COMMENT ~
 @loadBitmapResource@4 proc
           mov   eax, dword ptr [skiFreeHInstance]       ; <c61c>
           and   ecx, 00000FFFFh
@@ -7253,14 +7256,16 @@ LAB_00405eb4:
           db 090h
           db 090h
 @loadBitmapResource@4 endp
+~
 
+COMMENT ~
 @handleWindowMoveMessage@4 proc
           mov   eax, dword ptr [mainWindowDC]   ; <c63c>
           push  eax
           push  ecx
           call  dword ptr [__imp__ReleaseDC@8]  ; <ReleaseDC>
           call  _pauseGame
-          jmp   LAB_00405ee0
+          jmp   _deleteWindowObjects
 LAB_00405ed7:
           db 090h
           db 090h
@@ -7271,7 +7276,11 @@ LAB_00405ed7:
           db 090h
           db 090h
           db 090h
-LAB_00405ee0:     mov   eax, dword ptr [DAT_0040c620]   ; <c620>
+@handleWindowMoveMessage@4 endp
+~
+
+_deleteWindowObjects proc
+          mov   eax, dword ptr [DAT_0040c620]   ; <c620>
           push  esi
           mov   esi, dword ptr [__imp__DeleteObject@4]  ; <DeleteObject>
           push  edi
@@ -7351,7 +7360,7 @@ LAB_00405f9c:     pop   edi
           ret
 LAB_00405f9f:
           db 090h
-@handleWindowMoveMessage@4 endp
+_deleteWindowObjects endp
 
 @updateWindowSize@4 proc
           push  ebx
@@ -7378,7 +7387,7 @@ LAB_00405f9f:
           mov   edx, esi
           mov   ecx, eax
           sar   ecx, 1h
-          call  @FUN_00406060@8
+          call  @updateActorsAfterWindowResize@8
           mov   ebp, dword ptr [windowClientRect.top]   ; <c6b4>
           mov   esi, dword ptr [windowClientRect.bottom]        ; <c6bc>
           mov   ecx, dword ptr [windowClientRect.right] ; <c6b8>
@@ -7421,7 +7430,7 @@ LAB_00406053:
           db 090h
 @updateWindowSize@4 endp
 
-@FUN_00406060@8 proc
+@updateActorsAfterWindowResize@8 proc
           push  ebx
           push  esi
           mov   esi, dword ptr [actorListPtr]   ; <c618>
@@ -7459,7 +7468,7 @@ LAB_004060a9:
           db 090h
           db 090h
           db 090h
-@FUN_00406060@8 endp
+@updateActorsAfterWindowResize@8 endp
 
 COMMENT ~
 @mainWindowPaint@4 proc

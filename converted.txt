@@ -29,3 +29,6 @@ _cleanupSound
 @freeSoundResource@4
 @addActorOfType@8
 _getFreeActor
+@addActor@8
+@loadBitmapResource@4
+@handleWindowMoveMessage@4

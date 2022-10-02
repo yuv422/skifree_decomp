@@ -87,8 +87,9 @@
 00405ab0:@createBitmapSheets@4
 00405ea0:@loadBitmapResource@4
 00405ec0:@handleWindowMoveMessage@4
+00405ee0:_deleteWindowObjects
 00405fa0:@updateWindowSize@4
-00406060:@FUN_00406060@8
+00406060:@updateActorsAfterWindowResize@8
 004060b0:@mainWindowPaint@4
 00406100:@paintActors@8
 00406170:@handleKeydownMessage@4

@@ -18,6 +18,9 @@ extern _togglePausedState: proc
 extern _pauseGame: proc
 extern @addActorOfType@8: proc
 extern _getFreeActor: proc
+extern @addActor@8: proc
+extern @loadBitmapResource@4: proc
+extern @handleWindowMoveMessage@4: proc
 
 ; exports
 ; public _WinMain@16

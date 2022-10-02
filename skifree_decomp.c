@@ -58,7 +58,8 @@ void pauseGame();
 void togglePausedState();
 void __fastcall freeSoundResource(Sound *sound);
 void cleanupSound();
-
+Actor * __fastcall addActor(Actor *actor, BOOL insertBack);
+HBITMAP __fastcall loadBitmapResource(UINT resourceId);
 
 
 
@@ -78,8 +79,8 @@ extern void __fastcall drawWindow(HDC hdc, RECT *rect);
 extern void __fastcall formatAndPrintStatusStrings(HDC windowDC);
 extern LRESULT CALLBACK skiMainWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 extern void __fastcall updateRectForSpriteAtLocation(RECT *rect, Sprite *sprite, short newX, short newY, short param_5);
-extern Actor * __fastcall addActor(Actor *actor, BOOL insertBack);
 extern Actor * __fastcall FUN_00402120(Actor *actor, UINT frameNo);
+extern void deleteWindowObjects();
 
 extern char sourceFilename[];
 extern HWND hSkiMainWnd;
@@ -133,6 +134,7 @@ extern BOOL isGsGameMode;
 extern int updateTimerDurationMillis;
 extern void *DAT_0040c78c;
 extern Actor blankTemplateActor;
+extern Actor *currentFreeActor;
 
 
 extern BOOL (WINAPI *sndPlaySoundAFuncPtr)(LPCSTR, UINT);
@@ -508,6 +510,40 @@ USHORT __fastcall random(short maxValue) {
     return (USHORT)rand() % maxValue;
 }
 
+Actor * __fastcall addActor(Actor *actor, BOOL insertBack) {
+    Actor *targetActor;
+
+    targetActor = currentFreeActor;
+    if (actor == (Actor *)0x0) {
+        assertFailed(sourceFilename,840);
+    }
+    if (targetActor == (Actor *)0x0) {
+        assertFailed(sourceFilename,857);
+        return (Actor *)0x0;
+    }
+    currentFreeActor = targetActor->next;
+//    pAVar2 = actor;
+//    pAVar3 = targetActor;
+//    for (iVar1 = 20; iVar1 != 0; iVar1 = iVar1 + -1) {
+//        pAVar3->next = pAVar2->next;
+//        pAVar2 = (Actor *)&pAVar2->unk_0x4;
+//        pAVar3 = (Actor *)&pAVar3->unk_0x4;
+//    }
+
+    memcpy(targetActor, actor, sizeof(Actor));
+
+    targetActor->unkActorPtr = NULL;
+    if (insertBack) {
+        targetActor->next = actor->next;
+        actor->next = targetActor;
+    } else {
+        targetActor->next = actorListPtr;
+        actorListPtr = targetActor;
+    }
+
+    return targetActor;
+}
+
 Actor * getFreeActor() {
     Actor *actor;
 
@@ -717,6 +753,16 @@ BOOL __fastcall calculateStatusWindowDimensions(HWND hWnd) {
     statusWindowTotalTextWidth = (short)maxValueLength + (short)maxKeyLength;
     statusWindowLabelWidth = (short)maxKeyLength;
     return 1;
+}
+
+HBITMAP __fastcall loadBitmapResource(UINT resourceId) {
+    return LoadBitmapA(skiFreeHInstance,MAKEINTRESOURCE(resourceId));
+}
+
+void __fastcall handleWindowMoveMessage(HWND hWnd) {
+    ReleaseDC(hWnd,mainWindowDC);
+    pauseGame();
+    deleteWindowObjects();
 }
 
 void __fastcall statusWindowReleaseDC(HWND hWnd) {
