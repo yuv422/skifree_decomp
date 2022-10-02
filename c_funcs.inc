@@ -16,6 +16,8 @@ extern @updateActorSpriteRect@4: proc
 extern _startGameTimer: proc
 extern _togglePausedState: proc
 extern _pauseGame: proc
+extern @addActorOfType@8: proc
+extern _getFreeActor: proc
 
 ; exports
 ; public _WinMain@16

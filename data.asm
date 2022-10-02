@@ -28,8 +28,8 @@ db 3 DUP (00h)
 PUBLIC C DAT_0040c020
 DAT_0040c020 byte 00h
 db 15 DUP (00h)
-PUBLIC C playerActorMaybe
-playerActorMaybe byte 24 DUP (00h), 12h, 3 DUP (00h), 40h, 51 DUP (00h)
+PUBLIC C blankTemplateActor
+blankTemplateActor byte 24 DUP (00h), 12h, 3 DUP (00h), 40h, 51 DUP (00h)
 PUBLIC C entpack_ini_section_name_ski
 entpack_ini_section_name_ski byte 53h, 6bh, 69h, 00h
 PUBLIC C s_entpack_ini
@@ -209,8 +209,7 @@ DAT_0040c5ec byte 4 DUP (00h)
 PUBLIC C SHORT_0040c5f0
 SHORT_0040c5f0 byte 2 DUP (00h)
 PUBLIC C DAT_0040c5f2
-DAT_0040c5f2 byte 00h
-db 00h
+DAT_0040c5f2 byte 2 DUP (00h)
 PUBLIC C timerFrameDurationInMillis
 timerFrameDurationInMillis byte 4 DUP (00h)
 PUBLIC C sprites
@@ -248,8 +247,8 @@ PUBLIC C DAT_0040c644
 DAT_0040c644 byte 4 DUP (00h)
 PUBLIC C actors
 actors byte 4 DUP (00h)
-PUBLIC C PTR_0040c64c
-PTR_0040c64c byte 4 DUP (00h)
+PUBLIC C playerActorPtrMaybe_1
+playerActorPtrMaybe_1 byte 4 DUP (00h)
 PUBLIC C isPaused
 isPaused byte 4 DUP (00h)
 db 4 DUP (00h)
@@ -330,8 +329,8 @@ PUBLIC C DAT_0040c6fc
 DAT_0040c6fc byte 4 DUP (00h)
 PUBLIC C prevMouseX
 prevMouseX byte 2 DUP (00h)
-PUBLIC C DAT_0040c702
-DAT_0040c702 byte 2 DUP (00h)
+PUBLIC C struct24Index
+struct24Index byte 2 DUP (00h)
 PUBLIC C skierScreenXOffset
 skierScreenXOffset byte 2 DUP (00h)
 db 2 DUP (00h)
@@ -358,8 +357,8 @@ db 4 DUP (00h)
 PUBLIC C DAT_0040c738
 DAT_0040c738 byte 00h
 db 11 DUP (00h)
-PUBLIC C DAT_0040c744
-DAT_0040c744 byte 4 DUP (00h)
+PUBLIC C currentFreeActor
+currentFreeActor byte 4 DUP (00h)
 PUBLIC C DAT_0040c748
 DAT_0040c748 byte 4 DUP (00h)
 PUBLIC C SCREEN_HEIGHT

@@ -1,6 +1,7 @@
 // ski32_decomp.cpp : Defines the entry point for the application.
 //
 
+
 #include "stdafx.h"
 
 typedef struct {
@@ -77,6 +78,8 @@ extern void __fastcall drawWindow(HDC hdc, RECT *rect);
 extern void __fastcall formatAndPrintStatusStrings(HDC windowDC);
 extern LRESULT CALLBACK skiMainWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 extern void __fastcall updateRectForSpriteAtLocation(RECT *rect, Sprite *sprite, short newX, short newY, short param_5);
+extern Actor * __fastcall addActor(Actor *actor, BOOL insertBack);
+extern Actor * __fastcall FUN_00402120(Actor *actor, UINT frameNo);
 
 extern char sourceFilename[];
 extern HWND hSkiMainWnd;
@@ -129,6 +132,7 @@ extern BOOL isSsGameMode;
 extern BOOL isGsGameMode;
 extern int updateTimerDurationMillis;
 extern void *DAT_0040c78c;
+extern Actor blankTemplateActor;
 
 
 extern BOOL (WINAPI *sndPlaySoundAFuncPtr)(LPCSTR, UINT);
@@ -502,6 +506,32 @@ void pauseGame() {
 
 USHORT __fastcall random(short maxValue) {
     return (USHORT)rand() % maxValue;
+}
+
+Actor * getFreeActor() {
+    Actor *actor;
+
+    blankTemplateActor.spritePtr = sprites;
+    actor = addActor(&blankTemplateActor,0);
+    return actor;
+}
+
+Actor * __fastcall addActorOfType(int actorType, UINT param_2) {
+    Actor *actor;
+
+    actor = getFreeActor();
+    if (actor != NULL) {
+        if (actorType < 0) {
+            assertFailed(sourceFilename,1388);
+        }
+        if (0x11 < actorType) {
+            assertFailed(sourceFilename,1389);
+        }
+        actor->typeMaybe = actorType;
+        actor = FUN_00402120(actor, param_2);
+        return actor;
+    }
+    return NULL;
 }
 
 void handleWindowSizeMessage(void) {

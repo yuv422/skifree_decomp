@@ -27,3 +27,5 @@ _togglePausedState
 _pauseGame
 _cleanupSound
 @freeSoundResource@4
+@addActorOfType@8
+_getFreeActor

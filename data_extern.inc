@@ -128,7 +128,7 @@ EXTERN C DAT_0040c014: far
 EXTERN C DAT_0040c018: far
 EXTERN C DAT_0040c01c: far
 EXTERN C DAT_0040c020: far
-EXTERN C playerActorMaybe:Actor
+EXTERN C blankTemplateActor:Actor
 EXTERN C entpack_ini_section_name_ski: far
 EXTERN C s_entpack_ini: far
 EXTERN C sourceFilename: far
@@ -201,7 +201,7 @@ EXTERN C mainWindowDC: far
 EXTERN C DAT_0040c640: far
 EXTERN C DAT_0040c644: far
 EXTERN C actors: far
-EXTERN C PTR_0040c64c: far
+EXTERN C playerActorPtrMaybe_1: far
 EXTERN C isPaused: far
 EXTERN C DAT_0040c658: far
 EXTERN C statusWindowFont: far
@@ -238,7 +238,7 @@ EXTERN C sound_9:Sound
 EXTERN C DAT_0040c6f8: far
 EXTERN C DAT_0040c6fc: far
 EXTERN C prevMouseX: far
-EXTERN C DAT_0040c702: far
+EXTERN C struct24Index: far
 EXTERN C skierScreenXOffset: far
 EXTERN C prevTickCount: far
 EXTERN C prevMouseY: far
@@ -249,7 +249,7 @@ EXTERN C DAT_0040c720: far
 EXTERN C playerActorPtrMaybe: far
 EXTERN C DAT_0040c730: far
 EXTERN C DAT_0040c738: far
-EXTERN C DAT_0040c744: far
+EXTERN C currentFreeActor: far
 EXTERN C DAT_0040c748: far
 EXTERN C SCREEN_HEIGHT: far
 EXTERN C sound_5:Sound

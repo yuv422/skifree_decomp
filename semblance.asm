@@ -396,14 +396,14 @@ LAB_004013c4:     mov   eax, dword ptr [esi+00Ch]
 LAB_004013c9:     cmp   esi, dword ptr [playerActorPtrMaybe]    ; <c72c>
           jnz   LAB_004013d7
           mov   dword ptr [playerActorPtrMaybe], ebp    ; <c72c>
-LAB_004013d7:     cmp   esi, dword ptr [PTR_0040c64c]   ; <c64c>
+LAB_004013d7:     cmp   esi, dword ptr [playerActorPtrMaybe_1]  ; <c64c>
           jnz   LAB_004013e5
-          mov   dword ptr [PTR_0040c64c], ebp   ; <c64c>
+          mov   dword ptr [playerActorPtrMaybe_1], ebp  ; <c64c>
 LAB_004013e5:     mov   ecx, dword ptr [esi]
           mov   dword ptr [edi], ecx
-          mov   edx, dword ptr [DAT_0040c744]   ; <c744>
+          mov   edx, dword ptr [currentFreeActor]       ; <c744>
           mov   dword ptr [esi], edx
-          mov   dword ptr [DAT_0040c744], esi   ; <c744>
+          mov   dword ptr [currentFreeActor], esi       ; <c744>
           jmp   LAB_004013fb
 LAB_004013f9:     mov   edi, esi
 LAB_004013fb:     mov   esi, dword ptr [edi]
@@ -1567,10 +1567,10 @@ LAB_00402084:     mov   ecx, 00000029Ah
           jnz   LAB_004020ae
           mov   edx, 00000001Fh
           mov   ecx, 000000003h
-          call  @FUN_004020d0@8
+          call  @addActorOfType@8
           mov   ecx, eax
           mov   edx, 000000002h
-          jmp   LAB_00402350
+          jmp   @FUN_00402350@8
 LAB_004020ae:     ret
 LAB_004020af:
           db 090h
@@ -1601,13 +1601,14 @@ LAB_004020c7:
 @random@4 endp
 ~
 
-@FUN_004020d0@8 proc
+COMMENT ~
+@addActorOfType@8 proc
           push  ebx
           push  esi
           push  edi
           mov   ebx, edx
           mov   edi, ecx
-          call  _FUN_00402330
+          call  _getFreeActor
           mov   esi, eax
           test  esi, esi
           jz    LAB_00402118
@@ -1636,7 +1637,8 @@ LAB_00402118:     mov   eax, esi
 LAB_0040211e:
           db 090h
           db 090h
-@FUN_004020d0@8 endp
+@addActorOfType@8 endp
+~
 
 @FUN_00402120@8 proc
           push  esi
@@ -1749,7 +1751,7 @@ LAB_00402236:     test  byte ptr [esi+04Ch], 001h
           call  @assertFailed@8
 LAB_0040224b:     mov   edx, 000000001h
           mov   ecx, esi
-          call  @FUN_00402280@8
+          call  @addActor@8
           test  eax, eax
           mov   dword ptr [esi+004h], eax
           jz    LAB_00402272
@@ -1776,10 +1778,10 @@ LAB_00402276:
           db 090h
 @FUN_00402220@4 endp
 
-@FUN_00402280@8 proc
+@addActor@8 proc
           push  ecx
           push  ebx
-          mov   ebx, dword ptr [DAT_0040c744]   ; <c744>
+          mov   ebx, dword ptr [currentFreeActor]       ; <c744>
           push  ebp
           mov   ebp, ecx
           test  ebp, ebp
@@ -1796,7 +1798,7 @@ LAB_004022a2:     test  ebx, ebx
           mov   ecx, 000000014h
           mov   esi, ebp
           mov   edi, ebx
-          mov   dword ptr [DAT_0040c744], eax   ; <c744>
+          mov   dword ptr [currentFreeActor], eax       ; <c744>
           mov   eax, dword ptr [esp+010h]
           rep movsd     [esi], es:[edi]
           pop   edi
@@ -1843,7 +1845,7 @@ LAB_00402302:
           db 090h
           db 090h
           db 090h
-@FUN_00402280@8 endp
+@addActor@8 endp
 
 @FUN_00402310@4 proc
           cmp   cx, 00000001Bh
@@ -1868,12 +1870,13 @@ LAB_00402325:
           db 090h
 @FUN_00402310@4 endp
 
-_FUN_00402330 proc
+COMMENT ~
+_getFreeActor proc
           mov   eax, dword ptr [sprites]        ; <c5f8>
           xor   edx, edx
-          mov   dword ptr [playerActorMaybe.spritePtr], eax     ; <c044>
-          mov   ecx, offset playerActorMaybe.next       ; <c030>
-          jmp   @FUN_00402280@8
+          mov   dword ptr [blankTemplateActor.spritePtr], eax   ; <c044>
+          mov   ecx, offset blankTemplateActor.next     ; <c030>
+          jmp   @addActor@8
 LAB_00402346:
           db 090h
           db 090h
@@ -1885,7 +1888,11 @@ LAB_00402346:
           db 090h
           db 090h
           db 090h
-LAB_00402350:     sub   esp, 000000008h
+_getFreeActor endp
+~
+
+@FUN_00402350@8 proc
+          sub   esp, 000000008h
           mov   eax, edx
           push  esi
           mov   esi, ecx
@@ -1916,7 +1923,7 @@ LAB_0040238a:
           db 090h
           db 090h
           db 090h
-_FUN_00402330 endp
+@FUN_00402350@8 endp
 
 @updateActorPositionMaybe@16 proc
           push  ecx
@@ -1939,7 +1946,7 @@ LAB_004023b3:     mov   dx, word ptr [esi+044h]
           cmp   dx, word ptr [esp+01Ch]
           setnz cl
           mov   dword ptr [esp+010h], ecx
-          mov   ecx, dword ptr [PTR_0040c64c]   ; <c64c>
+          mov   ecx, dword ptr [playerActorPtrMaybe_1]  ; <c64c>
           xor   ebx, ebx
           cmp   esi, ecx
           setz  bl
@@ -2026,7 +2033,7 @@ LAB_00402468:
           sub   bx, word ptr [DAT_0040c5f2]     ; <c5f2>
           test  esi, esi
           jz    LAB_004024da
-LAB_0040249c:     cmp   esi, dword ptr [PTR_0040c64c]   ; <c64c>
+LAB_0040249c:     cmp   esi, dword ptr [playerActorPtrMaybe_1]  ; <c64c>
           jz    LAB_004024d4
           mov   eax, dword ptr [esi+04Ch]
           test  al, 004h
@@ -2179,7 +2186,7 @@ LAB_00402645:     mov   esi, eax
           jge   LAB_00402661
           mov   edx, dword ptr [esi*4+DAT_0040a22c]     ; <a22c>
           mov   ecx, esi
-          call  @FUN_004020d0@8
+          call  @addActorOfType@8
           jmp   LAB_00402671
 LAB_00402661:     mov   ecx, esi
           call  @FUN_00402850@4
@@ -2223,7 +2230,7 @@ LAB_00402695:
           push  edi
           mov   ebx, edx
           mov   edi, ecx
-          call  _FUN_00402330
+          call  _getFreeActor
           mov   esi, eax
           test  esi, esi
           jz    LAB_004026e8
@@ -4689,7 +4696,7 @@ LAB_0040414c:     cmp   dword ptr [esi], 000000000h
           jnz   LAB_00404194
           mov   edx, dword ptr [esi+010h]
           mov   ecx, dword ptr [esi+00Ch]
-          call  @FUN_004020d0@8
+          call  @addActorOfType@8
           jmp   LAB_0040419c
 LAB_00404194:     mov   ecx, dword ptr [esi+00Ch]
           call  @FUN_004026a0@8
@@ -4840,7 +4847,7 @@ LAB_004042f5:     cmp   dword ptr [esi], 000000000h
           push  ecx
           mov   edx, 000000021h
           mov   ecx, 000000003h
-          call  @FUN_004020d0@8
+          call  @addActorOfType@8
           mov   ecx, eax
           mov   dx, di
           call  @updateActorPositionMaybe@16
@@ -5467,7 +5474,7 @@ _resetGame proc
           add   esp, 000000004h
           call  _setupActorList
           xor   esi, esi
-          mov   dword ptr [PTR_0040c64c], esi   ; <c64c>
+          mov   dword ptr [playerActorPtrMaybe_1], esi  ; <c64c>
           mov   dword ptr [playerActorPtrMaybe], esi    ; <c72c>
           mov   dword ptr [DAT_0040c6fc], esi   ; <c6fc>
           call  _FUN_00404a70
@@ -5496,7 +5503,7 @@ _setupActorList proc
           mov   esi, dword ptr [actors] ; <c648>
           xor   edx, edx
           mov   dword ptr [actorListPtr], 000000000h    ; <c618>
-          mov   dword ptr [DAT_0040c744], esi   ; <c744>
+          mov   dword ptr [currentFreeActor], esi       ; <c744>
           mov   ecx, 000000001h
           xor   eax, eax
           jmp   LAB_00404a28
@@ -5536,7 +5543,7 @@ LAB_00404a64:
 _setupActorList endp
 
 _FUN_00404a70 proc
-          mov   word ptr [DAT_0040c702], 00000h ; <c702>
+          mov   word ptr [struct24Index], 00000h        ; <c702>
           ret
 LAB_00404a7a:
           db 090h
@@ -5552,16 +5559,16 @@ _setupGame proc
           push  000000000h
           mov   edx, 000000003h
           xor   ecx, ecx
-          call  @FUN_004020d0@8
+          call  @addActorOfType@8
           mov   ecx, eax
           xor   edx, edx
           call  @updateActorPositionMaybe@16
           test  eax, eax
           mov   dword ptr [playerActorPtrMaybe], eax    ; <c72c>
-          mov   dword ptr [PTR_0040c64c], eax   ; <c64c>
+          mov   dword ptr [playerActorPtrMaybe_1], eax  ; <c64c>
           jnz   LAB_00404aa8
           ret
-LAB_00404aa8:     call  _FUN_004051e0
+LAB_00404aa8:     call  _setupActorType0x11
           call  _FUN_00404b50
           mov   dword ptr [isPaused], 000000000h        ; <c650>
           call  _startGameTimer
@@ -5629,7 +5636,7 @@ _FUN_00404b50 proc
           mov   word ptr [esp+02Ch], di
           mov   word ptr [esp+02Ah], di
           mov   word ptr [esp+028h], di
-          call  @FUN_00405100@4
+          call  @setPointerToNull@4
           mov   eax, dword ptr [windowClientRect.left]  ; <c6b0>
           mov   edx, dword ptr [skierScreenXOffset]     ; <c704>
           mov   ecx, dword ptr [DAT_0040c640]   ; <c640>
@@ -5709,7 +5716,7 @@ LAB_00404c89:     add   ebx, 000000140h
           mov   word ptr [esp+024h], 0FEC0h
           call  @FUN_00405120@8
           mov   ecx, offset DAT_0040c5e0        ; <c5e0>
-          call  @FUN_00405100@4
+          call  @setPointerToNull@4
           mov   edx, dword ptr [windowClientRect.right] ; <c6b8>
           mov   eax, dword ptr [DAT_0040c640]   ; <c640>
           mov   dword ptr [esp+01Ch], esi
@@ -5799,7 +5806,7 @@ LAB_00404df8:     mov   ecx, 00000000Dh
           mov   word ptr [esp+024h], 00200h
           call  @FUN_00405120@8
           mov   ecx, offset DAT_0040c658        ; <c658>
-          call  @FUN_00405100@4
+          call  @setPointerToNull@4
           mov   eax, dword ptr [windowClientRect.bottom]        ; <c6bc>
           mov   ebx, dword ptr [skierScreenYOffset]     ; <c5fc>
           sub   eax, ebx
@@ -5842,7 +5849,7 @@ LAB_00404ec1:     lea   edx, dword ptr [esp+010h]
           mov   ecx, offset DAT_0040c738        ; <c738>
           mov   dword ptr [DAT_0040c968], edi   ; <c968>
           mov   dword ptr [isFsGameMode], edi   ; <c954>
-          call  @FUN_00405100@4
+          call  @setPointerToNull@4
           mov   esi, 0FFFFFC00h
           mov   ebp, 000000040h
           mov   ebx, 0FFFFFF80h
@@ -5861,7 +5868,7 @@ LAB_00404f72:     lea   edx, dword ptr [esp+010h]
           cmp   si, 05C00h
           jle   LAB_00404f72
           mov   ecx, offset DAT_0040c720        ; <c720>
-          call  @FUN_00405100@4
+          call  @setPointerToNull@4
           mov   esi, 0FFFFFC00h
           mov   ebx, 000000004h
           mov   ebp, 000000002h
@@ -5935,7 +5942,7 @@ LAB_004050f8:
           db 090h
 _FUN_00404b50 endp
 
-@FUN_00405100@4 proc
+@setPointerToNull@4 proc
           push  esi
           mov   esi, ecx
           test  esi, esi
@@ -5949,21 +5956,21 @@ LAB_00405116:     mov   dword ptr [esi], 000000000h
 LAB_0040511e:
           db 090h
           db 090h
-@FUN_00405100@4 endp
+@setPointerToNull@4 endp
 
 @FUN_00405120@8 proc
           push  ebx
           push  esi
           push  edi
           mov   edi, ecx
-          mov   cx, word ptr [DAT_0040c702]     ; <c702>
+          mov   cx, word ptr [struct24Index]    ; <c702>
           xor   eax, eax
           mov   ax, cx
           mov   esi, edx
           mov   edx, dword ptr [PTR_0040c758]   ; <c758>
           inc   cx
           lea   eax, dword ptr [eax+eax*8]
-          mov   word ptr [DAT_0040c702], cx     ; <c702>
+          mov   word ptr [struct24Index], cx    ; <c702>
           test  edi, edi
           lea   ebx, dword ptr [edx+eax*4]
           jnz   LAB_0040515b
@@ -5975,7 +5982,7 @@ LAB_0040515b:     test  esi, esi
           mov   edx, 000000A1Ch
           mov   ecx, offset sourceFilename      ; <c090>
           call  @assertFailed@8
-LAB_0040516e:     cmp   word ptr [DAT_0040c702], 00100h ; <c702>
+LAB_0040516e:     cmp   word ptr [struct24Index], 00100h        ; <c702>
           jbe   LAB_00405188
           mov   edx, 000000A1Dh
           mov   ecx, offset sourceFilename      ; <c090>
@@ -6016,7 +6023,7 @@ LAB_004051db:
           db 090h
 @FUN_00405120@8 endp
 
-_FUN_004051e0 proc
+_setupActorType0x11 proc
           push  ecx
           mov   eax, dword ptr [sprites]        ; <c5f8>
           push  esi
@@ -6097,7 +6104,7 @@ LAB_004052c2:
           db 090h
           db 090h
           db 090h
-_FUN_004051e0 endp
+_setupActorType0x11 endp
 
 COMMENT ~
 @initWindows@12 proc
