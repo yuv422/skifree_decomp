@@ -3505,6 +3505,7 @@ LAB_00403414:
           db 090h
 @updateGsGameMode@12 endp
 
+COMMENT ~
 @addStylePoints@4 proc
           mov   eax, dword ptr [isFsGameMode]   ; <c954>
           test  eax, eax
@@ -3512,6 +3513,7 @@ LAB_00403414:
           add   dword ptr [stylePoints], ecx    ; <c6a8>
 LAB_0040342f:     ret
 @addStylePoints@4 endp
+~
 
 @updateActorVelMaybe@8 proc
           push  ecx

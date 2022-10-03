@@ -160,6 +160,8 @@ extern HGDIOBJ smallBitmapSheet_1bpp;
 extern HGDIOBJ largeBitmapSheet;
 extern HGDIOBJ largeBitmapSheet_1bpp;
 extern HGDIOBJ scratchBitmap;
+extern BOOL isFsGameMode;
+extern int stylePoints;
 
 
 extern BOOL (WINAPI *sndPlaySoundAFuncPtr)(LPCSTR, UINT);
@@ -567,6 +569,12 @@ Actor * __fastcall addActor(Actor *actor, BOOL insertBack) {
     }
 
     return targetActor;
+}
+
+void __fastcall addStylePoints(int points) {
+    if (isFsGameMode != 0) {
+        stylePoints = stylePoints + points;
+    }
 }
 
 Actor * getFreeActor() {

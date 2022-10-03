@@ -39,3 +39,4 @@ _skiMainWndProc@16
 @setPointerToNull@4
 _handleGameReset
 _setupGame
+@addStylePoints@4
