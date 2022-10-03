@@ -393,9 +393,9 @@ LAB_004013a4:     test  byte ptr [esi+04Ch], 008h
           call  @assertFailed@8
 LAB_004013c4:     mov   eax, dword ptr [esi+00Ch]
           mov   dword ptr [eax], ebp
-LAB_004013c9:     cmp   esi, dword ptr [playerActorPtrMaybe]    ; <c72c>
+LAB_004013c9:     cmp   esi, dword ptr [playerActor]    ; <c72c>
           jnz   LAB_004013d7
-          mov   dword ptr [playerActorPtrMaybe], ebp    ; <c72c>
+          mov   dword ptr [playerActor], ebp    ; <c72c>
 LAB_004013d7:     cmp   esi, dword ptr [playerActorPtrMaybe_1]  ; <c64c>
           jnz   LAB_004013e5
           mov   dword ptr [playerActorPtrMaybe_1], ebp  ; <c64c>
@@ -606,7 +606,7 @@ LAB_004015c8:     mov   eax, dword ptr [ecx+04Ch]
 LAB_004015e8:     mov   edx, esi
           mov   ecx, ebp
           mov   dword ptr [esp+034h], 000000000h
-          call  @FUN_00401970@8
+          call  @changeScratchBitmapSize@8
           test  eax, eax
           jnz   LAB_00401696
           movsx edx, word ptr [esp+018h]
@@ -787,7 +787,7 @@ LAB_004017fc:     mov   eax, dword ptr [esp+034h]
           cmp   word ptr [esp+020h], si
           jge   LAB_00401848
 LAB_00401829:     movsx edx, word ptr [esp+010h]
-          mov   eax, dword ptr [DAT_0040c5ec]   ; <c5ec>
+          mov   eax, dword ptr [bitmapSourceDC] ; <c5ec>
           push  000FF0062h
           movsx ecx, si
           push  ecx
@@ -808,7 +808,7 @@ LAB_00401848:     movsx ecx, word ptr [esp+040h]
           movsx edx, di
           movsx eax, bp
           push  ecx
-          mov   ecx, dword ptr [DAT_0040c5ec]   ; <c5ec>
+          mov   ecx, dword ptr [bitmapSourceDC] ; <c5ec>
           push  edx
           push  eax
           push  ecx
@@ -823,7 +823,7 @@ LAB_00401873:     movsx esi, word ptr [esp+040h]
           movsx edi, di
           movsx ebp, bp
           push  edx
-          mov   edx, dword ptr [DAT_0040c5ec]   ; <c5ec>
+          mov   edx, dword ptr [bitmapSourceDC] ; <c5ec>
           push  eax
           push  ecx
           push  edi
@@ -837,7 +837,7 @@ LAB_00401873:     movsx esi, word ptr [esp+040h]
           push  esi
           push  000000000h
           push  eax
-          mov   eax, dword ptr [DAT_0040c5ec]   ; <c5ec>
+          mov   eax, dword ptr [bitmapSourceDC] ; <c5ec>
           push  ecx
           push  edx
           push  edi
@@ -859,7 +859,7 @@ LAB_004018ec:     mov   eax, dword ptr [esp+034h]
           test  eax, eax
           jz    LAB_0040192c
           movsx ecx, word ptr [esp+038h]
-          mov   eax, dword ptr [DAT_0040c5ec]   ; <c5ec>
+          mov   eax, dword ptr [bitmapSourceDC] ; <c5ec>
           push  000CC0020h
           push  000000000h
           push  000000000h
@@ -918,36 +918,36 @@ LAB_00401962:
           db 090h
 @drawActor@8 endp
 
-@FUN_00401970@8 proc
+@changeScratchBitmapSize@8 proc
           push  ebx
           push  esi
           mov   esi, ecx
           push  edi
-          cmp   si, word ptr [DAT_0040c690]     ; <c690>
+          cmp   si, word ptr [scratchBitmapWidth]       ; <c690>
           mov   edi, edx
           jg    LAB_0040198d
-          cmp   di, word ptr [DAT_0040c6e8]     ; <c6e8>
+          cmp   di, word ptr [scratchBitmapHeight]      ; <c6e8>
           jle   LAB_00401a3f
-LAB_0040198d:     mov   edx, dword ptr [DAT_0040c614]   ; <c614>
+LAB_0040198d:     mov   edx, dword ptr [scratchBitmap]  ; <c614>
           mov   eax, esi
           mov   ecx, edi
           and   al, 0C0h
           and   ecx, 0FFFFFFC0h
           add   eax, 000000040h
           add   ecx, 000000040h
-          mov   word ptr [DAT_0040c690], ax     ; <c690>
+          mov   word ptr [scratchBitmapWidth], ax       ; <c690>
           test  edx, edx
-          mov   word ptr [DAT_0040c6e8], cx     ; <c6e8>
+          mov   word ptr [scratchBitmapHeight], cx      ; <c6e8>
           jz    LAB_004019de
-          mov   eax, dword ptr [DAT_0040c5ec]   ; <c5ec>
+          mov   eax, dword ptr [bitmapSourceDC] ; <c5ec>
           push  edx
           push  eax
           call  dword ptr [__imp__SelectObject@8]       ; <SelectObject>
           push  eax
           call  dword ptr [__imp__DeleteObject@4]       ; <DeleteObject>
-          mov   ax, word ptr [DAT_0040c690]     ; <c690>
-          mov   cx, word ptr [DAT_0040c6e8]     ; <c6e8>
-          mov   dword ptr [DAT_0040c614], 000000000h    ; <c614>
+          mov   ax, word ptr [scratchBitmapWidth]       ; <c690>
+          mov   cx, word ptr [scratchBitmapHeight]      ; <c6e8>
+          mov   dword ptr [scratchBitmap], 000000000h   ; <c614>
 LAB_004019de:     mov   ebx, dword ptr [__imp__CreateCompatibleBitmap@12]       ; <CreateCompatibleBitmap>
           movsx ecx, cx
           movsx edx, ax
@@ -958,26 +958,26 @@ LAB_004019de:     mov   ebx, dword ptr [__imp__CreateCompatibleBitmap@12]       
           call  ebx
           test  eax, eax
           jnz   LAB_00401a2c
-LAB_004019f8:     cmp   word ptr [DAT_0040c690], si     ; <c690>
+LAB_004019f8:     cmp   word ptr [scratchBitmapWidth], si       ; <c690>
           jnz   LAB_00401a0a
-          cmp   word ptr [DAT_0040c6e8], di     ; <c6e8>
+          cmp   word ptr [scratchBitmapHeight], di      ; <c6e8>
           jz    LAB_00401a48
 LAB_00401a0a:     mov   eax, dword ptr [mainWindowDC]   ; <c63c>
-          mov   word ptr [DAT_0040c690], si     ; <c690>
+          mov   word ptr [scratchBitmapWidth], si       ; <c690>
           movsx ecx, di
           movsx edx, si
           push  ecx
           push  edx
           push  eax
-          mov   word ptr [DAT_0040c6e8], di     ; <c6e8>
+          mov   word ptr [scratchBitmapHeight], di      ; <c6e8>
           call  ebx
           test  eax, eax
           jz    LAB_004019f8
-LAB_00401a2c:     mov   ecx, dword ptr [DAT_0040c5ec]   ; <c5ec>
+LAB_00401a2c:     mov   ecx, dword ptr [bitmapSourceDC] ; <c5ec>
           push  eax
           push  ecx
           call  dword ptr [__imp__SelectObject@8]       ; <SelectObject>
-          mov   dword ptr [DAT_0040c614], eax   ; <c614>
+          mov   dword ptr [scratchBitmap], eax  ; <c614>
 LAB_00401a3f:     pop   edi
           pop   esi
           mov   eax, 000000001h
@@ -985,12 +985,12 @@ LAB_00401a3f:     pop   edi
           ret
 LAB_00401a48:     pop   edi
           pop   esi
-          mov   word ptr [DAT_0040c6e8], 00000h ; <c6e8>
-          mov   word ptr [DAT_0040c690], 00000h ; <c690>
+          mov   word ptr [scratchBitmapHeight], 00000h  ; <c6e8>
+          mov   word ptr [scratchBitmapWidth], 00000h   ; <c690>
           xor   eax, eax
           pop   ebx
           ret
-@FUN_00401970@8 endp
+@changeScratchBitmapSize@8 endp
 
 @FUN_00401a60@8 proc
           push  ebx
@@ -1110,7 +1110,7 @@ LAB_00401b7d:     pop   edi
 
 @formatAndPrintStatusStrings@4 proc
           sub   esp, 000000018h
-          mov   eax, dword ptr [playerActorPtrMaybe]    ; <c72c>
+          mov   eax, dword ptr [playerActor]    ; <c72c>
           push  ebx
           push  ebp
           push  esi
@@ -1135,7 +1135,7 @@ LAB_00401b7d:     pop   edi
           cdq
           idiv  ecx
           mov   ebp, eax
-          mov   eax, dword ptr [playerActorPtrMaybe]    ; <c72c>
+          mov   eax, dword ptr [playerActor]    ; <c72c>
           jmp   LAB_00401bd4
 LAB_00401bd2:     xor   ebp, ebp
 LAB_00401bd4:     mov   di, word ptr [eax+042h]
@@ -1425,7 +1425,7 @@ LAB_00401e82:     test  byte ptr [esi+04Ch], 00Ah
 LAB_00401ea3:     mov   eax, dword ptr [esi+04Ch]
           test  al, 001h
           jnz   LAB_00401eee
-          cmp   esi, dword ptr [playerActorPtrMaybe]    ; <c72c>
+          cmp   esi, dword ptr [playerActor]    ; <c72c>
           jz    LAB_00401eee
           test  al, 004h
           jz    LAB_00401ebb
@@ -2774,7 +2774,7 @@ LAB_00402bda:
           mov   edx, 000000425h
           mov   ecx, offset sourceFilename      ; <c090>
           call  @assertFailed@8
-LAB_00402c11:     mov   eax, dword ptr [DAT_0040c670]   ; <c670>
+LAB_00402c11:     mov   eax, dword ptr [isTurboMode]    ; <c670>
           test  eax, eax
           jz    LAB_00402c2c
           mov   ax, word ptr [esi+046h]
@@ -2815,7 +2815,7 @@ LAB_00402c5d:
 @updateActorPositionWithVelocityMaybe@4 endp
 
 @updateSsGameMode@12 proc
-          mov   eax, dword ptr [playerActorPtrMaybe]    ; <c72c>
+          mov   eax, dword ptr [playerActor]    ; <c72c>
           push  ebx
           push  ebp
           push  esi
@@ -3007,7 +3007,7 @@ LAB_00402e72:
 @FUN_00402e30@20 endp
 
 _FUN_00402e80 proc
-          mov   ecx, dword ptr [playerActorPtrMaybe]    ; <c72c>
+          mov   ecx, dword ptr [playerActor]    ; <c72c>
           test  ecx, ecx
           jz    LAB_00402eb7
           mov   edx, dword ptr [ecx+01Ch]
@@ -3296,7 +3296,7 @@ LAB_00403172:
 @FUN_00403130@8 endp
 
 @updateFsGameMode@12 proc
-          mov   eax, dword ptr [playerActorPtrMaybe]    ; <c72c>
+          mov   eax, dword ptr [playerActor]    ; <c72c>
           push  ebx
           push  esi
           cmp   ecx, eax
@@ -3361,7 +3361,7 @@ LAB_0040324f:
 @updateFsGameMode@12 endp
 
 @updateGsGameMode@12 proc
-          mov   eax, dword ptr [playerActorPtrMaybe]    ; <c72c>
+          mov   eax, dword ptr [playerActor]    ; <c72c>
           push  ebx
           push  ebp
           push  esi
@@ -4117,7 +4117,7 @@ LAB_00403ad3:     mov   dword ptr [esp+010h], 00000003Ch
           pop   esi
           add   esp, 00000000Ch
           ret
-LAB_00403af4:     cmp   edi, dword ptr [playerActorPtrMaybe]    ; <c72c>
+LAB_00403af4:     cmp   edi, dword ptr [playerActor]    ; <c72c>
           jnz   LAB_00403fc1
           mov   eax, dword ptr [esp+014h]
           xor   ebx, ebx
@@ -5012,7 +5012,7 @@ LAB_004044c4:     cmp   edi, 000000008h
           jge   LAB_004044dd
           mov   dword ptr [esp+010h], 000000010h
           jmp   LAB_004045d8
-LAB_004044dd:     mov   eax, dword ptr [playerActorPtrMaybe]    ; <c72c>
+LAB_004044dd:     mov   eax, dword ptr [playerActor]    ; <c72c>
           cmp   eax, ebx
           jz    LAB_004045d8
           mov   dx, word ptr [eax+040h]
@@ -5057,14 +5057,14 @@ LAB_00404568:     mov   di, word ptr [DAT_0040c6d8]     ; <c6d8>
           movsx edx, di
           cmp   ecx, edx
           jle   LAB_00404585
-          mov   edx, dword ptr [playerActorPtrMaybe]    ; <c72c>
+          mov   edx, dword ptr [playerActor]    ; <c72c>
           mov   dx, word ptr [edx+042h]
           sub   dx, di
           jmp   LAB_00404598
 LAB_00404585:     neg   edx
           cmp   ecx, edx
           jge   LAB_0040459c
-          mov   edx, dword ptr [playerActorPtrMaybe]    ; <c72c>
+          mov   edx, dword ptr [playerActor]    ; <c72c>
           mov   dx, word ptr [edx+042h]
           add   dx, di
 LAB_00404598:     mov   word ptr [esi+016h], dx
@@ -5477,11 +5477,11 @@ _resetGame proc
           call  _setupActorList
           xor   esi, esi
           mov   dword ptr [playerActorPtrMaybe_1], esi  ; <c64c>
-          mov   dword ptr [playerActorPtrMaybe], esi    ; <c72c>
+          mov   dword ptr [playerActor], esi    ; <c72c>
           mov   dword ptr [DAT_0040c6fc], esi   ; <c6fc>
           call  _FUN_00404a70
           mov   eax, 000000001h
-          mov   dword ptr [DAT_0040c670], esi   ; <c670>
+          mov   dword ptr [isTurboMode], esi    ; <c670>
           mov   word ptr [DAT_0040c5f2], si     ; <c5f2>
           mov   word ptr [DAT_0040c640], si     ; <c640>
           mov   word ptr [DAT_0040c5d8], si     ; <c5d8>
@@ -5566,7 +5566,7 @@ _setupGame proc
           xor   edx, edx
           call  @updateActorPositionMaybe@16
           test  eax, eax
-          mov   dword ptr [playerActorPtrMaybe], eax    ; <c72c>
+          mov   dword ptr [playerActor], eax    ; <c72c>
           mov   dword ptr [playerActorPtrMaybe_1], eax  ; <c64c>
           jnz   LAB_00404aa8
           ret
@@ -6825,16 +6825,16 @@ _updateWindowsActiveStatus endp
           xor   eax, eax
           ret
 LAB_00405a55:     mov   ecx, eax
-          mov   dword ptr [DAT_0040c710], edx   ; <c710>
-          mov   dword ptr [DAT_0040c6a4], edx   ; <c6a4>
-          mov   dword ptr [DAT_0040c730], edx   ; <c730>
-          mov   dword ptr [DAT_0040c6ec], edx   ; <c6ec>
-          mov   dword ptr [DAT_0040c5ec], edx   ; <c5ec>
-          mov   dword ptr [DAT_0040c620], edx   ; <c620>
-          mov   dword ptr [DAT_0040c6d4], edx   ; <c6d4>
-          mov   dword ptr [DAT_0040c644], edx   ; <c644>
-          mov   dword ptr [DAT_0040c75c], edx   ; <c75c>
-          mov   dword ptr [DAT_0040c614], edx   ; <c614>
+          mov   dword ptr [smallBitmapDC], edx  ; <c710>
+          mov   dword ptr [smallBitmapDC_1bpp], edx     ; <c6a4>
+          mov   dword ptr [largeBitmapDC], edx  ; <c730>
+          mov   dword ptr [largeBitmapDC_1bpp], edx     ; <c6ec>
+          mov   dword ptr [bitmapSourceDC], edx ; <c5ec>
+          mov   dword ptr [smallBitmapSheet], edx       ; <c620>
+          mov   dword ptr [smallBitmapSheet_1bpp], edx  ; <c6d4>
+          mov   dword ptr [largeBitmapSheet], edx       ; <c644>
+          mov   dword ptr [largeBitmapSheet_1bpp], edx  ; <c75c>
+          mov   dword ptr [scratchBitmap], edx  ; <c614>
           call  @createBitmapSheets@4
           test  eax, eax
           jnz   LAB_00405aa9
@@ -6909,7 +6909,7 @@ LAB_00405b63:     push  esi
           push  ebp
           call  dword ptr [__imp__CreateCompatibleDC@4] ; <CreateCompatibleDC>
           cmp   eax, ebx
-          mov   dword ptr [DAT_0040c710], eax   ; <c710>
+          mov   dword ptr [smallBitmapDC], eax  ; <c710>
           jnz   LAB_00405b8b
           pop   edi
           pop   esi
@@ -6933,12 +6933,12 @@ LAB_00405b8b:     movsx edi, word ptr [esp+014h]
           pop   ebx
           add   esp, 000000034h
           ret
-LAB_00405baa:     mov   eax, dword ptr [DAT_0040c710]   ; <c710>
+LAB_00405baa:     mov   eax, dword ptr [smallBitmapDC]  ; <c710>
           push  esi
           push  eax
           call  dword ptr [__imp__SelectObject@8]       ; <SelectObject>
           cmp   eax, ebx
-          mov   dword ptr [DAT_0040c620], eax   ; <c620>
+          mov   dword ptr [smallBitmapSheet], eax       ; <c620>
           jnz   LAB_00405bd1
           push  esi
           call  dword ptr [__imp__DeleteObject@4]       ; <DeleteObject>
@@ -6952,7 +6952,7 @@ LAB_00405baa:     mov   eax, dword ptr [DAT_0040c710]   ; <c710>
 LAB_00405bd1:     push  ebp
           call  dword ptr [__imp__CreateCompatibleDC@4] ; <CreateCompatibleDC>
           cmp   eax, ebx
-          mov   dword ptr [DAT_0040c6a4], eax   ; <c6a4>
+          mov   dword ptr [smallBitmapDC_1bpp], eax     ; <c6a4>
           jnz   LAB_00405beb
           pop   edi
           pop   esi
@@ -6977,12 +6977,12 @@ LAB_00405beb:     push  ebx
           pop   ebx
           add   esp, 000000034h
           ret
-LAB_00405c09:     mov   ecx, dword ptr [DAT_0040c6a4]   ; <c6a4>
+LAB_00405c09:     mov   ecx, dword ptr [smallBitmapDC_1bpp]     ; <c6a4>
           push  esi
           push  ecx
           call  dword ptr [__imp__SelectObject@8]       ; <SelectObject>
           cmp   eax, ebx
-          mov   dword ptr [DAT_0040c6d4], eax   ; <c6d4>
+          mov   dword ptr [smallBitmapSheet_1bpp], eax  ; <c6d4>
           jnz   LAB_00405c31
           push  esi
           call  dword ptr [__imp__DeleteObject@4]       ; <DeleteObject>
@@ -6996,7 +6996,7 @@ LAB_00405c09:     mov   ecx, dword ptr [DAT_0040c6a4]   ; <c6a4>
 LAB_00405c31:     push  ebp
           call  dword ptr [__imp__CreateCompatibleDC@4] ; <CreateCompatibleDC>
           cmp   eax, ebx
-          mov   dword ptr [DAT_0040c730], eax   ; <c730>
+          mov   dword ptr [largeBitmapDC], eax  ; <c730>
           jnz   LAB_00405c4b
           pop   edi
           pop   esi
@@ -7020,12 +7020,12 @@ LAB_00405c4b:     movsx edi, word ptr [esp+018h]
           pop   ebx
           add   esp, 000000034h
           ret
-LAB_00405c6c:     mov   edx, dword ptr [DAT_0040c730]   ; <c730>
+LAB_00405c6c:     mov   edx, dword ptr [largeBitmapDC]  ; <c730>
           push  esi
           push  edx
           call  dword ptr [__imp__SelectObject@8]       ; <SelectObject>
           test  eax, eax
-          mov   dword ptr [DAT_0040c644], eax   ; <c644>
+          mov   dword ptr [largeBitmapSheet], eax       ; <c644>
           jnz   LAB_00405c94
           push  esi
           call  dword ptr [__imp__DeleteObject@4]       ; <DeleteObject>
@@ -7039,7 +7039,7 @@ LAB_00405c6c:     mov   edx, dword ptr [DAT_0040c730]   ; <c730>
 LAB_00405c94:     push  ebp
           call  dword ptr [__imp__CreateCompatibleDC@4] ; <CreateCompatibleDC>
           test  eax, eax
-          mov   dword ptr [DAT_0040c6ec], eax   ; <c6ec>
+          mov   dword ptr [largeBitmapDC_1bpp], eax     ; <c6ec>
           jnz   LAB_00405cac
           pop   edi
           pop   esi
@@ -7062,12 +7062,12 @@ LAB_00405cac:     push  000000000h
           pop   ebx
           add   esp, 000000034h
           ret
-LAB_00405cc8:     mov   eax, dword ptr [DAT_0040c6ec]   ; <c6ec>
+LAB_00405cc8:     mov   eax, dword ptr [largeBitmapDC_1bpp]     ; <c6ec>
           push  esi
           push  eax
           call  dword ptr [__imp__SelectObject@8]       ; <SelectObject>
           test  eax, eax
-          mov   dword ptr [DAT_0040c75c], eax   ; <c75c>
+          mov   dword ptr [largeBitmapSheet_1bpp], eax  ; <c75c>
           jnz   LAB_00405cef
           push  esi
           call  dword ptr [__imp__DeleteObject@4]       ; <DeleteObject>
@@ -7080,7 +7080,7 @@ LAB_00405cc8:     mov   eax, dword ptr [DAT_0040c6ec]   ; <c6ec>
           ret
 LAB_00405cef:     push  ebp
           call  dword ptr [__imp__CreateCompatibleDC@4] ; <CreateCompatibleDC>
-          mov   dword ptr [DAT_0040c5ec], eax   ; <c5ec>
+          mov   dword ptr [bitmapSourceDC], eax ; <c5ec>
           mov   ebx, 000000001h
 LAB_00405d00:     mov   edx, dword ptr [sprites]        ; <c5f8>
           mov   esi, ebx
@@ -7117,22 +7117,22 @@ LAB_00405d61:     mov   ebp, dword ptr [esp+020h]
           mov   dword ptr [esp+020h], ecx
 LAB_00405d6d:     mov   eax, dword ptr [esp+018h]
           mov   word ptr [esi+008h], bp
-          mov   ecx, dword ptr [DAT_0040c5ec]   ; <c5ec>
+          mov   ecx, dword ptr [bitmapSourceDC] ; <c5ec>
           push  eax
           push  ecx
           call  dword ptr [__imp__SelectObject@8]       ; <SelectObject>
           cmp   di, 000000020h
           mov   dword ptr [esp+018h], eax
-          mov   eax, dword ptr [DAT_0040c730]   ; <c730>
+          mov   eax, dword ptr [largeBitmapDC]  ; <c730>
           jg    LAB_00405d97
-          mov   eax, dword ptr [DAT_0040c710]   ; <c710>
+          mov   eax, dword ptr [smallBitmapDC]  ; <c710>
 LAB_00405d97:     mov   dword ptr [esi], eax
-          mov   ecx, dword ptr [DAT_0040c6ec]   ; <c6ec>
+          mov   ecx, dword ptr [largeBitmapDC_1bpp]     ; <c6ec>
           cmp   di, 000000020h
           jg    LAB_00405dab
-          mov   ecx, dword ptr [DAT_0040c6a4]   ; <c6a4>
+          mov   ecx, dword ptr [smallBitmapDC_1bpp]     ; <c6a4>
 LAB_00405dab:     mov   dword ptr [esi+004h], ecx
-          mov   edx, dword ptr [DAT_0040c5ec]   ; <c5ec>
+          mov   edx, dword ptr [bitmapSourceDC] ; <c5ec>
           mov   ecx, dword ptr [esp+034h]
           push  000CC0020h
           push  000000000h
@@ -7147,7 +7147,7 @@ LAB_00405dab:     mov   dword ptr [esi+004h], ecx
           push  000000000h
           push  eax
           call  ebp
-          mov   eax, dword ptr [DAT_0040c5ec]   ; <c5ec>
+          mov   eax, dword ptr [bitmapSourceDC] ; <c5ec>
           mov   ecx, dword ptr [esp+034h]
           mov   edx, dword ptr [esp+030h]
           push  000330008h
@@ -7161,7 +7161,7 @@ LAB_00405dab:     mov   dword ptr [esi+004h], ecx
           push  000000000h
           push  eax
           call  ebp
-          mov   edx, dword ptr [DAT_0040c5ec]   ; <c5ec>
+          mov   edx, dword ptr [bitmapSourceDC] ; <c5ec>
           mov   ecx, dword ptr [esp+018h]
           push  ecx
           push  edx
@@ -7178,9 +7178,9 @@ LAB_00405dab:     mov   dword ptr [esi+004h], ecx
           mov   cx, ax
           mov   eax, dword ptr [esp+024h]
           and   al, 0C0h
-          mov   word ptr [DAT_0040c690], cx     ; <c690>
+          mov   word ptr [scratchBitmapWidth], cx       ; <c690>
           add   eax, 000000040h
-          mov   word ptr [DAT_0040c6e8], ax     ; <c6e8>
+          mov   word ptr [scratchBitmapHeight], ax      ; <c6e8>
           movsx eax, ax
           movsx ecx, cx
           push  eax
@@ -7196,12 +7196,12 @@ LAB_00405dab:     mov   dword ptr [esi+004h], ecx
           pop   ebx
           add   esp, 000000034h
           ret
-LAB_00405e60:     mov   eax, dword ptr [DAT_0040c5ec]   ; <c5ec>
+LAB_00405e60:     mov   eax, dword ptr [bitmapSourceDC] ; <c5ec>
           push  esi
           push  eax
           call  dword ptr [__imp__SelectObject@8]       ; <SelectObject>
           test  eax, eax
-          mov   dword ptr [DAT_0040c614], eax   ; <c614>
+          mov   dword ptr [scratchBitmap], eax  ; <c614>
           jnz   LAB_00405e87
           push  esi
           call  dword ptr [__imp__DeleteObject@4]       ; <DeleteObject>
@@ -7280,7 +7280,7 @@ LAB_00405ed7:
 ~
 
 _deleteWindowObjects proc
-          mov   eax, dword ptr [DAT_0040c620]   ; <c620>
+          mov   eax, dword ptr [smallBitmapSheet]       ; <c620>
           push  esi
           mov   esi, dword ptr [__imp__DeleteObject@4]  ; <DeleteObject>
           push  edi
@@ -7288,69 +7288,69 @@ _deleteWindowObjects proc
           test  eax, eax
           jz    LAB_00405f03
           push  eax
-          mov   eax, dword ptr [DAT_0040c710]   ; <c710>
+          mov   eax, dword ptr [smallBitmapDC]  ; <c710>
           push  eax
           call  edi
           push  eax
           call  esi
-LAB_00405f03:     mov   eax, dword ptr [DAT_0040c644]   ; <c644>
+LAB_00405f03:     mov   eax, dword ptr [largeBitmapSheet]       ; <c644>
           test  eax, eax
           jz    LAB_00405f19
-          mov   ecx, dword ptr [DAT_0040c730]   ; <c730>
+          mov   ecx, dword ptr [largeBitmapDC]  ; <c730>
           push  eax
           push  ecx
           call  edi
           push  eax
           call  esi
-LAB_00405f19:     mov   eax, dword ptr [DAT_0040c6d4]   ; <c6d4>
+LAB_00405f19:     mov   eax, dword ptr [smallBitmapSheet_1bpp]  ; <c6d4>
           test  eax, eax
           jz    LAB_00405f2f
-          mov   edx, dword ptr [DAT_0040c6a4]   ; <c6a4>
+          mov   edx, dword ptr [smallBitmapDC_1bpp]     ; <c6a4>
           push  eax
           push  edx
           call  edi
           push  eax
           call  esi
-LAB_00405f2f:     mov   eax, dword ptr [DAT_0040c75c]   ; <c75c>
+LAB_00405f2f:     mov   eax, dword ptr [largeBitmapSheet_1bpp]  ; <c75c>
           test  eax, eax
           jz    LAB_00405f44
           push  eax
-          mov   eax, dword ptr [DAT_0040c6ec]   ; <c6ec>
+          mov   eax, dword ptr [largeBitmapDC_1bpp]     ; <c6ec>
           push  eax
           call  edi
           push  eax
           call  esi
-LAB_00405f44:     mov   eax, dword ptr [DAT_0040c614]   ; <c614>
+LAB_00405f44:     mov   eax, dword ptr [scratchBitmap]  ; <c614>
           test  eax, eax
           jz    LAB_00405f5a
-          mov   ecx, dword ptr [DAT_0040c5ec]   ; <c5ec>
+          mov   ecx, dword ptr [bitmapSourceDC] ; <c5ec>
           push  eax
           push  ecx
           call  edi
           push  eax
           call  esi
-LAB_00405f5a:     mov   eax, dword ptr [DAT_0040c710]   ; <c710>
+LAB_00405f5a:     mov   eax, dword ptr [smallBitmapDC]  ; <c710>
           mov   esi, dword ptr [__imp__DeleteDC@4]      ; <DeleteDC>
           test  eax, eax
           jz    LAB_00405f6c
           push  eax
           call  esi
-LAB_00405f6c:     mov   eax, dword ptr [DAT_0040c730]   ; <c730>
+LAB_00405f6c:     mov   eax, dword ptr [largeBitmapDC]  ; <c730>
           test  eax, eax
           jz    LAB_00405f78
           push  eax
           call  esi
-LAB_00405f78:     mov   eax, dword ptr [DAT_0040c6a4]   ; <c6a4>
+LAB_00405f78:     mov   eax, dword ptr [smallBitmapDC_1bpp]     ; <c6a4>
           test  eax, eax
           jz    LAB_00405f84
           push  eax
           call  esi
-LAB_00405f84:     mov   eax, dword ptr [DAT_0040c6ec]   ; <c6ec>
+LAB_00405f84:     mov   eax, dword ptr [largeBitmapDC_1bpp]     ; <c6ec>
           test  eax, eax
           jz    LAB_00405f90
           push  eax
           call  esi
-LAB_00405f90:     mov   eax, dword ptr [DAT_0040c5ec]   ; <c5ec>
+LAB_00405f90:     mov   eax, dword ptr [bitmapSourceDC] ; <c5ec>
           test  eax, eax
           jz    LAB_00405f9c
           push  eax
@@ -7571,12 +7571,12 @@ LAB_00406188:     mov   eax, dword ptr [hSkiMainWnd]    ; <c6c8>
           ret
 LAB_00406198:     pop   esi
           jmp   _togglePausedState
-LAB_0040619e:     mov   eax, dword ptr [playerActorPtrMaybe]    ; <c72c>
+LAB_0040619e:     mov   eax, dword ptr [playerActor]    ; <c72c>
           test  eax, eax
           jnz   LAB_004063a3
 LAB_004061ab:     pop   esi
-          jmp   LAB_00406500
-LAB_004061b1:     mov   eax, dword ptr [playerActorPtrMaybe]    ; <c72c>
+          jmp   _handleGameReset
+LAB_004061b1:     mov   eax, dword ptr [playerActor]    ; <c72c>
           test  eax, eax
           jz    LAB_004063a3
           mov   esi, dword ptr [eax+01Ch]
@@ -7597,7 +7597,7 @@ LAB_004061f3:     cmp   esi, 000000016h
           mov   edx, 000000F63h
           mov   ecx, offset sourceFilename      ; <c090>
           call  @assertFailed@8
-          mov   eax, dword ptr [playerActorPtrMaybe]    ; <c72c>
+          mov   eax, dword ptr [playerActor]    ; <c72c>
 LAB_0040620c:     mov   esi, dword ptr [esi*8+DAT_0040a258]     ; <a258>
           cmp   esi, 000000007h
           jnz   LAB_0040636f
@@ -7613,7 +7613,7 @@ LAB_00406236:     cmp   esi, 000000016h
           mov   edx, 000000F6Bh
           mov   ecx, offset sourceFilename      ; <c090>
           call  @assertFailed@8
-          mov   eax, dword ptr [playerActorPtrMaybe]    ; <c72c>
+          mov   eax, dword ptr [playerActor]    ; <c72c>
 LAB_0040624f:     mov   esi, dword ptr [esi*8+DAT_0040a25c]     ; <a25c>
           cmp   esi, 000000008h
           jnz   LAB_0040636f
@@ -7679,14 +7679,14 @@ LAB_00406338:     test  dx, dx
 LAB_00406344:     test  dx, dx
           jnz   LAB_0040636f
           mov   word ptr [eax+04Ah], 00002h
-          mov   eax, dword ptr [playerActorPtrMaybe]    ; <c72c>
+          mov   eax, dword ptr [playerActor]    ; <c72c>
           mov   esi, 00000000Dh
           mov   cx, word ptr [eax+048h]
           cmp   cx, 000000004h
           jle   LAB_0040636f
           add   ecx, 0FFFFFFFCh
           mov   word ptr [eax+048h], cx
-LAB_0040636a:     mov   eax, dword ptr [playerActorPtrMaybe]    ; <c72c>
+LAB_0040636a:     mov   eax, dword ptr [playerActor]    ; <c72c>
 LAB_0040636f:     mov   ecx, dword ptr [eax+01Ch]
           pop   edi
           cmp   esi, ecx
@@ -7934,7 +7934,7 @@ DAT_004064f0  dword offset LAB_0040636f
 DAT_004064f4  dword offset LAB_0040636f
 DAT_004064f8  dword offset LAB_00406293
 DAT_004064fc  dword offset LAB_004062ce
-LAB_00406500:     call  _resetGame
+_handleGameReset:         call  _resetGame
           test  eax, eax
           jz    LAB_0040653e
           mov   eax, dword ptr [isPaused]       ; <c650>
@@ -7976,7 +7976,7 @@ LAB_0040654c:
           jnz   LAB_00406571
           cmp   si, word ptr [prevMouseY]       ; <c70c>
           jz    LAB_004065bd
-LAB_00406571:     mov   eax, dword ptr [playerActorPtrMaybe]    ; <c72c>
+LAB_00406571:     mov   eax, dword ptr [playerActor]    ; <c72c>
           test  eax, eax
           jz    LAB_004065bd
           mov   ecx, dword ptr [eax+01Ch]
@@ -7997,7 +7997,7 @@ LAB_00406571:     mov   eax, dword ptr [playerActorPtrMaybe]    ; <c72c>
           call  @getSkierGroundSpriteFromMousePosition@8
           jmp   LAB_004065b0
 LAB_004065ab:     call  @getSkierInAirSpriteFromMousePosition@8
-LAB_004065b0:     mov   ecx, dword ptr [playerActorPtrMaybe]    ; <c72c>
+LAB_004065b0:     mov   ecx, dword ptr [playerActor]    ; <c72c>
           mov   edx, eax
           call  @FUN_00402120@8
 LAB_004065bd:     mov   word ptr [prevMouseX], di       ; <c700>
@@ -8137,17 +8137,17 @@ LAB_004066c5:
 @getSkierInAirSpriteFromMousePosition@8 endp
 
 _FUN_004066d0 proc
-          mov   ecx, dword ptr [playerActorPtrMaybe]    ; <c72c>
+          mov   ecx, dword ptr [playerActor]    ; <c72c>
           test  ecx, ecx
           jnz   LAB_004066df
-          jmp   LAB_00406500
+          jmp   _handleGameReset
 LAB_004066df:     mov   edx, dword ptr [ecx+01Ch]
           cmp   edx, 00000000Bh
           jz    LAB_00406736
           cmp   word ptr [ecx+044h], 000000000h
           jnz   LAB_00406701
           mov   word ptr [ecx+04Ah], 00004h
-          mov   ecx, dword ptr [playerActorPtrMaybe]    ; <c72c>
+          mov   ecx, dword ptr [playerActor]    ; <c72c>
           mov   edx, 00000000Dh
           jmp   LAB_00406736
 LAB_00406701:     cmp   edx, 000000011h
@@ -8186,6 +8186,7 @@ DAT_00406778  dword offset LAB_0040671c
 DAT_0040677c  dword offset LAB_00406723
 _FUN_004066d0 endp
 
+COMMENT ~
 @handleCharMessage@4 proc
           lea   eax, dword ptr [ecx-058h]
           cmp   eax, 000000021h
@@ -8194,16 +8195,16 @@ _FUN_004066d0 endp
           mov   cl, byte ptr [eax+LAB_0040686c] ; <686c>
           jmp   dword ptr [ecx*4+LAB_0040684c]  ; <684c>
 LAB_0040679b:     jmp   _timerUpdateFunc
-LAB_004067a0:     mov   eax, dword ptr [DAT_0040c670]   ; <c670>
+LAB_004067a0:     mov   eax, dword ptr [isTurboMode]    ; <c670>
           xor   edx, edx
           test  eax, eax
           setz  dl
-          mov   dword ptr [DAT_0040c670], edx   ; <c670>
+          mov   dword ptr [isTurboMode], edx    ; <c670>
           ret
 LAB_004067b3:     mov   ecx, dword ptr [mainWindowDC]   ; <c63c>
           mov   edx, offset windowClientRect.left       ; <c6b0>
           jmp   @drawWindow@8
-LAB_004067c3:     mov   ecx, dword ptr [playerActorPtrMaybe]    ; <c72c>
+LAB_004067c3:     mov   ecx, dword ptr [playerActor]    ; <c72c>
           test  ecx, ecx
           jz    LAB_0040684a
           mov   ax, word ptr [ecx+044h]
@@ -8214,7 +8215,7 @@ LAB_004067c3:     mov   ecx, dword ptr [playerActorPtrMaybe]    ; <c72c>
           add   dx, 000000002h
           call  @updateActorPositionMaybe@16
           ret
-LAB_004067e5:     mov   ecx, dword ptr [playerActorPtrMaybe]    ; <c72c>
+LAB_004067e5:     mov   ecx, dword ptr [playerActor]    ; <c72c>
           test  ecx, ecx
           jz    LAB_0040684a
           mov   ax, word ptr [ecx+044h]
@@ -8225,7 +8226,7 @@ LAB_004067e5:     mov   ecx, dword ptr [playerActorPtrMaybe]    ; <c72c>
           sub   dx, 000000002h
           call  @updateActorPositionMaybe@16
           ret
-LAB_00406807:     mov   ecx, dword ptr [playerActorPtrMaybe]    ; <c72c>
+LAB_00406807:     mov   ecx, dword ptr [playerActor]    ; <c72c>
           test  ecx, ecx
           jz    LAB_0040684a
           mov   dx, word ptr [ecx+042h]
@@ -8236,7 +8237,7 @@ LAB_00406807:     mov   ecx, dword ptr [playerActorPtrMaybe]    ; <c72c>
           mov   dx, word ptr [ecx+040h]
           call  @updateActorPositionMaybe@16
           ret
-LAB_00406829:     mov   ecx, dword ptr [playerActorPtrMaybe]    ; <c72c>
+LAB_00406829:     mov   ecx, dword ptr [playerActor]    ; <c72c>
           test  ecx, ecx
           jz    LAB_0040684a
           mov   dx, word ptr [ecx+042h]
@@ -8296,6 +8297,7 @@ LAB_0040686c:
           db 090h
           db 090h
 @handleCharMessage@4 endp
+~
 
 COMMENT ~
 _handleWindowSizeMessage proc

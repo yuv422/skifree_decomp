@@ -81,6 +81,7 @@ extern LRESULT CALLBACK skiMainWndProc(HWND hWnd, UINT message, WPARAM wParam, L
 extern void __fastcall updateRectForSpriteAtLocation(RECT *rect, Sprite *sprite, short newX, short newY, short param_5);
 extern Actor * __fastcall FUN_00402120(Actor *actor, UINT frameNo);
 extern void deleteWindowObjects();
+extern Actor * __fastcall updateActorPositionMaybe(Actor *actor, short newX, short newY, short inAir);
 
 extern char sourceFilename[];
 extern HWND hSkiMainWnd;
@@ -91,6 +92,7 @@ extern char s_out_o_memory[];
 extern Sprite *sprites;
 extern Actor *actors;
 extern Actor *actorListPtr;
+extern Actor *playerActor;
 extern void *PTR_0040c758;
 extern int isSoundDisabled;
 extern USHORT SCREEN_WIDTH;
@@ -135,6 +137,7 @@ extern int updateTimerDurationMillis;
 extern void *DAT_0040c78c;
 extern Actor blankTemplateActor;
 extern Actor *currentFreeActor;
+extern BOOL isTurboMode;
 
 
 extern BOOL (WINAPI *sndPlaySoundAFuncPtr)(LPCSTR, UINT);
@@ -569,6 +572,53 @@ Actor * __fastcall addActorOfType(int actorType, UINT param_2) {
     }
     return NULL;
 }
+
+
+void __fastcall handleCharMessage(UINT charCode) {
+    switch(charCode) {
+        case 'X':
+            /* 'X' */
+            if (playerActor) {
+                updateActorPositionMaybe(playerActor,playerActor->xPosMaybe - 2,playerActor->yPosMaybe,playerActor->isInAir);
+                return;
+            }
+            break;
+        case 'Y':
+            /* 'Y' */
+            if (playerActor) {
+                updateActorPositionMaybe(playerActor,playerActor->xPosMaybe,playerActor->yPosMaybe + -2,playerActor->isInAir);
+            }
+            break;
+        case 'f':
+            isTurboMode = (isTurboMode == 0);
+            /* 'f' key */
+            return;
+        case 'r':
+            /* 'r' */
+            drawWindow(mainWindowDC,&windowClientRect);
+            return;
+        case 't':
+            /* 't' */
+            timerUpdateFunc();
+            return;
+        case 'x':
+            /* 'x' */
+            if (playerActor) {
+                updateActorPositionMaybe(playerActor,playerActor->xPosMaybe + 2,playerActor->yPosMaybe,playerActor->isInAir);
+                return;
+            }
+            break;
+        case 'y':
+            /* 'y' */
+            if (playerActor) {
+                updateActorPositionMaybe(playerActor,playerActor->xPosMaybe,playerActor->yPosMaybe + 2,playerActor->isInAir);
+                return;
+            }
+    }
+    return;
+}
+
+
 
 void handleWindowSizeMessage(void) {
     int nWidth;

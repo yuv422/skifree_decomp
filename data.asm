@@ -204,8 +204,8 @@ statusWindowLastUpdateTime byte 4 DUP (00h)
 PUBLIC C DAT_0040c5e0
 DAT_0040c5e0 byte 00h
 db 11 DUP (00h)
-PUBLIC C DAT_0040c5ec
-DAT_0040c5ec byte 4 DUP (00h)
+PUBLIC C bitmapSourceDC
+bitmapSourceDC byte 4 DUP (00h)
 PUBLIC C SHORT_0040c5f0
 SHORT_0040c5f0 byte 2 DUP (00h)
 PUBLIC C DAT_0040c5f2
@@ -224,14 +224,14 @@ PUBLIC C sound_8
 sound_8 byte 8 DUP (00h)
 PUBLIC C redrawRequired
 redrawRequired byte 4 DUP (00h)
-PUBLIC C DAT_0040c614
-DAT_0040c614 byte 4 DUP (00h)
+PUBLIC C scratchBitmap
+scratchBitmap byte 4 DUP (00h)
 PUBLIC C actorListPtr
 actorListPtr byte 4 DUP (00h)
 PUBLIC C skiFreeHInstance
 skiFreeHInstance byte 4 DUP (00h)
-PUBLIC C DAT_0040c620
-DAT_0040c620 byte 4 DUP (00h)
+PUBLIC C smallBitmapSheet
+smallBitmapSheet byte 4 DUP (00h)
 PUBLIC C hSkiStatusWnd
 hSkiStatusWnd byte 4 DUP (00h)
 PUBLIC C sound_6
@@ -243,8 +243,8 @@ PUBLIC C mainWindowDC
 mainWindowDC byte 4 DUP (00h)
 PUBLIC C DAT_0040c640
 DAT_0040c640 byte 4 DUP (00h)
-PUBLIC C DAT_0040c644
-DAT_0040c644 byte 4 DUP (00h)
+PUBLIC C largeBitmapSheet
+largeBitmapSheet byte 4 DUP (00h)
 PUBLIC C actors
 actors byte 4 DUP (00h)
 PUBLIC C playerActorPtrMaybe_1
@@ -265,8 +265,8 @@ PUBLIC C statusWindowTotalTextWidth
 statusWindowTotalTextWidth byte 2 DUP (00h)
 PUBLIC C statusWindowLabelWidth
 statusWindowLabelWidth byte 2 DUP (00h)
-PUBLIC C DAT_0040c670
-DAT_0040c670 byte 4 DUP (00h)
+PUBLIC C isTurboMode
+isTurboMode byte 4 DUP (00h)
 PUBLIC C stringCache
 stringCache byte 4 DUP (00h)
 PUBLIC C updateTimerDurationMillis
@@ -283,8 +283,8 @@ DAT_0040c688 byte 00h
 db 3 DUP (00h)
 PUBLIC C DAT_0040c68c
 DAT_0040c68c byte 4 DUP (00h)
-PUBLIC C DAT_0040c690
-DAT_0040c690 byte 2 DUP (00h)
+PUBLIC C scratchBitmapWidth
+scratchBitmapWidth byte 2 DUP (00h)
 db 2 DUP (00h)
 PUBLIC C mainWndActivationFlags
 mainWndActivationFlags byte 4 DUP (00h)
@@ -294,8 +294,8 @@ PUBLIC C whiteBrush
 whiteBrush byte 4 DUP (00h)
 PUBLIC C SCREEN_WIDTH
 SCREEN_WIDTH byte 4 DUP (00h)
-PUBLIC C DAT_0040c6a4
-DAT_0040c6a4 byte 4 DUP (00h)
+PUBLIC C smallBitmapDC_1bpp
+smallBitmapDC_1bpp byte 4 DUP (00h)
 PUBLIC C stylePoints
 stylePoints byte 4 DUP (00h)
 db 4 DUP (00h)
@@ -309,18 +309,18 @@ PUBLIC C statusWindowDC
 statusWindowDC byte 4 DUP (00h)
 PUBLIC C isGameTimerRunning
 isGameTimerRunning byte 4 DUP (00h)
-PUBLIC C DAT_0040c6d4
-DAT_0040c6d4 byte 4 DUP (00h)
+PUBLIC C smallBitmapSheet_1bpp
+smallBitmapSheet_1bpp byte 4 DUP (00h)
 PUBLIC C DAT_0040c6d8
 DAT_0040c6d8 byte 2 DUP (00h)
 db 6 DUP (00h)
 PUBLIC C sound_7
 sound_7 byte 8 DUP (00h)
-PUBLIC C DAT_0040c6e8
-DAT_0040c6e8 byte 2 DUP (00h)
+PUBLIC C scratchBitmapHeight
+scratchBitmapHeight byte 2 DUP (00h)
 db 2 DUP (00h)
-PUBLIC C DAT_0040c6ec
-DAT_0040c6ec byte 4 DUP (00h)
+PUBLIC C largeBitmapDC_1bpp
+largeBitmapDC_1bpp byte 4 DUP (00h)
 PUBLIC C sound_9
 sound_9 byte 8 DUP (00h)
 PUBLIC C DAT_0040c6f8
@@ -339,8 +339,8 @@ prevTickCount byte 4 DUP (00h)
 PUBLIC C prevMouseY
 prevMouseY byte 2 DUP (00h)
 db 2 DUP (00h)
-PUBLIC C DAT_0040c710
-DAT_0040c710 byte 4 DUP (00h)
+PUBLIC C smallBitmapDC
+smallBitmapDC byte 4 DUP (00h)
 PUBLIC C DAT_0040c714
 DAT_0040c714 byte 2 DUP (00h)
 db 2 DUP (00h)
@@ -349,10 +349,10 @@ sound_4 byte 8 DUP (00h)
 PUBLIC C DAT_0040c720
 DAT_0040c720 byte 00h
 db 11 DUP (00h)
-PUBLIC C playerActorPtrMaybe
-playerActorPtrMaybe byte 4 DUP (00h)
-PUBLIC C DAT_0040c730
-DAT_0040c730 byte 4 DUP (00h)
+PUBLIC C playerActor
+playerActor byte 4 DUP (00h)
+PUBLIC C largeBitmapDC
+largeBitmapDC byte 4 DUP (00h)
 db 4 DUP (00h)
 PUBLIC C DAT_0040c738
 DAT_0040c738 byte 00h
@@ -367,8 +367,8 @@ PUBLIC C sound_5
 sound_5 byte 8 DUP (00h)
 PUBLIC C PTR_0040c758
 PTR_0040c758 byte 4 DUP (00h)
-PUBLIC C DAT_0040c75c
-DAT_0040c75c byte 4 DUP (00h)
+PUBLIC C largeBitmapSheet_1bpp
+largeBitmapSheet_1bpp byte 4 DUP (00h)
 PUBLIC C DAT_0040c760
 DAT_0040c760 byte 4 DUP (00h)
 db 4 DUP (00h)

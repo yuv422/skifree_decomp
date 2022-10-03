@@ -32,3 +32,4 @@ _getFreeActor
 @addActor@8
 @loadBitmapResource@4
 @handleWindowMoveMessage@4
+@handleCharMessage@4

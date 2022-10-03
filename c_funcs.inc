@@ -21,6 +21,7 @@ extern _getFreeActor: proc
 extern @addActor@8: proc
 extern @loadBitmapResource@4: proc
 extern @handleWindowMoveMessage@4: proc
+extern @handleCharMessage@4: proc
 
 ; exports
 ; public _WinMain@16
