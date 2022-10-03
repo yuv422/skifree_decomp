@@ -22,6 +22,10 @@ extern @addActor@8: proc
 extern @loadBitmapResource@4: proc
 extern @handleWindowMoveMessage@4: proc
 extern @handleCharMessage@4: proc
+extern @loadBitmaps@4: proc
+extern _updateWindowsActiveStatus: proc
+extern @setPointerToNull@4: proc
+extern _handleGameReset: proc
 
 ; exports
 ; public _WinMain@16

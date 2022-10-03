@@ -97,7 +97,7 @@
 00406550:@handleMouseMoveMessage@8
 004065e0:@getSkierGroundSpriteFromMousePosition@8
 00406670:@getSkierInAirSpriteFromMousePosition@8
-004066d0:_FUN_004066d0
+004066d0:_handleMouseClick
 00406780:@handleCharMessage@4
 00406890:_handleWindowSizeMessage
 004068d0:_skiStatusWndProc@16

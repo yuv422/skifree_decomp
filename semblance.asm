@@ -5556,6 +5556,7 @@ LAB_00404a7a:
           db 090h
 _FUN_00404a70 endp
 
+COMMENT ~
 _setupGame proc
           push  000000000h
           push  000000000h
@@ -5587,6 +5588,7 @@ LAB_00404ac7:
           db 090h
           db 090h
 _setupGame endp
+~
 
 COMMENT ~
 _startGameTimer proc
@@ -5944,6 +5946,7 @@ LAB_004050f8:
           db 090h
 _FUN_00404b50 endp
 
+COMMENT ~
 @setPointerToNull@4 proc
           push  esi
           mov   esi, ecx
@@ -5959,6 +5962,7 @@ LAB_0040511e:
           db 090h
           db 090h
 @setPointerToNull@4 endp
+~
 
 @FUN_00405120@8 proc
           push  ebx
@@ -6603,6 +6607,7 @@ LAB_004057f4:
 _pauseGame endp
 ~
 
+COMMENT ~
 _skiMainWndProc@16 proc
           mov   eax, dword ptr [esp+008h]
           push  esi
@@ -6737,7 +6742,7 @@ LAB_00405995:     mov   ecx, dword ptr [esp+014h]
 LAB_004059af:     mov   eax, dword ptr [inputEnabled]   ; <c67c>
           test  eax, eax
           jz    LAB_004059bd
-          call  _FUN_004066d0
+          call  _handleMouseClick
 LAB_004059bd:     xor   eax, eax
           pop   esi
           ret   00010h
@@ -6801,7 +6806,9 @@ LAB_004059e0:
           db 090h
           db 090h
 _skiMainWndProc@16 endp
+~
 
+COMMENT ~
 _updateWindowsActiveStatus proc
           mov   eax, dword ptr [mainWndActivationFlags] ; <c694>
           test  eax, eax
@@ -6814,7 +6821,9 @@ _updateWindowsActiveStatus proc
 LAB_00405a31:     mov   dword ptr [inputEnabled], 000000000h    ; <c67c>
           jmp   _pauseGame
 _updateWindowsActiveStatus endp
+~
 
+COMMENT ~
 @loadBitmaps@4 proc
           push  ecx
           call  dword ptr [__imp__GetDC@4]      ; <GetDC>
@@ -6847,6 +6856,7 @@ LAB_00405aa9:     mov   eax, 000000001h
 LAB_00405aaf:
           db 090h
 @loadBitmaps@4 endp
+~
 
 @createBitmapSheets@4 proc
           sub   esp, 000000034h
@@ -7934,7 +7944,11 @@ DAT_004064f0  dword offset LAB_0040636f
 DAT_004064f4  dword offset LAB_0040636f
 DAT_004064f8  dword offset LAB_00406293
 DAT_004064fc  dword offset LAB_004062ce
-_handleGameReset:         call  _resetGame
+@handleKeydownMessage@4 endp
+
+COMMENT ~
+_handleGameReset proc
+          call  _resetGame
           test  eax, eax
           jz    LAB_0040653e
           mov   eax, dword ptr [isPaused]       ; <c650>
@@ -7962,7 +7976,8 @@ LAB_0040654c:
           db 090h
           db 090h
           db 090h
-@handleKeydownMessage@4 endp
+_handleGameReset endp
+~
 
 @handleMouseMoveMessage@8 proc
           mov   eax, dword ptr [DAT_0040c760]   ; <c760>
@@ -8136,7 +8151,7 @@ LAB_004066c5:
           db 090h
 @getSkierInAirSpriteFromMousePosition@8 endp
 
-_FUN_004066d0 proc
+_handleMouseClick proc
           mov   ecx, dword ptr [playerActor]    ; <c72c>
           test  ecx, ecx
           jnz   LAB_004066df
@@ -8184,7 +8199,7 @@ DAT_00406770  dword offset LAB_00406736
 DAT_00406774  dword offset LAB_00406736
 DAT_00406778  dword offset LAB_0040671c
 DAT_0040677c  dword offset LAB_00406723
-_FUN_004066d0 endp
+_handleMouseClick endp
 
 COMMENT ~
 @handleCharMessage@4 proc

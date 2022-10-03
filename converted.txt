@@ -33,3 +33,9 @@ _getFreeActor
 @loadBitmapResource@4
 @handleWindowMoveMessage@4
 @handleCharMessage@4
+@loadBitmaps@4
+_updateWindowsActiveStatus
+_skiMainWndProc@16
+@setPointerToNull@4
+_handleGameReset
+_setupGame

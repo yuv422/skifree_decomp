@@ -52,6 +52,7 @@ void __fastcall statusWindowFindLongestTextString(HDC hdc, short *maxLength, LPC
 void __fastcall paintStatusWindow(HWND hWnd);
 BOOL __fastcall calculateStatusWindowDimensions(HWND hWnd);
 void __fastcall statusWindowReleaseDC(HWND hWnd);
+LRESULT CALLBACK skiMainWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 LRESULT CALLBACK skiStatusWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 void __fastcall paintActors(HDC hdc, RECT *paintRect);
 void pauseGame();
@@ -60,6 +61,10 @@ void __fastcall freeSoundResource(Sound *sound);
 void cleanupSound();
 Actor * __fastcall addActor(Actor *actor, BOOL insertBack);
 HBITMAP __fastcall loadBitmapResource(UINT resourceId);
+BOOL __fastcall loadBitmaps(HWND hWnd);
+void __fastcall handleWindowMoveMessage(HWND hWnd);
+void updateWindowsActiveStatus();
+void __fastcall setPointerToNull(void **param_1);
 
 
 
@@ -77,11 +82,17 @@ extern int resetGame();
 extern void updateGameState();
 extern void __fastcall drawWindow(HDC hdc, RECT *rect);
 extern void __fastcall formatAndPrintStatusStrings(HDC windowDC);
-extern LRESULT CALLBACK skiMainWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 extern void __fastcall updateRectForSpriteAtLocation(RECT *rect, Sprite *sprite, short newX, short newY, short param_5);
 extern Actor * __fastcall FUN_00402120(Actor *actor, UINT frameNo);
 extern void deleteWindowObjects();
 extern Actor * __fastcall updateActorPositionMaybe(Actor *actor, short newX, short newY, short inAir);
+extern BOOL __fastcall createBitmapSheets(HDC param_1);
+extern void __fastcall updateWindowSize(HWND hWnd);
+extern void __fastcall handleMouseMoveMessage(short xPos,short yPos);
+extern void __fastcall handleKeydownMessage(UINT charCode);
+extern void handleMouseClick(void);
+extern void setupActorType0x11();
+extern void FUN_00404b50();
 
 extern char sourceFilename[];
 extern HWND hSkiMainWnd;
@@ -93,6 +104,7 @@ extern Sprite *sprites;
 extern Actor *actors;
 extern Actor *actorListPtr;
 extern Actor *playerActor;
+extern Actor *playerActorPtrMaybe_1;
 extern void *PTR_0040c758;
 extern int isSoundDisabled;
 extern USHORT SCREEN_WIDTH;
@@ -138,6 +150,16 @@ extern void *DAT_0040c78c;
 extern Actor blankTemplateActor;
 extern Actor *currentFreeActor;
 extern BOOL isTurboMode;
+extern HDC smallBitmapDC;
+extern HDC smallBitmapDC_1bpp;
+extern HDC largeBitmapDC;
+extern HDC largeBitmapDC_1bpp;
+extern HDC bitmapSourceDC;
+extern HGDIOBJ smallBitmapSheet;
+extern HGDIOBJ smallBitmapSheet_1bpp;
+extern HGDIOBJ largeBitmapSheet;
+extern HGDIOBJ largeBitmapSheet_1bpp;
+extern HGDIOBJ scratchBitmap;
 
 
 extern BOOL (WINAPI *sndPlaySoundAFuncPtr)(LPCSTR, UINT);
@@ -573,6 +595,19 @@ Actor * __fastcall addActorOfType(int actorType, UINT param_2) {
     return NULL;
 }
 
+void handleGameReset() {
+    if (resetGame()) {
+        if (isPaused != 0) {
+            togglePausedState();
+        }
+        InvalidateRect(hSkiMainWnd,NULL,TRUE);
+        if (setupGame()) {
+            UpdateWindow(hSkiMainWnd);
+            return;
+        }
+    }
+    DestroyWindow(hSkiMainWnd);
+}
 
 void __fastcall handleCharMessage(UINT charCode) {
     switch(charCode) {
@@ -803,6 +838,187 @@ BOOL __fastcall calculateStatusWindowDimensions(HWND hWnd) {
     statusWindowTotalTextWidth = (short)maxValueLength + (short)maxKeyLength;
     statusWindowLabelWidth = (short)maxKeyLength;
     return 1;
+}
+
+BOOL setupGame() {
+    Actor *actor;
+    short newY;
+    short inAir;
+
+    inAir = 0;
+    newY = 0;
+    actor = addActorOfType(0,3);
+    playerActorPtrMaybe_1 = updateActorPositionMaybe(actor,0,newY,inAir);
+    playerActor = playerActorPtrMaybe_1;
+    if (!playerActorPtrMaybe_1) {
+        return FALSE;
+    }
+    setupActorType0x11();
+    FUN_00404b50();
+    isPaused = 0;
+    startGameTimer();
+    return TRUE;
+}
+
+void __fastcall setPointerToNull(void **param_1) {
+    ski_assert(param_1, 2578);
+    *param_1 = NULL;
+}
+
+LRESULT CALLBACK skiMainWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
+    BOOL BVar1;
+    LRESULT LVar2;
+
+    if (message < 0x25) {
+        switch(message) {
+            case 1:
+                /* WM_CREATE */
+                BVar1 = loadBitmaps(hWnd);
+                if (BVar1 != 0) {
+                    updateWindowSize(hWnd);
+                    return 0;
+                }
+                return -1;
+            case 2:
+                /* WM_MOVE */
+                handleWindowMoveMessage(hWnd);
+                PostQuitMessage(0);
+                return 0;
+            case 3:
+            case 4:
+            case 7:
+            case 8:
+            case 9:
+            case 10:
+            case 0xb:
+            case 0xc:
+            case 0xd:
+            case 0xe:
+            case 0x10:
+            case 0x11:
+            case 0x12:
+            case 0x13:
+            case 0x14:
+            case 0x15:
+            case 0x16:
+            case 0x17:
+            case 0x18:
+            case 0x19:
+            case 0x1a:
+            case 0x1b:
+            case 0x1c:
+            case 0x1d:
+            case 0x1e:
+            case 0x1f:
+            case 0x20:
+                LVar2 = DefWindowProcA(hWnd,message,wParam,lParam);
+                return LVar2;
+            case 5:
+                /* WM_SIZE */
+                updateWindowSize(hWnd);
+                if (hSkiStatusWnd != 0) {
+                    handleWindowSizeMessage();
+                }
+                isMinimised = (BOOL)(wParam == 1);
+                updateWindowsActiveStatus();
+                if (inputEnabled != 0) {
+                    UpdateWindow(hSkiMainWnd);
+                    return 0;
+                }
+                break;
+            case 6:
+                /* WM_ACTIVATE */
+                mainWndActivationFlags = wParam;
+                if (wParam != 0) {
+                    SetFocus(hWnd);
+                }
+                updateWindowsActiveStatus();
+                return 0;
+            case 0xf:
+                /* WM_PAINT */
+                mainWindowPaint(hWnd);
+                return 0;
+            case 0x21:
+                /* WM_MOUSEACTIVATE */
+                if ((short)lParam == 1) {
+                    return 2;
+                }
+                break;
+            default:
+                // TODO what is this doing?!
+                *(int *)(lParam + 0x18) = 0x140;
+                *(int *)(lParam + 0x1c) = 300;
+                return 0;
+        }
+    }
+    else if (message < WM_MOUSEMOVE + 1) {
+        if (message == WM_MOUSEMOVE) {
+            if (inputEnabled != 0) {
+                handleMouseMoveMessage((short)lParam,(short)((UINT)lParam >> 0x10));
+                return 0;
+            }
+        }
+        else if (message == WM_KEYDOWN) {
+            if (inputEnabled != 0) {
+                handleKeydownMessage(wParam);
+                return 0;
+            }
+        }
+        else {
+            if (message != WM_CHAR) {
+                LVar2 = DefWindowProcA(hWnd,message,wParam,lParam);
+                return LVar2;
+            }
+            /* WM_CHAR */
+            if (inputEnabled != 0) {
+                handleCharMessage(wParam);
+                return 0;
+            }
+        }
+    }
+    else {
+        if ((message != WM_LBUTTONDOWN) && (message != WM_LBUTTONDBLCLK)) {
+            LVar2 = DefWindowProcA(hWnd,message,wParam,lParam);
+            return LVar2;
+        }
+        if (inputEnabled != 0) {
+            handleMouseClick();
+        }
+    }
+    return 0;
+}
+
+
+void updateWindowsActiveStatus() {
+    if ((mainWndActivationFlags != 0) && (isMinimised == 0)) {
+        inputEnabled = 1;
+        startGameTimer();
+        return;
+    }
+    inputEnabled = 0;
+    pauseGame();
+}
+
+BOOL __fastcall loadBitmaps(HWND hWnd) {
+    mainWindowDC = GetDC(hWnd);
+    if (!mainWindowDC) {
+        return FALSE;
+    }
+    smallBitmapDC = NULL;
+    smallBitmapDC_1bpp = NULL;
+    largeBitmapDC = NULL;
+    largeBitmapDC_1bpp = NULL;
+    bitmapSourceDC = NULL;
+    smallBitmapSheet = NULL;
+    smallBitmapSheet_1bpp = NULL;
+    largeBitmapSheet = NULL;
+    largeBitmapSheet_1bpp = NULL;
+    scratchBitmap = NULL;
+    if (!createBitmapSheets(mainWindowDC)) {
+        showErrorMessage("Whoa, like, can't load bitmaps!  Yer outa memory, duuude!");
+        return FALSE;
+    }
+    return TRUE;
 }
 
 HBITMAP __fastcall loadBitmapResource(UINT resourceId) {
