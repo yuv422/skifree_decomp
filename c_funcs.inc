@@ -27,6 +27,7 @@ extern _updateWindowsActiveStatus: proc
 extern @setPointerToNull@4: proc
 extern _handleGameReset: proc
 extern @addStylePoints@4: proc
+extern @areRectanglesEqual@8: proc
 
 ; exports
 ; public _WinMain@16

@@ -3,7 +3,7 @@
 00401240:@assertFailed@8
 00401270:@assertFailedDialog@8
 00401290:@doRectsOverlap@8
-004012f0:@FUN_004012f0@8
+004012f0:@areRectanglesEqual@8
 00401350:@FUN_00401350@4
 00401390:_FUN_00401390
 00401410:@updateActorSpriteRect@4

@@ -214,6 +214,17 @@ int __fastcall doRectsOverlap(RECT *rect1, RECT *rect2) {
     return 0;
 }
 
+BOOL __fastcall areRectanglesEqual(RECT *rect1,RECT *rect2) {
+    ski_assert(rect1 != NULL, 381);
+    ski_assert(rect2 != NULL, 382);
+
+    if ((((rect1->top == rect2->top) && (rect1->left == rect2->left)) &&
+         (rect1->right == rect2->right)) && (rect1->bottom == rect2->bottom)) {
+        return TRUE;
+    }
+    return FALSE;
+}
+
 char * __fastcall getCachedString(UINT stringIdx) {
     int length;
     char *pcVar1;

@@ -82,7 +82,7 @@ LAB_004010e9:     mov   ecx, esi
           call  @updateActorSpriteRect@4
 LAB_004010f0:     mov   edx, ebp
           mov   ecx, eax
-          call  @FUN_004012f0@8
+          call  @areRectanglesEqual@8
           test  eax, eax
           jz    LAB_00401115
           mov   ecx, dword ptr [esi+04Ch]
@@ -295,7 +295,8 @@ LAB_004012ef:
 @doRectsOverlap@8 endp
 ~
 
-@FUN_004012f0@8 proc
+COMMENT ~
+@areRectanglesEqual@8 proc
           push  esi
           mov   esi, ecx
           push  edi
@@ -336,7 +337,8 @@ LAB_0040134a:     pop   edi
           ret
 LAB_0040134f:
           db 090h
-@FUN_004012f0@8 endp
+@areRectanglesEqual@8 endp
+~
 
 @FUN_00401350@4 proc
           push  esi

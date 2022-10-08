@@ -40,3 +40,4 @@ _skiMainWndProc@16
 _handleGameReset
 _setupGame
 @addStylePoints@4
+@areRectanglesEqual@8
