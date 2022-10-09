@@ -65,6 +65,7 @@ BOOL __fastcall loadBitmaps(HWND hWnd);
 void __fastcall handleWindowMoveMessage(HWND hWnd);
 void updateWindowsActiveStatus();
 void __fastcall setPointerToNull(void **param_1);
+Actor *getFreeActor();
 
 
 
@@ -91,8 +92,8 @@ extern void __fastcall updateWindowSize(HWND hWnd);
 extern void __fastcall handleMouseMoveMessage(short xPos,short yPos);
 extern void __fastcall handleKeydownMessage(UINT charCode);
 extern void handleMouseClick(void);
-extern void setupActorType0x11();
 extern void FUN_00404b50();
+extern Actor * __fastcall actorSetSpriteIdx(Actor *actor, USHORT spriteIdx);
 
 extern char sourceFilename[];
 extern HWND hSkiMainWnd;
@@ -162,6 +163,8 @@ extern HGDIOBJ largeBitmapSheet_1bpp;
 extern HGDIOBJ scratchBitmap;
 extern BOOL isFsGameMode;
 extern int stylePoints;
+extern short playerX;
+extern short playerY;
 
 
 extern BOOL (WINAPI *sndPlaySoundAFuncPtr)(LPCSTR, UINT);
@@ -335,6 +338,53 @@ int __fastcall showErrorMessage(LPCSTR text) {
     lpCaption = getCachedString(IDS_TITLE);
     return MessageBoxA(NULL, text, lpCaption, 0x30);
 }
+
+Actor * __fastcall addActorOfTypeWithSpriteIdx(int actorType, USHORT spriteIdx) {
+    Actor *actor;
+
+    actor = getFreeActor();
+    if (actor != NULL) {
+        if (actorType < 0) {
+            assertFailed(sourceFilename,1403);
+        }
+        if (0x11 < actorType) {
+            assertFailed(sourceFilename,1404);
+        }
+        actor->typeMaybe = actorType;
+        actor = actorSetSpriteIdx(actor, spriteIdx);
+        return actor;
+    }
+    return NULL;
+}
+
+
+void setupGameTitleActors() {
+    Actor *actor;
+    short x;
+    short y;
+
+    y = playerY;
+    x = -(sprites[0x35].width / 2) - 40;
+
+    actor = addActorOfTypeWithSpriteIdx(0x11, 0x35);
+    updateActorPositionMaybe(actor, x, y, 0);
+
+    y = y + sprites[0x36].height + 4;
+    actor = addActorOfTypeWithSpriteIdx(0x11, 0x36);
+    updateActorPositionMaybe(actor, x, y, 0);
+    x = sprites[0x37].width;
+    if (sprites[0x37].width <= sprites[0x38].width) {
+        x = sprites[0x38].width;
+    }
+    y = sprites[0x37].height;
+    actor = addActorOfTypeWithSpriteIdx(0x11, 0x37);
+    updateActorPositionMaybe(actor, x, y, 0);
+
+    y = y + sprites[0x38].height + 4;
+    actor = addActorOfTypeWithSpriteIdx(0x11, 0x38);
+    updateActorPositionMaybe(actor, x, y, 0);
+}
+
 
 
 /* WARNING: Removing unreachable block (ram,0x004053c9) */
@@ -872,7 +922,7 @@ BOOL setupGame() {
     if (!playerActorPtrMaybe_1) {
         return FALSE;
     }
-    setupActorType0x11();
+    setupGameTitleActors();
     FUN_00404b50();
     isPaused = 0;
     startGameTimer();

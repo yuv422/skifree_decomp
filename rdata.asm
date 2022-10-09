@@ -214,10 +214,9 @@ db 26h, 00h, 27h, 00h, 28h, 00h, 29h, 00h, 2ah, 00h, 2bh, 00h, 2ch, 00h, 41h, 00
 db 42h, 00h, 43h, 00h, 44h, 00h, 45h, 00h, 46h, 00h, 47h, 00h, 48h, 00h, 49h, 00h
 db 4ah, 00h, 4bh, 00h, 4ch, 00h, 4dh, 00h, 4eh, 00h, 4fh, 00h, 50h, 00h, 51h, 00h
 db 53h, 00h, 54h, 00h, 55h, 00h, 54h, 00h, 31h, 00h, 57h, 00h, 58h, 00h, 59h, 00h
-PUBLIC C DAT_0040a22c
-DAT_0040a22c byte 06h
-db 3 DUP (00h), 16h, 3 DUP (00h), 1bh, 3 DUP (00h), 1fh, 3 DUP (00h), 27h, 3 DUP (00h), 2ah, 3 DUP (00h), 2ah, 3 DUP (00h), 2ah, 3 DUP (00h), 2ah
-db 3 DUP (00h), 38h, 3 DUP (00h), 3ch, 3 DUP (00h)
+PUBLIC C UINT_ARRAY_0040a22c
+UINT_ARRAY_0040a22c byte 06h, 3 DUP (00h), 16h, 3 DUP (00h), 1bh, 3 DUP (00h), 1fh, 3 DUP (00h), 27h, 3 DUP (00h), 2ah, 3 DUP (00h), 2ah, 3 DUP (00h), 2ah, 3 DUP (00h)
+db 2ah, 3 DUP (00h), 38h, 3 DUP (00h), 3ch, 3 DUP (00h)
 PUBLIC C DAT_0040a258
 DAT_0040a258 byte 01h
 db 3 DUP (00h)

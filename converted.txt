@@ -41,3 +41,5 @@ _handleGameReset
 _setupGame
 @addStylePoints@4
 @areRectanglesEqual@8
+@addActorOfTypeWithSpriteIdx@8
+_setupGameTitleActors

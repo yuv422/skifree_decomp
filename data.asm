@@ -206,10 +206,10 @@ DAT_0040c5e0 byte 00h
 db 11 DUP (00h)
 PUBLIC C bitmapSourceDC
 bitmapSourceDC byte 4 DUP (00h)
-PUBLIC C SHORT_0040c5f0
-SHORT_0040c5f0 byte 2 DUP (00h)
-PUBLIC C DAT_0040c5f2
-DAT_0040c5f2 byte 2 DUP (00h)
+PUBLIC C windowWidth
+windowWidth byte 2 DUP (00h)
+PUBLIC C playerY
+playerY byte 2 DUP (00h)
 PUBLIC C timerFrameDurationInMillis
 timerFrameDurationInMillis byte 4 DUP (00h)
 PUBLIC C sprites
@@ -241,8 +241,8 @@ DAT_0040c630 byte 00h
 db 11 DUP (00h)
 PUBLIC C mainWindowDC
 mainWindowDC byte 4 DUP (00h)
-PUBLIC C DAT_0040c640
-DAT_0040c640 byte 4 DUP (00h)
+PUBLIC C playerX
+playerX byte 4 DUP (00h)
 PUBLIC C largeBitmapSheet
 largeBitmapSheet byte 4 DUP (00h)
 PUBLIC C actors
@@ -273,16 +273,8 @@ PUBLIC C updateTimerDurationMillis
 updateTimerDurationMillis byte 4 DUP (00h)
 PUBLIC C inputEnabled
 inputEnabled byte 4 DUP (00h)
-PUBLIC C DAT_0040c680
-DAT_0040c680 byte 00h
-db 3 DUP (00h)
-PUBLIC C DAT_0040c684
-DAT_0040c684 byte 4 DUP (00h)
-PUBLIC C DAT_0040c688
-DAT_0040c688 byte 00h
-db 3 DUP (00h)
-PUBLIC C DAT_0040c68c
-DAT_0040c68c byte 4 DUP (00h)
+PUBLIC C windowClientRectWith120Margin
+windowClientRectWith120Margin byte 16 DUP (00h)
 PUBLIC C scratchBitmapWidth
 scratchBitmapWidth byte 2 DUP (00h)
 db 2 DUP (00h)
@@ -311,8 +303,8 @@ PUBLIC C isGameTimerRunning
 isGameTimerRunning byte 4 DUP (00h)
 PUBLIC C smallBitmapSheet_1bpp
 smallBitmapSheet_1bpp byte 4 DUP (00h)
-PUBLIC C DAT_0040c6d8
-DAT_0040c6d8 byte 2 DUP (00h)
+PUBLIC C windowHeight
+windowHeight byte 2 DUP (00h)
 db 6 DUP (00h)
 PUBLIC C sound_7
 sound_7 byte 8 DUP (00h)
@@ -325,8 +317,8 @@ PUBLIC C sound_9
 sound_9 byte 8 DUP (00h)
 PUBLIC C DAT_0040c6f8
 DAT_0040c6f8 byte 4 DUP (00h)
-PUBLIC C DAT_0040c6fc
-DAT_0040c6fc byte 4 DUP (00h)
+PUBLIC C totalAreaOfActorSprites
+totalAreaOfActorSprites byte 4 DUP (00h)
 PUBLIC C prevMouseX
 prevMouseX byte 2 DUP (00h)
 PUBLIC C struct24Index
@@ -359,8 +351,8 @@ DAT_0040c738 byte 00h
 db 11 DUP (00h)
 PUBLIC C currentFreeActor
 currentFreeActor byte 4 DUP (00h)
-PUBLIC C DAT_0040c748
-DAT_0040c748 byte 4 DUP (00h)
+PUBLIC C windowWithMarginTotalArea
+windowWithMarginTotalArea byte 4 DUP (00h)
 PUBLIC C SCREEN_HEIGHT
 SCREEN_HEIGHT byte 4 DUP (00h)
 PUBLIC C sound_5

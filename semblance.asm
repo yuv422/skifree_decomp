@@ -92,7 +92,7 @@ LAB_004010f0:     mov   edx, ebp
           and   eax, ebx
           mov   ecx, edi
           mov   dword ptr [edi+04Ch], eax
-          call  @FUN_00401350@4
+          call  @actorSetFlag8IfFlag1IsUnset@4
 LAB_00401115:     mov   esi, dword ptr [esi]
           test  esi, esi
           jnz   LAB_004010aa
@@ -192,11 +192,11 @@ LAB_00401212:     mov   esi, dword ptr [actorListPtr]   ; <c618>
 LAB_0040121c:     test  byte ptr [esi+04Ch], 002h
           jz    LAB_00401229
           mov   ecx, esi
-          call  @FUN_00401350@4
+          call  @actorSetFlag8IfFlag1IsUnset@4
 LAB_00401229:     mov   esi, dword ptr [esi]
           test  esi, esi
           jnz   LAB_0040121c
-LAB_0040122f:     call  _FUN_00401390
+LAB_0040122f:     call  _removeFlag8ActorsFromList
           pop   edi
           pop   esi
           pop   ebp
@@ -340,7 +340,7 @@ LAB_0040134f:
 @areRectanglesEqual@8 endp
 ~
 
-@FUN_00401350@4 proc
+@actorSetFlag8IfFlag1IsUnset@4 proc
           push  esi
           mov   esi, ecx
           test  esi, esi
@@ -372,9 +372,9 @@ LAB_00401384:
           db 090h
           db 090h
           db 090h
-@FUN_00401350@4 endp
+@actorSetFlag8IfFlag1IsUnset@4 endp
 
-_FUN_00401390 proc
+_removeFlag8ActorsFromList proc
           push  ebp
           push  esi
           mov   esi, dword ptr [actorListPtr]   ; <c618>
@@ -427,7 +427,7 @@ LAB_00401405:
           db 090h
           db 090h
           db 090h
-_FUN_00401390 endp
+_removeFlag8ActorsFromList endp
 
 COMMENT ~
 @updateActorSpriteRect@4 proc
@@ -516,7 +516,7 @@ LAB_004014d3:     test  edi, edi
           call  @assertFailed@8
 LAB_004014e6:     mov   ax, word ptr [skierScreenYOffset]       ; <c5fc>
           mov   edi, dword ptr [esp+01Ch]
-          sub   ax, word ptr [DAT_0040c5f2]     ; <c5f2>
+          sub   ax, word ptr [playerY]  ; <c5f2>
           mov   ecx, dword ptr [esp+018h]
           sub   eax, edi
           movsx edi, bp
@@ -527,7 +527,7 @@ LAB_004014e6:     mov   ax, word ptr [skierScreenYOffset]       ; <c5fc>
           mov   edx, dword ptr [skierScreenXOffset]     ; <c704>
           sar   eax, 1h
           sub   edx, eax
-          mov   eax, dword ptr [DAT_0040c640]   ; <c640>
+          mov   eax, dword ptr [playerX]        ; <c640>
           sub   edx, eax
           mov   eax, dword ptr [esp+014h]
           add   eax, edx
@@ -1046,7 +1046,7 @@ LAB_00401aef:     mov   ecx, dword ptr [esi+008h]
 LAB_00401af9:     lea   edx, dword ptr [ebp+030h]
           lea   ecx, dword ptr [edi+030h]
           mov   dword ptr [esi+008h], ebp
-          call  @FUN_00401b20@8
+          call  @enlargeRect@8
           mov   eax, dword ptr [ebp+04Ch]
           and   al, 0EFh
           pop   edi
@@ -1070,7 +1070,7 @@ LAB_00401b14:
           db 090h
 @FUN_00401a60@8 endp
 
-@FUN_00401b20@8 proc
+@enlargeRect@8 proc
           push  esi
           push  edi
           mov   edi, edx
@@ -1108,7 +1108,7 @@ LAB_00401b70:     mov   edi, dword ptr [edi+00Ch]
 LAB_00401b7d:     pop   edi
           pop   esi
           ret
-@FUN_00401b20@8 endp
+@enlargeRect@8 endp
 
 @formatAndPrintStatusStrings@4 proc
           sub   esp, 000000018h
@@ -1400,8 +1400,8 @@ LAB_00401e4a:
 ~
 
 _updateGameState proc
-          mov   ax, word ptr [DAT_0040c640]     ; <c640>
-          mov   cx, word ptr [DAT_0040c5f2]     ; <c5f2>
+          mov   ax, word ptr [playerX]  ; <c640>
+          mov   cx, word ptr [playerY]  ; <c5f2>
           sub   word ptr [DAT_0040c714], ax     ; <c714>
           sub   word ptr [DAT_0040c5d8], cx     ; <c5d8>
           push  ebx
@@ -1435,18 +1435,18 @@ LAB_00401ea3:     mov   eax, dword ptr [esi+04Ch]
           jmp   LAB_00401ec2
 LAB_00401ebb:     mov   ecx, esi
           call  @updateActorSpriteRect@4
-LAB_00401ec2:     mov   edx, offset DAT_0040c680        ; <c680>
+LAB_00401ec2:     mov   edx, offset windowClientRectWith120Margin.left  ; <c680>
           mov   ecx, eax
           call  @doRectsOverlap@8
           test  eax, eax
           jnz   LAB_00401eee
           mov   edx, dword ptr [esi+014h]
-          mov   ecx, dword ptr [DAT_0040c6fc]   ; <c6fc>
+          mov   ecx, dword ptr [totalAreaOfActorSprites]        ; <c6fc>
           movsx eax, word ptr [edx+00Eh]
           sub   ecx, eax
-          mov   dword ptr [DAT_0040c6fc], ecx   ; <c6fc>
+          mov   dword ptr [totalAreaOfActorSprites], ecx        ; <c6fc>
           mov   ecx, esi
-          call  @FUN_00401350@4
+          call  @actorSetFlag8IfFlag1IsUnset@4
 LAB_00401eee:     mov   esi, dword ptr [esi]
           test  esi, esi
           jnz   LAB_00401e82
@@ -1460,7 +1460,7 @@ LAB_00401ef4:     mov   ecx, offset DAT_0040c630        ; <c630>
           call  @FUN_004046e0@4
           mov   ecx, offset DAT_0040c720        ; <c720>
           call  @FUN_004040a0@4
-          call  _FUN_00401390
+          call  _removeFlag8ActorsFromList
           mov   edi, dword ptr [actorListPtr]   ; <c618>
           test  edi, edi
           jz    LAB_00401fc5
@@ -1503,14 +1503,14 @@ LAB_00401f89:     mov   edx, eax
           jz    LAB_00401fb4
           mov   edx, esi
           mov   ecx, edi
-          call  @FUN_00403a00@8
+          call  @handleActorCollision@8
           test  byte ptr [edi+04Ch], 008h
           jnz   LAB_00401fb4
           test  byte ptr [esi+04Ch], 008h
           jnz   LAB_00401fb4
           mov   edx, edi
           mov   ecx, esi
-          call  @FUN_00403a00@8
+          call  @handleActorCollision@8
 LAB_00401fb4:     mov   esi, dword ptr [esi]
           test  esi, esi
           jnz   LAB_00401f66
@@ -1519,8 +1519,8 @@ LAB_00401fba:     mov   edi, dword ptr [edi]
           jnz   LAB_00401f3a
           pop   ebp
 LAB_00401fc5:     mov   ax, word ptr [DAT_0040c5d8]     ; <c5d8>
-          mov   cx, word ptr [DAT_0040c640]     ; <c640>
-          add   ax, word ptr [DAT_0040c5f2]     ; <c5f2>
+          mov   cx, word ptr [playerX]  ; <c640>
+          add   ax, word ptr [playerY]  ; <c5f2>
           add   word ptr [DAT_0040c714], cx     ; <c714>
           pop   edi
           pop   esi
@@ -1529,7 +1529,7 @@ LAB_00401fc5:     mov   ax, word ptr [DAT_0040c5d8]     ; <c5d8>
           pop   ebx
           jle   LAB_0040200f
 LAB_00401fef:     mov   ecx, 000000003h
-          call  @FUN_004025c0@4
+          call  @addRandomActor@4
           mov   ax, word ptr [DAT_0040c5d8]     ; <c5d8>
           add   ax, 0FFC4h
           cmp   ax, 0003Ch
@@ -1538,7 +1538,7 @@ LAB_00401fef:     mov   ecx, 000000003h
 LAB_0040200f:     cmp   ax, 0FFC4h
           jge   LAB_00402035
 LAB_00402015:     mov   ecx, 000000002h
-          call  @FUN_004025c0@4
+          call  @addRandomActor@4
           mov   ax, word ptr [DAT_0040c5d8]     ; <c5d8>
           add   ax, 0003Ch
           cmp   ax, 0FFC4h
@@ -1548,7 +1548,7 @@ LAB_00402035:     mov   ax, word ptr [DAT_0040c714]     ; <c714>
           cmp   ax, 0003Ch
           jle   LAB_00402061
 LAB_00402041:     mov   ecx, 000000001h
-          call  @FUN_004025c0@4
+          call  @addRandomActor@4
           mov   ax, word ptr [DAT_0040c714]     ; <c714>
           add   ax, 0FFC4h
           cmp   ax, 0003Ch
@@ -1557,7 +1557,7 @@ LAB_00402041:     mov   ecx, 000000001h
 LAB_00402061:     cmp   ax, 0FFC4h
           jge   LAB_00402084
 LAB_00402067:     xor   ecx, ecx
-          call  @FUN_004025c0@4
+          call  @addRandomActor@4
           mov   ax, word ptr [DAT_0040c714]     ; <c714>
           add   ax, 0003Ch
           cmp   ax, 0FFC4h
@@ -1572,7 +1572,7 @@ LAB_00402084:     mov   ecx, 00000029Ah
           call  @addActorOfType@8
           mov   ecx, eax
           mov   edx, 000000002h
-          jmp   @FUN_00402350@8
+          jmp   @updateActorWithOffscreenStartingPosition@8
 LAB_004020ae:     ret
 LAB_004020af:
           db 090h
@@ -1666,7 +1666,7 @@ LAB_0040214d:     cmp   dword ptr [edi+01Ch], esi
           call  @assertFailed@8
 LAB_00402166:     mov   dx, word ptr [esi*2+unk_array_0040a1ac] ; <a1ac>
           mov   ecx, edi
-          call  @FUN_00402180@8
+          call  @actorSetSpriteIdx@8
           mov   dword ptr [eax+01Ch], esi
           pop   edi
           pop   esi
@@ -1677,7 +1677,7 @@ LAB_0040217b:     mov   eax, edi
           ret
 @FUN_00402120@8 endp
 
-@FUN_00402180@8 proc
+@actorSetSpriteIdx@8 proc
           push  esi
           mov   esi, ecx
           push  edi
@@ -1690,10 +1690,10 @@ LAB_0040217b:     mov   eax, edi
 LAB_00402199:     cmp   di, word ptr [esi+010h]
           jz    LAB_00402213
           mov   eax, dword ptr [esi+014h]
-          mov   edx, dword ptr [DAT_0040c6fc]   ; <c6fc>
+          mov   edx, dword ptr [totalAreaOfActorSprites]        ; <c6fc>
           movsx ecx, word ptr [eax+00Eh]
           sub   edx, ecx
-          mov   dword ptr [DAT_0040c6fc], edx   ; <c6fc>
+          mov   dword ptr [totalAreaOfActorSprites], edx        ; <c6fc>
           mov   al, byte ptr [esi+04Ch]
           test  al, 001h
           jz    LAB_004021c4
@@ -1707,11 +1707,11 @@ LAB_004021c4:     mov   edx, edi
           shl   edx, 004h
           add   eax, edx
           mov   dword ptr [esi+014h], eax
-          mov   edx, dword ptr [DAT_0040c6fc]   ; <c6fc>
+          mov   edx, dword ptr [totalAreaOfActorSprites]        ; <c6fc>
           movsx ecx, word ptr [eax+00Eh]
           add   edx, ecx
           mov   ecx, edi
-          mov   dword ptr [DAT_0040c6fc], edx   ; <c6fc>
+          mov   dword ptr [totalAreaOfActorSprites], edx        ; <c6fc>
           mov   edx, dword ptr [esi+04Ch]
           and   edx, 0FFFFFFFBh
           or    edx, 000000020h
@@ -1736,7 +1736,7 @@ LAB_00402218:
           db 090h
           db 090h
           db 090h
-@FUN_00402180@8 endp
+@actorSetSpriteIdx@8 endp
 
 @FUN_00402220@4 proc
           push  esi
@@ -1895,7 +1895,7 @@ LAB_00402346:
 _getFreeActor endp
 ~
 
-@FUN_00402350@8 proc
+@updateActorWithOffscreenStartingPosition@8 proc
           sub   esp, 000000008h
           mov   eax, edx
           push  esi
@@ -1906,7 +1906,7 @@ _getFreeActor endp
           lea   edx, dword ptr [esp+008h]
           push  ecx
           mov   ecx, eax
-          call  @FUN_004024f0@12
+          call  @getRandomOffscreenStartingPosition@12
           mov   ecx, esi
           mov   edx, dword ptr [esp+004h]
           push  000000000h
@@ -1927,7 +1927,7 @@ LAB_0040238a:
           db 090h
           db 090h
           db 090h
-@FUN_00402350@8 endp
+@updateActorWithOffscreenStartingPosition@8 endp
 
 @updateActorPositionMaybe@16 proc
           push  ecx
@@ -1965,7 +1965,7 @@ LAB_004023e5:     test  ebx, ebx
           jz    LAB_004023fc
           mov   edx, dword ptr [esp+018h]
           mov   ecx, ebp
-          call  @FUN_00402470@8
+          call  @updateActorRectsAfterPlayerMove@8
 LAB_004023f8:     test  edi, edi
           jnz   LAB_00402404
 LAB_004023fc:     mov   eax, dword ptr [esp+010h]
@@ -2020,13 +2020,13 @@ LAB_00402468:
           db 090h
 @updateActorPositionMaybe@16 endp
 
-@FUN_00402470@8 proc
+@updateActorRectsAfterPlayerMove@8 proc
           push  ecx
           push  ebx
           push  ebp
           mov   bp, dx
           push  esi
-          mov   esi, dword ptr [DAT_0040c640]   ; <c640>
+          mov   esi, dword ptr [playerX]        ; <c640>
           mov   edx, ecx
           push  edi
           mov   edi, edx
@@ -2034,7 +2034,7 @@ LAB_00402468:
           mov   esi, dword ptr [actorListPtr]   ; <c618>
           mov   bx, bp
           mov   dword ptr [esp+010h], edx
-          sub   bx, word ptr [DAT_0040c5f2]     ; <c5f2>
+          sub   bx, word ptr [playerY]  ; <c5f2>
           test  esi, esi
           jz    LAB_004024da
 LAB_0040249c:     cmp   esi, dword ptr [playerActorPtrMaybe_1]  ; <c64c>
@@ -2061,20 +2061,20 @@ LAB_004024d4:     mov   esi, dword ptr [esi]
           test  esi, esi
           jnz   LAB_0040249c
 LAB_004024da:     pop   edi
-          mov   word ptr [DAT_0040c5f2], bp     ; <c5f2>
+          mov   word ptr [playerY], bp  ; <c5f2>
           pop   esi
           pop   ebp
-          mov   word ptr [DAT_0040c640], dx     ; <c640>
+          mov   word ptr [playerX], dx  ; <c640>
           pop   ebx
           pop   ecx
           ret
 LAB_004024ee:
           db 090h
           db 090h
-@FUN_00402470@8 endp
+@updateActorRectsAfterPlayerMove@8 endp
 
-@FUN_004024f0@12 proc
-          mov   eax, dword ptr [DAT_0040c640]   ; <c640>
+@getRandomOffscreenStartingPosition@12 proc
+          mov   eax, dword ptr [playerX]        ; <c640>
           push  ebx
           mov   ebx, dword ptr [skierScreenXOffset]     ; <c704>
           push  esi
@@ -2084,7 +2084,7 @@ LAB_004024ee:
           mov   ebx, dword ptr [esp+010h]
           mov   edi, ecx
           mov   word ptr [esi], ax
-          mov   cx, word ptr [DAT_0040c5f2]     ; <c5f2>
+          mov   cx, word ptr [playerY]  ; <c5f2>
           sub   cx, word ptr [skierScreenYOffset]       ; <c5fc>
           cmp   edi, 000000003h
           mov   word ptr [ebx], cx
@@ -2098,7 +2098,7 @@ LAB_00402528:     test  edi, edi
 LAB_00402537:     mov   eax, dword ptr [windowClientRect.right] ; <c6b8>
           add   eax, 00000003Ch
 LAB_0040253f:     add   word ptr [esi], ax
-          mov   ecx, dword ptr [DAT_0040c6d8]   ; <c6d8>
+          mov   ecx, dword ptr [windowHeight]   ; <c6d8>
           call  @random@4
           mov   edx, dword ptr [windowClientRect.top]   ; <c6b4>
           add   eax, edx
@@ -2107,7 +2107,7 @@ LAB_0040253f:     add   word ptr [esi], ax
           pop   esi
           pop   ebx
           ret   00004h
-LAB_0040255e:     mov   ecx, dword ptr [SHORT_0040c5f0] ; <c5f0>
+LAB_0040255e:     mov   ecx, dword ptr [windowWidth]    ; <c5f0>
           call  @random@4
           add   eax, dword ptr [windowClientRect.left]  ; <c6b0>
           add   word ptr [esi], ax
@@ -2139,9 +2139,9 @@ DAT_004025b0  dword offset LAB_00402528
 DAT_004025b4  dword offset LAB_00402528
 DAT_004025b8  dword offset LAB_0040255e
 DAT_004025bc  dword offset LAB_0040255e
-@FUN_004024f0@12 endp
+@getRandomOffscreenStartingPosition@12 endp
 
-@FUN_004025c0@4 proc
+@addRandomActor@4 proc
           sub   esp, 000000008h
           lea   eax, dword ptr [esp+000h]
           lea   edx, dword ptr [esp+004h]
@@ -2149,7 +2149,7 @@ DAT_004025bc  dword offset LAB_0040255e
           push  edi
           push  eax
           xor   edi, edi
-          call  @FUN_004024f0@12
+          call  @getRandomOffscreenStartingPosition@12
           mov   eax, dword ptr [esp+00Ch]
           mov   ecx, dword ptr [esp+008h]
           cmp   ax, 0FDC0h
@@ -2160,7 +2160,7 @@ DAT_004025bc  dword offset LAB_0040255e
           jl    LAB_004025fe
           cmp   cx, 021C0h
           jg    LAB_004025fe
-          call  _FUN_00402770
+          call  _areaBasedActorType
           jmp   LAB_00402645
 LAB_004025fe:     cmp   ax, 00140h
           jl    LAB_0040261f
@@ -2170,7 +2170,7 @@ LAB_004025fe:     cmp   ax, 00140h
           jl    LAB_0040261f
           cmp   cx, 04100h
           jg    LAB_0040261f
-          call  _FUN_004027a0
+          call  _randomActorType3
           jmp   LAB_00402645
 LAB_0040261f:     cmp   ax, 0FF60h
           jl    LAB_00402640
@@ -2180,23 +2180,23 @@ LAB_0040261f:     cmp   ax, 0FF60h
           jl    LAB_00402640
           cmp   cx, 04100h
           jg    LAB_00402640
-          call  _FUN_004027e0
+          call  _randomActorType2
           jmp   LAB_00402645
-LAB_00402640:     call  _FUN_004026f0
+LAB_00402640:     call  _randomActorType1
 LAB_00402645:     mov   esi, eax
           cmp   esi, 000000012h
           jz    LAB_0040268d
           cmp   esi, 00000000Bh
           jge   LAB_00402661
-          mov   edx, dword ptr [esi*4+DAT_0040a22c]     ; <a22c>
+          mov   edx, dword ptr [esi*4+UINT_ARRAY_0040a22c]      ; <a22c>
           mov   ecx, esi
           call  @addActorOfType@8
           jmp   LAB_00402671
 LAB_00402661:     mov   ecx, esi
-          call  @FUN_00402850@4
+          call  @getSpriteIdxForActorType@4
           mov   edx, eax
           mov   ecx, esi
-          call  @FUN_004026a0@8
+          call  @addActorOfTypeWithSpriteIdx@8
 LAB_00402671:     test  eax, eax
           jz    LAB_0040268f
           mov   ecx, dword ptr [esp+008h]
@@ -2226,9 +2226,10 @@ LAB_00402695:
           db 090h
           db 090h
           db 090h
-@FUN_004025c0@4 endp
+@addRandomActor@4 endp
 
-@FUN_004026a0@8 proc
+COMMENT ~
+@addActorOfTypeWithSpriteIdx@8 proc
           push  ebx
           push  esi
           push  edi
@@ -2254,7 +2255,7 @@ LAB_004026d9:     mov   dword ptr [esi+018h], edi
           mov   edx, ebx
           pop   esi
           pop   ebx
-          jmp   @FUN_00402180@8
+          jmp   @actorSetSpriteIdx@8
 LAB_004026e8:     mov   eax, esi
           pop   edi
           pop   esi
@@ -2263,11 +2264,12 @@ LAB_004026e8:     mov   eax, esi
 LAB_004026ee:
           db 090h
           db 090h
-@FUN_004026a0@8 endp
+@addActorOfTypeWithSpriteIdx@8 endp
+~
 
-_FUN_004026f0 proc
-          mov   eax, dword ptr [DAT_0040c748]   ; <c748>
-          mov   ecx, dword ptr [DAT_0040c6fc]   ; <c6fc>
+_randomActorType1 proc
+          mov   eax, dword ptr [windowWithMarginTotalArea]      ; <c748>
+          mov   ecx, dword ptr [totalAreaOfActorSprites]        ; <c6fc>
           cdq
           and   edx, 00000001Fh
           add   eax, edx
@@ -2313,15 +2315,15 @@ LAB_0040276a:
           db 090h
           db 090h
           db 090h
-_FUN_004026f0 endp
+_randomActorType1 endp
 
-_FUN_00402770 proc
-          mov   eax, dword ptr [DAT_0040c748]   ; <c748>
+_areaBasedActorType proc
+          mov   eax, dword ptr [windowWithMarginTotalArea]      ; <c748>
           xor   ecx, ecx
           cdq
           and   edx, 00000003Fh
           add   eax, edx
-          mov   edx, dword ptr [DAT_0040c6fc]   ; <c6fc>
+          mov   edx, dword ptr [totalAreaOfActorSprites]        ; <c6fc>
           sar   eax, 006h
           cmp   edx, eax
           setle cl
@@ -2342,11 +2344,11 @@ LAB_00402795:
           db 090h
           db 090h
           db 090h
-_FUN_00402770 endp
+_areaBasedActorType endp
 
-_FUN_004027a0 proc
-          mov   eax, dword ptr [DAT_0040c748]   ; <c748>
-          mov   ecx, dword ptr [DAT_0040c6fc]   ; <c6fc>
+_randomActorType3 proc
+          mov   eax, dword ptr [windowWithMarginTotalArea]      ; <c748>
+          mov   ecx, dword ptr [totalAreaOfActorSprites]        ; <c6fc>
           cdq
           and   edx, 00000000Fh
           add   eax, edx
@@ -2375,11 +2377,11 @@ LAB_004027d4:
           db 090h
           db 090h
           db 090h
-_FUN_004027a0 endp
+_randomActorType3 endp
 
-_FUN_004027e0 proc
-          mov   eax, dword ptr [DAT_0040c748]   ; <c748>
-          mov   ecx, dword ptr [DAT_0040c6fc]   ; <c6fc>
+_randomActorType2 proc
+          mov   eax, dword ptr [windowWithMarginTotalArea]      ; <c748>
+          mov   ecx, dword ptr [totalAreaOfActorSprites]        ; <c6fc>
           cdq
           and   edx, 00000001Fh
           add   eax, edx
@@ -2424,9 +2426,9 @@ LAB_00402844:
           db 090h
           db 090h
           db 090h
-_FUN_004027e0 endp
+_randomActorType2 endp
 
-@FUN_00402850@4 proc
+@getSpriteIdxForActorType@4 proc
           lea   eax, dword ptr [ecx-00Bh]
           cmp   eax, 000000005h
           ja    LAB_004028b3
@@ -2475,7 +2477,7 @@ DAT_004028d0  dword offset LAB_00402864
 DAT_004028d4  dword offset LAB_00402888
 DAT_004028d8  dword offset LAB_0040289b
 DAT_004028dc  dword offset LAB_004028ae
-@FUN_00402850@4 endp
+@getSpriteIdxForActorType@4 endp
 
 @updateActor@4 proc
           push  esi
@@ -3276,7 +3278,7 @@ LAB_00403149:     mov   eax, edi
           mov   dword ptr [esi+004h], eax
           jz    LAB_0040316f
           mov   edx, edi
-          call  @FUN_00402180@8
+          call  @actorSetSpriteIdx@8
 LAB_0040316f:     pop   edi
           pop   esi
           ret
@@ -3778,7 +3780,7 @@ LAB_004036e2:     mov   cx, word ptr [edi+042h]
           mov   edx, 000000052h
           mov   ecx, 000000011h
           sub   si, 000000004h
-          call  @FUN_004026a0@8
+          call  @addActorOfTypeWithSpriteIdx@8
           mov   ecx, eax
           mov   edx, esi
           call  @updateActorPositionMaybe@16
@@ -4044,7 +4046,7 @@ LAB_004039f7:
           db 090h
 @updateActorVelMaybe@8 endp
 
-@FUN_00403a00@8 proc
+@handleActorCollision@8 proc
           sub   esp, 00000000Ch
           push  esi
           mov   esi, ecx
@@ -4139,7 +4141,7 @@ LAB_00403b19:     mov   ecx, offset sound_7.soundResource       ; <c6e0>
           jmp   LAB_00403b34
 LAB_00403b32:     mov   eax, edi
 LAB_00403b34:     mov   ecx, eax
-          call  @FUN_00401350@4
+          call  @actorSetFlag8IfFlag1IsUnset@4
           cmp   dword ptr [esi+00Ch], ebx
           jnz   LAB_00403b4f
           mov   edx, 00000095Ch
@@ -4286,7 +4288,7 @@ LAB_00403cfe:     cmp   word ptr [edi+010h], 000000056h
           jmp   LAB_00403d1a
 LAB_00403d18:     mov   eax, edi
 LAB_00403d1a:     mov   ecx, eax
-          call  @FUN_00401350@4
+          call  @actorSetFlag8IfFlag1IsUnset@4
           mov   ecx, 000000064h
           call  @addStylePoints@4
           mov   edx, dword ptr [esp+010h]
@@ -4354,7 +4356,7 @@ LAB_00403dcd:     cmp   word ptr [esi+048h], 000000000h
           jnz   LAB_00403e39
           mov   edx, 000000056h
           mov   ecx, edi
-          call  @FUN_00402180@8
+          call  @actorSetSpriteIdx@8
           mov   edx, dword ptr [esp+010h]
           mov   ecx, esi
           call  @FUN_00402120@8
@@ -4402,7 +4404,7 @@ LAB_00403e60:     cmp   dword ptr [esp+014h], 000000009h
           mov   edx, 000000032h
           mov   ecx, edi
           mov   dword ptr [edi+018h], 00000000Dh
-          call  @FUN_00402180@8
+          call  @actorSetSpriteIdx@8
           mov   edx, dword ptr [esp+010h]
           mov   ecx, esi
           call  @FUN_00402120@8
@@ -4572,7 +4574,7 @@ LAB_00404054:
           db 090h
           db 090h
           db 090h
-@FUN_00403a00@8 endp
+@handleActorCollision@8 endp
 
 @FUN_00404070@4 proc
           push  esi
@@ -4610,10 +4612,10 @@ LAB_00404091:
           mov   eax, dword ptr [skierScreenYOffset]     ; <c5fc>
           push  ebx
           push  ebp
-          mov   ebp, dword ptr [DAT_0040c68c]   ; <c68c>
+          mov   ebp, dword ptr [windowClientRectWith120Margin.bottom]   ; <c68c>
           push  esi
           push  edi
-          mov   edi, dword ptr [DAT_0040c684]   ; <c684>
+          mov   edi, dword ptr [windowClientRectWith120Margin.top]      ; <c684>
           sub   ebp, eax
           sub   edi, eax
           mov   ebx, ecx
@@ -4635,7 +4637,7 @@ LAB_004040ed:     jae   LAB_0040411c
 LAB_004040ef:     mov   ecx, esi
           call  @FUN_004041c0@4
           mov   ax, word ptr [esi+016h]
-          sub   ax, word ptr [DAT_0040c5f2]     ; <c5f2>
+          sub   ax, word ptr [playerY]  ; <c5f2>
           cmp   ax, di
           jl    LAB_00404112
           cmp   ax, bp
@@ -4692,7 +4694,7 @@ LAB_0040414c:     cmp   dword ptr [esi], 000000000h
           push  edi
           lea   ecx, dword ptr [esp+01Ch]
           call  @updateRectForSpriteAtLocation@20
-          mov   edx, offset DAT_0040c680        ; <c680>
+          mov   edx, offset windowClientRectWith120Margin.left  ; <c680>
           lea   ecx, dword ptr [esp+010h]
           call  @doRectsOverlap@8
           test  eax, eax
@@ -4705,7 +4707,7 @@ LAB_0040414c:     cmp   dword ptr [esi], 000000000h
           call  @addActorOfType@8
           jmp   LAB_0040419c
 LAB_00404194:     mov   ecx, dword ptr [esi+00Ch]
-          call  @FUN_004026a0@8
+          call  @addActorOfTypeWithSpriteIdx@8
 LAB_0040419c:     test  eax, eax
           jz    LAB_004041b0
           push  ebp
@@ -5042,7 +5044,7 @@ LAB_00404525:     cmp   edi, 000000008h
           jle   LAB_004045d8
 LAB_00404539:     movsx eax, dx
           movsx edi, bp
-          mov   ebx, dword ptr [SHORT_0040c5f0] ; <c5f0>
+          mov   ebx, dword ptr [windowWidth]    ; <c5f0>
           sub   eax, edi
           movsx edi, word ptr [esp+018h]
           movsx ecx, cx
@@ -5057,7 +5059,7 @@ LAB_0040455c:     neg   edi
           jge   LAB_00404568
           add   edx, ebx
 LAB_00404564:     mov   word ptr [esi+014h], dx
-LAB_00404568:     mov   di, word ptr [DAT_0040c6d8]     ; <c6d8>
+LAB_00404568:     mov   di, word ptr [windowHeight]     ; <c6d8>
           movsx edx, di
           cmp   ecx, edx
           jle   LAB_00404585
@@ -5206,9 +5208,9 @@ DAT_004046d8  dword offset LAB_00404439
           push  ecx
           mov   eax, dword ptr [skierScreenYOffset]     ; <c5fc>
           push  ebx
-          mov   ebx, dword ptr [DAT_0040c684]   ; <c684>
+          mov   ebx, dword ptr [windowClientRectWith120Margin.top]      ; <c684>
           push  ebp
-          mov   ebp, dword ptr [DAT_0040c68c]   ; <c68c>
+          mov   ebp, dword ptr [windowClientRectWith120Margin.bottom]   ; <c68c>
           push  esi
           push  edi
           sub   ebx, eax
@@ -5236,7 +5238,7 @@ LAB_0040473f:     mov   eax, dword ptr [edi+004h]
           cmp   esi, eax
           mov   dword ptr [esp+010h], eax
           jae   LAB_00404769
-          movsx eax, word ptr [DAT_0040c5f2]    ; <c5f2>
+          movsx eax, word ptr [playerY] ; <c5f2>
           movsx ecx, bx
 LAB_00404754:     movsx edx, word ptr [esi+016h]
           sub   edx, eax
@@ -5249,7 +5251,7 @@ LAB_00404754:     movsx edx, word ptr [esi+016h]
 LAB_00404769:     mov   edx, dword ptr [edi]
           cmp   esi, edx
           jbe   LAB_0040478a
-          movsx eax, word ptr [DAT_0040c5f2]    ; <c5f2>
+          movsx eax, word ptr [playerY] ; <c5f2>
           movsx ecx, bx
 LAB_00404779:     movsx ebx, word ptr [esi+016h]
           sub   ebx, eax
@@ -5264,7 +5266,7 @@ LAB_0040478a:     mov   eax, dword ptr [esp+010h]
           jae   LAB_004047b8
           movsx ebx, bp
 LAB_00404798:     movsx eax, word ptr [esi+016h]
-          movsx ecx, word ptr [DAT_0040c5f2]    ; <c5f2>
+          movsx ecx, word ptr [playerY] ; <c5f2>
           sub   eax, ecx
           cmp   eax, ebx
           jge   LAB_004047b8
@@ -5482,12 +5484,12 @@ _resetGame proc
           xor   esi, esi
           mov   dword ptr [playerActorPtrMaybe_1], esi  ; <c64c>
           mov   dword ptr [playerActor], esi    ; <c72c>
-          mov   dword ptr [DAT_0040c6fc], esi   ; <c6fc>
+          mov   dword ptr [totalAreaOfActorSprites], esi        ; <c6fc>
           call  _FUN_00404a70
           mov   eax, 000000001h
           mov   dword ptr [isTurboMode], esi    ; <c670>
-          mov   word ptr [DAT_0040c5f2], si     ; <c5f2>
-          mov   word ptr [DAT_0040c640], si     ; <c640>
+          mov   word ptr [playerY], si  ; <c5f2>
+          mov   word ptr [playerX], si  ; <c640>
           mov   word ptr [DAT_0040c5d8], si     ; <c5d8>
           mov   word ptr [DAT_0040c714], si     ; <c714>
           mov   dword ptr [stylePoints], esi    ; <c6a8>
@@ -5575,7 +5577,7 @@ _setupGame proc
           mov   dword ptr [playerActorPtrMaybe_1], eax  ; <c64c>
           jnz   LAB_00404aa8
           ret
-LAB_00404aa8:     call  _setupActorType0x11
+LAB_00404aa8:     call  _setupGameTitleActors
           call  _FUN_00404b50
           mov   dword ptr [isPaused], 000000000h        ; <c650>
           call  _startGameTimer
@@ -5647,7 +5649,7 @@ _FUN_00404b50 proc
           call  @setPointerToNull@4
           mov   eax, dword ptr [windowClientRect.left]  ; <c6b0>
           mov   edx, dword ptr [skierScreenXOffset]     ; <c704>
-          mov   ecx, dword ptr [DAT_0040c640]   ; <c640>
+          mov   ecx, dword ptr [playerX]        ; <c640>
           sub   eax, edx
           mov   esi, 0FFFFFEC0h
           mov   dword ptr [esp+01Ch], 000000011h
@@ -5660,7 +5662,7 @@ _FUN_00404b50 proc
 LAB_00404bb1:     mov   eax, dword ptr [windowClientRect.bottom]        ; <c6bc>
           mov   ebp, dword ptr [skierScreenYOffset]     ; <c5fc>
           sub   eax, ebp
-          add   ax, word ptr [DAT_0040c5f2]     ; <c5f2>
+          add   ax, word ptr [playerY]  ; <c5f2>
           sub   eax, 00000003Ch
           cmp   ax, 00280h
           mov   word ptr [esp+026h], ax
@@ -5726,7 +5728,7 @@ LAB_00404c89:     add   ebx, 000000140h
           mov   ecx, offset DAT_0040c5e0        ; <c5e0>
           call  @setPointerToNull@4
           mov   edx, dword ptr [windowClientRect.right] ; <c6b8>
-          mov   eax, dword ptr [DAT_0040c640]   ; <c640>
+          mov   eax, dword ptr [playerX]        ; <c640>
           mov   dword ptr [esp+01Ch], esi
           mov   esi, dword ptr [skierScreenXOffset]     ; <c704>
           sub   edx, esi
@@ -5740,7 +5742,7 @@ LAB_00404c89:     add   ebx, 000000140h
 LAB_00404d1c:     mov   eax, dword ptr [windowClientRect.bottom]        ; <c6bc>
           mov   ebp, dword ptr [skierScreenYOffset]     ; <c5fc>
           sub   eax, ebp
-          add   ax, word ptr [DAT_0040c5f2]     ; <c5f2>
+          add   ax, word ptr [playerY]  ; <c5f2>
           sub   eax, 00000003Ch
           cmp   ax, 00280h
           mov   word ptr [esp+026h], ax
@@ -5789,7 +5791,7 @@ LAB_00404da5:     mov   ecx, esi
           mov   dword ptr [DAT_0040c950], eax   ; <c950>
 LAB_00404df8:     mov   ecx, 00000000Dh
           mov   dword ptr [esp+01Ch], ecx
-          call  @FUN_00402850@4
+          call  @getSpriteIdxForActorType@4
           mov   ecx, 000000020h
           mov   word ptr [esp+018h], ax
           call  @random@4
@@ -5819,7 +5821,7 @@ LAB_00404df8:     mov   ecx, 00000000Dh
           mov   ebx, dword ptr [skierScreenYOffset]     ; <c5fc>
           sub   eax, ebx
           mov   dword ptr [esp+01Ch], esi
-          add   ax, word ptr [DAT_0040c5f2]     ; <c5f2>
+          add   ax, word ptr [playerY]  ; <c5f2>
           mov   word ptr [esp+018h], 0003Fh
           mov   word ptr [esp+024h], di
           sub   eax, 00000003Ch
@@ -6033,7 +6035,8 @@ LAB_004051db:
           db 090h
 @FUN_00405120@8 endp
 
-_setupActorType0x11 proc
+COMMENT ~
+_setupGameTitleActors proc
           push  ecx
           mov   eax, dword ptr [sprites]        ; <c5f8>
           push  esi
@@ -6045,12 +6048,12 @@ _setupActorType0x11 proc
           push  000000000h
           sar   eax, 1h
           sub   esi, eax
-          mov   ax, word ptr [DAT_0040c5f2]     ; <c5f2>
+          mov   ax, word ptr [playerY]  ; <c5f2>
           push  eax
           mov   edx, 000000035h
           mov   ecx, 000000011h
           mov   word ptr [esp+010h], ax
-          call  @FUN_004026a0@8
+          call  @addActorOfTypeWithSpriteIdx@8
           mov   ecx, eax
           mov   edx, esi
           call  @updateActorPositionMaybe@16
@@ -6063,7 +6066,7 @@ _setupActorType0x11 proc
           add   eax, edx
           mov   edx, 000000036h
           push  eax
-          call  @FUN_004026a0@8
+          call  @addActorOfTypeWithSpriteIdx@8
           mov   ecx, eax
           mov   edx, esi
           call  @updateActorPositionMaybe@16
@@ -6079,7 +6082,7 @@ LAB_0040526f:     mov   si, word ptr [eax+00000037Ch]
           push  esi
           mov   edx, 000000037h
           mov   ecx, 000000011h
-          call  @FUN_004026a0@8
+          call  @addActorOfTypeWithSpriteIdx@8
           mov   ecx, eax
           mov   edx, edi
           call  @updateActorPositionMaybe@16
@@ -6091,7 +6094,7 @@ LAB_0040526f:     mov   si, word ptr [eax+00000037Ch]
           add   esi, ecx
           mov   ecx, 000000011h
           push  esi
-          call  @FUN_004026a0@8
+          call  @addActorOfTypeWithSpriteIdx@8
           mov   ecx, eax
           mov   edx, edi
           call  @updateActorPositionMaybe@16
@@ -6114,7 +6117,8 @@ LAB_004052c2:
           db 090h
           db 090h
           db 090h
-_setupActorType0x11 endp
+_setupGameTitleActors endp
+~
 
 COMMENT ~
 @initWindows@12 proc
@@ -7407,25 +7411,25 @@ _deleteWindowObjects endp
           mov   ecx, dword ptr [windowClientRect.right] ; <c6b8>
           mov   edi, dword ptr [windowClientRect.left]  ; <c6b0>
           lea   eax, dword ptr [ebp-078h]
-          mov   dword ptr [DAT_0040c684], eax   ; <c684>
+          mov   dword ptr [windowClientRectWith120Margin.top], eax      ; <c684>
           lea   eax, dword ptr [esi+078h]
           sub   esi, ebp
           lea   edx, dword ptr [ecx+078h]
-          mov   word ptr [DAT_0040c6d8], si     ; <c6d8>
-          mov   esi, dword ptr [DAT_0040c684]   ; <c684>
+          mov   word ptr [windowHeight], si     ; <c6d8>
+          mov   esi, dword ptr [windowClientRectWith120Margin.top]      ; <c684>
           lea   ebx, dword ptr [edi-078h]
-          mov   dword ptr [DAT_0040c688], edx   ; <c688>
-          mov   dword ptr [DAT_0040c68c], eax   ; <c68c>
+          mov   dword ptr [windowClientRectWith120Margin.right], edx    ; <c688>
+          mov   dword ptr [windowClientRectWith120Margin.bottom], eax   ; <c68c>
           sub   eax, esi
           sub   edx, ebx
           sub   ecx, edi
           imul  eax, edx
           pop   edi
           pop   esi
-          mov   dword ptr [DAT_0040c680], ebx   ; <c680>
+          mov   dword ptr [windowClientRectWith120Margin.left], ebx     ; <c680>
           pop   ebp
-          mov   word ptr [SHORT_0040c5f0], cx   ; <c5f0>
-          mov   dword ptr [DAT_0040c748], eax   ; <c748>
+          mov   word ptr [windowWidth], cx      ; <c5f0>
+          mov   dword ptr [windowWithMarginTotalArea], eax      ; <c748>
           pop   ebx
           ret
 LAB_00406053:

@@ -97,7 +97,7 @@ EXTERN __imp__sndPlaySoundA@8: far
 EXTERN C s_skiMain: far
 EXTERN C s_skiStatus: far
 EXTERN C unk_array_0040a1ac: far
-EXTERN C DAT_0040a22c: far
+EXTERN C UINT_ARRAY_0040a22c: far
 EXTERN C DAT_0040a258: far
 EXTERN C DAT_0040a25c: far
 EXTERN C DAT_0040a308: far
@@ -182,8 +182,8 @@ EXTERN C DAT_0040c5d8: far
 EXTERN C statusWindowLastUpdateTime: far
 EXTERN C DAT_0040c5e0: far
 EXTERN C bitmapSourceDC: far
-EXTERN C SHORT_0040c5f0: far
-EXTERN C DAT_0040c5f2: far
+EXTERN C windowWidth: far
+EXTERN C playerY: far
 EXTERN C timerFrameDurationInMillis: far
 EXTERN C sprites: far
 EXTERN C skierScreenYOffset: far
@@ -198,7 +198,7 @@ EXTERN C hSkiStatusWnd: far
 EXTERN C sound_6:Sound
 EXTERN C DAT_0040c630: far
 EXTERN C mainWindowDC: far
-EXTERN C DAT_0040c640: far
+EXTERN C playerX: far
 EXTERN C largeBitmapSheet: far
 EXTERN C actors: far
 EXTERN C playerActorPtrMaybe_1: far
@@ -213,10 +213,7 @@ EXTERN C isTurboMode: far
 EXTERN C stringCache: far
 EXTERN C updateTimerDurationMillis: far
 EXTERN C inputEnabled: far
-EXTERN C DAT_0040c680: far
-EXTERN C DAT_0040c684: far
-EXTERN C DAT_0040c688: far
-EXTERN C DAT_0040c68c: far
+EXTERN C windowClientRectWith120Margin:tagRECT
 EXTERN C scratchBitmapWidth: far
 EXTERN C mainWndActivationFlags: far
 EXTERN C currentTickCount: far
@@ -230,13 +227,13 @@ EXTERN C hSkiMainWnd: far
 EXTERN C statusWindowDC: far
 EXTERN C isGameTimerRunning: far
 EXTERN C smallBitmapSheet_1bpp: far
-EXTERN C DAT_0040c6d8: far
+EXTERN C windowHeight: far
 EXTERN C sound_7:Sound
 EXTERN C scratchBitmapHeight: far
 EXTERN C largeBitmapDC_1bpp: far
 EXTERN C sound_9:Sound
 EXTERN C DAT_0040c6f8: far
-EXTERN C DAT_0040c6fc: far
+EXTERN C totalAreaOfActorSprites: far
 EXTERN C prevMouseX: far
 EXTERN C struct24Index: far
 EXTERN C skierScreenXOffset: far
@@ -250,7 +247,7 @@ EXTERN C playerActor: far
 EXTERN C largeBitmapDC: far
 EXTERN C DAT_0040c738: far
 EXTERN C currentFreeActor: far
-EXTERN C DAT_0040c748: far
+EXTERN C windowWithMarginTotalArea: far
 EXTERN C SCREEN_HEIGHT: far
 EXTERN C sound_5:Sound
 EXTERN C PTR_0040c758: far
