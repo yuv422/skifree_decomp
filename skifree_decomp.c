@@ -13,15 +13,31 @@ typedef struct {
     short totalPixels;
 } Sprite;
 
+typedef struct PermObject {
+    struct Actor *actor;
+    Sprite *spritePtr;
+    short spriteIdx;
+    // 2 bytes padding
+    int actorTypeMaybe;
+    int actorFrameNo;
+    short maybeX;
+    short maybeY;
+    short unk_0x18;
+    short unk_0x1a;
+    short unk_0x1c;
+    short unk_0x1e;
+    int unk_0x20;
+} PermObject;
+
 typedef struct Actor {
     struct Actor *next;
     Sprite *sprite;
     UINT spriteIdx1;
-    struct Actor *unkActorPtr;
+    struct PermObject *permObject;
     UINT spriteIdx2;
     Sprite *spritePtr;
     int typeMaybe;
-    UINT unk_0x1c;
+    UINT frameNo;
     RECT someRect;
     RECT rect;
     short xPosMaybe;
@@ -84,7 +100,7 @@ extern void updateGameState();
 extern void __fastcall drawWindow(HDC hdc, RECT *rect);
 extern void __fastcall formatAndPrintStatusStrings(HDC windowDC);
 extern void __fastcall updateRectForSpriteAtLocation(RECT *rect, Sprite *sprite, short newX, short newY, short param_5);
-extern Actor * __fastcall FUN_00402120(Actor *actor, UINT frameNo);
+extern Actor * __fastcall setActorFrameNo(Actor *actor, UINT frameNo);
 extern void deleteWindowObjects();
 extern Actor * __fastcall updateActorPositionMaybe(Actor *actor, short newX, short newY, short inAir);
 extern BOOL __fastcall createBitmapSheets(HDC param_1);
@@ -92,7 +108,7 @@ extern void __fastcall updateWindowSize(HWND hWnd);
 extern void __fastcall handleMouseMoveMessage(short xPos,short yPos);
 extern void __fastcall handleKeydownMessage(UINT charCode);
 extern void handleMouseClick(void);
-extern void FUN_00404b50();
+extern void setupPermObjects();
 extern Actor * __fastcall actorSetSpriteIdx(Actor *actor, USHORT spriteIdx);
 
 extern char sourceFilename[];
@@ -620,7 +636,7 @@ Actor * __fastcall addActor(Actor *actor, BOOL insertBack) {
 
     memcpy(targetActor, actor, sizeof(Actor));
 
-    targetActor->unkActorPtr = NULL;
+    targetActor->permObject = NULL;
     if (insertBack) {
         targetActor->next = actor->next;
         actor->next = targetActor;
@@ -658,7 +674,7 @@ Actor * __fastcall addActorOfType(int actorType, UINT param_2) {
             assertFailed(sourceFilename,1389);
         }
         actor->typeMaybe = actorType;
-        actor = FUN_00402120(actor, param_2);
+        actor = setActorFrameNo(actor, param_2);
         return actor;
     }
     return NULL;
@@ -923,7 +939,7 @@ BOOL setupGame() {
         return FALSE;
     }
     setupGameTitleActors();
-    FUN_00404b50();
+    setupPermObjects();
     isPaused = 0;
     startGameTimer();
     return TRUE;

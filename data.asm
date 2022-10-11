@@ -201,9 +201,8 @@ DAT_0040c5d8 byte 2 DUP (00h)
 db 2 DUP (00h)
 PUBLIC C statusWindowLastUpdateTime
 statusWindowLastUpdateTime byte 4 DUP (00h)
-PUBLIC C DAT_0040c5e0
-DAT_0040c5e0 byte 00h
-db 11 DUP (00h)
+PUBLIC C PermObjectList_0040c5e0
+PermObjectList_0040c5e0 byte 12 DUP (00h)
 PUBLIC C bitmapSourceDC
 bitmapSourceDC byte 4 DUP (00h)
 PUBLIC C windowWidth
@@ -236,9 +235,8 @@ PUBLIC C hSkiStatusWnd
 hSkiStatusWnd byte 4 DUP (00h)
 PUBLIC C sound_6
 sound_6 byte 8 DUP (00h)
-PUBLIC C DAT_0040c630
-DAT_0040c630 byte 00h
-db 11 DUP (00h)
+PUBLIC C PermObjectList_0040c630
+PermObjectList_0040c630 byte 12 DUP (00h)
 PUBLIC C mainWindowDC
 mainWindowDC byte 4 DUP (00h)
 PUBLIC C playerX
@@ -252,9 +250,8 @@ playerActorPtrMaybe_1 byte 4 DUP (00h)
 PUBLIC C isPaused
 isPaused byte 4 DUP (00h)
 db 4 DUP (00h)
-PUBLIC C DAT_0040c658
-DAT_0040c658 byte 00h
-db 11 DUP (00h)
+PUBLIC C PermObjectList_0040c658
+PermObjectList_0040c658 byte 12 DUP (00h)
 PUBLIC C statusWindowFont
 statusWindowFont byte 4 DUP (00h)
 PUBLIC C textLineHeight
@@ -321,8 +318,8 @@ PUBLIC C totalAreaOfActorSprites
 totalAreaOfActorSprites byte 4 DUP (00h)
 PUBLIC C prevMouseX
 prevMouseX byte 2 DUP (00h)
-PUBLIC C struct24Index
-struct24Index byte 2 DUP (00h)
+PUBLIC C permObjectCount
+permObjectCount byte 2 DUP (00h)
 PUBLIC C skierScreenXOffset
 skierScreenXOffset byte 2 DUP (00h)
 db 2 DUP (00h)
@@ -338,17 +335,15 @@ DAT_0040c714 byte 2 DUP (00h)
 db 2 DUP (00h)
 PUBLIC C sound_4
 sound_4 byte 8 DUP (00h)
-PUBLIC C DAT_0040c720
-DAT_0040c720 byte 00h
-db 11 DUP (00h)
+PUBLIC C PermObjectList_0040c720
+PermObjectList_0040c720 byte 12 DUP (00h)
 PUBLIC C playerActor
 playerActor byte 4 DUP (00h)
 PUBLIC C largeBitmapDC
 largeBitmapDC byte 4 DUP (00h)
 db 4 DUP (00h)
-PUBLIC C DAT_0040c738
-DAT_0040c738 byte 00h
-db 11 DUP (00h)
+PUBLIC C PermObjectList_0040c738
+PermObjectList_0040c738 byte 12 DUP (00h)
 PUBLIC C currentFreeActor
 currentFreeActor byte 4 DUP (00h)
 PUBLIC C windowWithMarginTotalArea

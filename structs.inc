@@ -10,6 +10,28 @@ soundResource dword ? ; HGLOBAL
 soundData dword ?     ; LPVOID
 Sound ends
 
+PermObject struct
+    actor dword ?
+    spritePtr dword ?
+    spriteIdx word ?
+    padding word ?
+    actorTypeMaybe dword ?
+    actorFrameNo dword ?
+    maybeX word ?
+    maybeY word ?
+    unk_0x18 word ?
+    unk_0x1a word ?
+    unk_0x1c word ?
+    unk_0x1e word ?
+    unk_0x20 dword ?
+PermObject ends
+
+PermObjectList struct
+    startingObject dword ?
+    nextObject dword ?
+    currentObj dword ?
+PermObjectList ends
+
 Actor struct
     next dword ?
     sprite dword ?
@@ -18,7 +40,7 @@ Actor struct
     spriteIdx2 dword ?
     spritePtr dword ?
     typeMaybe dword ?
-    unk_0x1c dword ?
+    frameNo dword ?
     someRect tagRECT <>
     rect tagRECT <>
     xPosMaybe word ?

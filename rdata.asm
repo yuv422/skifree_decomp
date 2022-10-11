@@ -205,8 +205,8 @@ s_skiMain byte 53h, 6bh, 69h, 4dh, 61h, 69h, 6eh, 00h
 PUBLIC C s_skiStatus
 s_skiStatus byte 53h, 6bh, 69h, 53h, 74h, 61h, 74h, 75h, 73h, 00h
 db 2 DUP (00h), 62h, 75h, 2 DUP (74h), 6fh, 6eh, 2 DUP (00h)
-PUBLIC C unk_array_0040a1ac
-unk_array_0040a1ac byte 01h, 00h, 02h, 00h, 03h, 00h, 04h, 00h, 05h, 00h, 06h, 00h, 07h, 00h, 08h, 00h
+PUBLIC C actorFrameToSpriteTbl
+actorFrameToSpriteTbl byte 01h, 00h, 02h, 00h, 03h, 00h, 04h, 00h, 05h, 00h, 06h, 00h, 07h, 00h, 08h, 00h
 db 09h, 00h, 0ah, 00h, 0bh, 00h, 0ch, 00h, 0dh, 00h, 0eh, 00h, 0fh, 00h, 10h, 00h
 db 11h, 00h, 12h, 00h, 13h, 00h, 14h, 00h, 15h, 00h, 16h, 00h, 1ch, 00h, 1dh, 00h
 db 1eh, 00h, 1fh, 00h, 20h, 00h, 21h, 00h, 22h, 00h, 23h, 00h, 24h, 00h, 25h, 00h

@@ -96,7 +96,7 @@ EXTERN __imp__LoadIconA@8: far
 EXTERN __imp__sndPlaySoundA@8: far
 EXTERN C s_skiMain: far
 EXTERN C s_skiStatus: far
-EXTERN C unk_array_0040a1ac: far
+EXTERN C actorFrameToSpriteTbl: far
 EXTERN C UINT_ARRAY_0040a22c: far
 EXTERN C DAT_0040a258: far
 EXTERN C DAT_0040a25c: far
@@ -180,7 +180,7 @@ EXTERN C DAT_0040c5c0: far
 EXTERN C sound_3:Sound
 EXTERN C DAT_0040c5d8: far
 EXTERN C statusWindowLastUpdateTime: far
-EXTERN C DAT_0040c5e0: far
+EXTERN C PermObjectList_0040c5e0:PermObjectList
 EXTERN C bitmapSourceDC: far
 EXTERN C windowWidth: far
 EXTERN C playerY: far
@@ -196,14 +196,14 @@ EXTERN C skiFreeHInstance: far
 EXTERN C smallBitmapSheet: far
 EXTERN C hSkiStatusWnd: far
 EXTERN C sound_6:Sound
-EXTERN C DAT_0040c630: far
+EXTERN C PermObjectList_0040c630:PermObjectList
 EXTERN C mainWindowDC: far
 EXTERN C playerX: far
 EXTERN C largeBitmapSheet: far
 EXTERN C actors: far
 EXTERN C playerActorPtrMaybe_1: far
 EXTERN C isPaused: far
-EXTERN C DAT_0040c658: far
+EXTERN C PermObjectList_0040c658:PermObjectList
 EXTERN C statusWindowFont: far
 EXTERN C textLineHeight: far
 EXTERN C statusWindowHeight: far
@@ -235,17 +235,17 @@ EXTERN C sound_9:Sound
 EXTERN C DAT_0040c6f8: far
 EXTERN C totalAreaOfActorSprites: far
 EXTERN C prevMouseX: far
-EXTERN C struct24Index: far
+EXTERN C permObjectCount: far
 EXTERN C skierScreenXOffset: far
 EXTERN C prevTickCount: far
 EXTERN C prevMouseY: far
 EXTERN C smallBitmapDC: far
 EXTERN C DAT_0040c714: far
 EXTERN C sound_4:Sound
-EXTERN C DAT_0040c720: far
+EXTERN C PermObjectList_0040c720:PermObjectList
 EXTERN C playerActor: far
 EXTERN C largeBitmapDC: far
-EXTERN C DAT_0040c738: far
+EXTERN C PermObjectList_0040c738:PermObjectList
 EXTERN C currentFreeActor: far
 EXTERN C windowWithMarginTotalArea: far
 EXTERN C SCREEN_HEIGHT: far

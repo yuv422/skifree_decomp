@@ -1450,16 +1450,16 @@ LAB_00401ec2:     mov   edx, offset windowClientRectWith120Margin.left  ; <c680>
 LAB_00401eee:     mov   esi, dword ptr [esi]
           test  esi, esi
           jnz   LAB_00401e82
-LAB_00401ef4:     mov   ecx, offset DAT_0040c630        ; <c630>
+LAB_00401ef4:     mov   ecx, offset PermObjectList_0040c630.startingObject      ; <c630>
           call  @FUN_004046e0@4
-          mov   ecx, offset DAT_0040c5e0        ; <c5e0>
+          mov   ecx, offset PermObjectList_0040c5e0.startingObject      ; <c5e0>
           call  @FUN_004046e0@4
-          mov   ecx, offset DAT_0040c658        ; <c658>
+          mov   ecx, offset PermObjectList_0040c658.startingObject      ; <c658>
           call  @FUN_004046e0@4
-          mov   ecx, offset DAT_0040c738        ; <c738>
+          mov   ecx, offset PermObjectList_0040c738.startingObject      ; <c738>
           call  @FUN_004046e0@4
-          mov   ecx, offset DAT_0040c720        ; <c720>
-          call  @FUN_004040a0@4
+          mov   ecx, offset PermObjectList_0040c720.startingObject      ; <c720>
+          call  @updateAllPermObjectsInList@4
           call  _removeFlag8ActorsFromList
           mov   edi, dword ptr [actorListPtr]   ; <c618>
           test  edi, edi
@@ -1630,7 +1630,7 @@ LAB_00402109:     mov   dword ptr [esi+018h], edi
           mov   edx, ebx
           pop   esi
           pop   ebx
-          jmp   @FUN_00402120@8
+          jmp   @setActorFrameNo@8
 LAB_00402118:     mov   eax, esi
           pop   edi
           pop   esi
@@ -1642,7 +1642,7 @@ LAB_0040211e:
 @addActorOfType@8 endp
 ~
 
-@FUN_00402120@8 proc
+@setActorFrameNo@8 proc
           push  esi
           push  edi
           mov   edi, ecx
@@ -1664,7 +1664,7 @@ LAB_0040214d:     cmp   dword ptr [edi+01Ch], esi
           mov   edx, 000000440h
           mov   ecx, offset sourceFilename      ; <c090>
           call  @assertFailed@8
-LAB_00402166:     mov   dx, word ptr [esi*2+unk_array_0040a1ac] ; <a1ac>
+LAB_00402166:     mov   dx, word ptr [esi*2+actorFrameToSpriteTbl]      ; <a1ac>
           mov   ecx, edi
           call  @actorSetSpriteIdx@8
           mov   dword ptr [eax+01Ch], esi
@@ -1675,7 +1675,7 @@ LAB_0040217b:     mov   eax, edi
           pop   edi
           pop   esi
           ret
-@FUN_00402120@8 endp
+@setActorFrameNo@8 endp
 
 @actorSetSpriteIdx@8 proc
           push  esi
@@ -1716,7 +1716,7 @@ LAB_004021c4:     mov   edx, edi
           and   edx, 0FFFFFFFBh
           or    edx, 000000020h
           mov   dword ptr [esi+04Ch], edx
-          call  @FUN_00402310@4
+          call  @isSlowTile@4
           mov   ecx, dword ptr [esi+04Ch]
           and   eax, 000000001h
           shl   eax, 006h
@@ -1851,7 +1851,7 @@ LAB_00402302:
 @addActor@8 endp
 ~
 
-@FUN_00402310@4 proc
+@isSlowTile@4 proc
           cmp   cx, 00000001Bh
           jz    LAB_0040231f
           cmp   cx, 000000052h
@@ -1872,7 +1872,7 @@ LAB_00402325:
           db 090h
           db 090h
           db 090h
-@FUN_00402310@4 endp
+@isSlowTile@4 endp
 
 COMMENT ~
 _getFreeActor proc
@@ -2504,19 +2504,19 @@ LAB_00402921:     mov   ecx, esi
           jmp   LAB_00402990
 LAB_00402929:     mov   ecx, esi
           pop   esi
-          jmp   @updateActorType3@4
+          jmp   @updateActorType3_snowboarder@4
 LAB_00402931:     mov   ecx, esi
           pop   esi
-          jmp   @updateActorType2@4
+          jmp   @updateActorType2_dog@4
 LAB_00402939:     mov   ecx, esi
           pop   esi
-          jmp   @updateActorType1@4
+          jmp   @updateActorType1_Beginner@4
 LAB_00402941:     mov   ecx, esi
           pop   esi
-          jmp   @updateActorType9@4
+          jmp   @updateActorType9_treeOnFire@4
 LAB_00402949:     mov   ecx, esi
           pop   esi
-          jmp   @updateActorTypeA@4
+          jmp   @updateActorTypeA_walkingTree@4
 LAB_00402951:     mov   edx, 00000091Fh
           mov   ecx, offset sourceFilename      ; <c090>
           call  @assertFailed@8
@@ -2637,7 +2637,7 @@ LAB_00402ae6:     mov   ecx, offset sound_4.soundResource       ; <c718>
 LAB_00402aeb:     call  @playSound@4
 LAB_00402af0:     mov   edx, edi
           mov   ecx, esi
-          call  @FUN_00402120@8
+          call  @setActorFrameNo@8
           mov   esi, eax
           lea   eax, dword ptr [edi-007h]
           cmp   eax, 00000000Eh
@@ -2857,7 +2857,7 @@ LAB_00402c94:     cmp   dword ptr [isSsGameMode], edi   ; <c95c>
           sub   eax, ecx
           mov   dword ptr [DAT_0040c964], 000000001h    ; <c964>
           mov   dword ptr [elapsedTime], eax    ; <c944>
-          call  _FUN_00402e80
+          call  _resetPlayerFrameNo
           mov   edx, dword ptr [elapsedTime]    ; <c944>
           mov   ecx, offset iniSsConfigKey      ; <c0d8>
           push  000000001h
@@ -3010,7 +3010,7 @@ LAB_00402e72:
           db 090h
 @FUN_00402e30@20 endp
 
-_FUN_00402e80 proc
+_resetPlayerFrameNo proc
           mov   ecx, dword ptr [playerActor]    ; <c72c>
           test  ecx, ecx
           jz    LAB_00402eb7
@@ -3025,7 +3025,7 @@ _FUN_00402e80 proc
           dec   edx
           and   edx, 00000000Bh
           add   edx, 000000003h
-LAB_00402ea7:     call  @FUN_00402120@8
+LAB_00402ea7:     call  @setActorFrameNo@8
           mov   ecx, dword ptr [statusWindowDC] ; <c6cc>
           jmp   @formatAndPrintStatusStrings@4
 LAB_00402eb7:     ret
@@ -3038,7 +3038,7 @@ LAB_00402eb8:
           db 090h
           db 090h
           db 090h
-_FUN_00402e80 endp
+_resetPlayerFrameNo endp
 
 @updateEntPackIniKeyValue@12 proc
           sub   esp, 000000138h
@@ -3322,7 +3322,7 @@ LAB_004031b1:     mov   eax, dword ptr [isFsGameMode]   ; <c954>
           jle   LAB_004031f2
           mov   dword ptr [isFsGameMode], 000000000h    ; <c954>
           mov   dword ptr [DAT_0040c968], 000000001h    ; <c968>
-          call  _FUN_00402e80
+          call  _resetPlayerFrameNo
           mov   edx, dword ptr [stylePoints]    ; <c6a8>
           mov   ecx, offset iniFsConfigKey      ; <c0f4>
           push  000000000h
@@ -3403,7 +3403,7 @@ LAB_00403284:     cmp   dword ptr [isGsGameMode], edi   ; <c958>
           sub   eax, ecx
           mov   dword ptr [DAT_0040c960], 000000001h    ; <c960>
           mov   dword ptr [elapsedTime], eax    ; <c944>
-          call  _FUN_00402e80
+          call  _resetPlayerFrameNo
           mov   edx, dword ptr [elapsedTime]    ; <c944>
           mov   ecx, offset iniGsConfigKey      ; <c0f8>
           push  000000001h
@@ -3629,7 +3629,7 @@ LAB_00403533:
           db 090h
           db 090h
           db 090h
-@updateActorType1@4:      push  esi
+@updateActorType1_Beginner@4:     push  esi
           mov   esi, ecx
           push  edi
           mov   edi, dword ptr [esi+01Ch]
@@ -3678,19 +3678,19 @@ LAB_00403598:     lea   edx, dword ptr [edi-016h]
           mov   edx, edi
           pop   edi
           pop   esi
-          jmp   @FUN_00402120@8
+          jmp   @setActorFrameNo@8
 LAB_004035e4:     mov   edi, 000000017h
           mov   ecx, esi
           mov   edx, edi
           pop   edi
           pop   esi
-          jmp   @FUN_00402120@8
+          jmp   @setActorFrameNo@8
 LAB_004035f4:     mov   edi, 000000016h
 LAB_004035f9:     mov   edx, edi
           mov   ecx, esi
           pop   edi
           pop   esi
-          jmp   @FUN_00402120@8
+          jmp   @setActorFrameNo@8
 LAB_00403604:     mov   eax, esi
           pop   edi
           pop   esi
@@ -3703,7 +3703,7 @@ LAB_00403609:
           db 090h
           db 090h
           db 090h
-@updateActorType2@4:      push  esi
+@updateActorType2_dog@4:          push  esi
           push  edi
           mov   edi, ecx
           mov   eax, dword ptr [edi+018h]
@@ -3726,7 +3726,7 @@ LAB_00403641:     mov   ecx, 000000003h
           call  @updateActorPositionWithVelocityMaybe@4
           mov   ecx, eax
           mov   edx, esi
-          call  @FUN_00402120@8
+          call  @setActorFrameNo@8
           pop   edi
           pop   esi
           ret
@@ -3736,7 +3736,7 @@ LAB_00403668:     mov   ecx, edi
           call  @updateActorPositionWithVelocityMaybe@4
           mov   ecx, eax
           mov   edx, esi
-          call  @FUN_00402120@8
+          call  @setActorFrameNo@8
           pop   edi
           pop   esi
           ret
@@ -3754,7 +3754,7 @@ LAB_00403686:     xor   eax, eax
           call  @updateActorPositionWithVelocityMaybe@4
           mov   ecx, eax
           mov   edx, esi
-          call  @FUN_00402120@8
+          call  @setActorFrameNo@8
           pop   edi
           pop   esi
           ret
@@ -3767,7 +3767,7 @@ LAB_004036bb:     mov   ecx, 000000064h
           call  @updateActorPositionWithVelocityMaybe@4
           mov   ecx, eax
           mov   edx, esi
-          call  @FUN_00402120@8
+          call  @setActorFrameNo@8
           pop   edi
           pop   esi
           ret
@@ -3793,7 +3793,7 @@ LAB_0040371f:     mov   ecx, edi
           mov   ecx, eax
           pop   edi
           pop   esi
-          jmp   @FUN_00402120@8
+          jmp   @setActorFrameNo@8
 LAB_00403731:
           db 08Dh
           db 049h
@@ -3815,7 +3815,7 @@ DAT_00403740  dword offset LAB_004036bb
           db 090h
           db 090h
           db 090h
-@updateActorType9@4:      push  esi
+@updateActorType9_treeOnFire@4:   push  esi
           push  edi
           mov   edi, ecx
           mov   eax, dword ptr [edi+018h]
@@ -3843,13 +3843,13 @@ LAB_004037a1:     mov   ecx, edi
           mov   edx, esi
           pop   edi
           pop   esi
-          jmp   @FUN_00402120@8
+          jmp   @setActorFrameNo@8
 LAB_004037ac:
           db 090h
           db 090h
           db 090h
           db 090h
-@updateActorTypeA@4:      push  esi
+@updateActorTypeA_walkingTree@4:          push  esi
           mov   esi, ecx
           push  edi
           mov   eax, dword ptr [esi+018h]
@@ -3891,7 +3891,7 @@ LAB_0040381f:     mov   ecx, 000000064h
           call  @updateActorPositionWithVelocityMaybe@4
           mov   ecx, eax
           mov   edx, edi
-          call  @FUN_00402120@8
+          call  @setActorFrameNo@8
           pop   edi
           pop   esi
           ret
@@ -3913,7 +3913,7 @@ LAB_00403872:     mov   ecx, 00000000Ah
           call  @updateActorPositionWithVelocityMaybe@4
           mov   ecx, eax
           mov   edx, edi
-          call  @FUN_00402120@8
+          call  @setActorFrameNo@8
           pop   edi
           pop   esi
           ret
@@ -3923,7 +3923,7 @@ LAB_004038a2:     mov   ecx, esi
           call  @updateActorPositionWithVelocityMaybe@4
           mov   ecx, eax
           mov   edx, edi
-          call  @FUN_00402120@8
+          call  @setActorFrameNo@8
           pop   edi
           pop   esi
           ret
@@ -3943,7 +3943,7 @@ LAB_004038e9:     mov   ecx, esi
           mov   ecx, eax
           pop   edi
           pop   esi
-          jmp   @FUN_00402120@8
+          jmp   @setActorFrameNo@8
 LAB_004038fb:
           db 090h
 LAB_004038fc:
@@ -3955,7 +3955,7 @@ DAT_00403908  dword offset LAB_004038ce
           db 090h
           db 090h
           db 090h
-@updateActorType3@4:      push  esi
+@updateActorType3_snowboarder@4:          push  esi
           push  edi
           mov   edi, ecx
           mov   eax, dword ptr [edi+018h]
@@ -4000,7 +4000,7 @@ LAB_00403989:     inc   esi
           mov   esi, 000000020h
           mov   ecx, edi
           mov   edx, esi
-          call  @FUN_00402120@8
+          call  @setActorFrameNo@8
           pop   edi
           pop   esi
           ret
@@ -4009,7 +4009,7 @@ LAB_004039a0:     cmp   word ptr [edi+044h], 000000000h
           mov   esi, 000000020h
           mov   ecx, edi
           mov   edx, esi
-          call  @FUN_00402120@8
+          call  @setActorFrameNo@8
           pop   edi
           pop   esi
           ret
@@ -4020,7 +4020,7 @@ LAB_004039b8:     mov   ecx, 00000000Ah
           mov   esi, 00000001Fh
           mov   ecx, edi
           mov   edx, esi
-          call  @FUN_00402120@8
+          call  @setActorFrameNo@8
           pop   edi
           pop   esi
           ret
@@ -4033,7 +4033,7 @@ LAB_004039ec:     mov   ecx, edi
           mov   edx, esi
           pop   edi
           pop   esi
-          jmp   @FUN_00402120@8
+          jmp   @setActorFrameNo@8
 LAB_004039f7:
           db 090h
           db 090h
@@ -4116,7 +4116,7 @@ LAB_00403ad3:     mov   dword ptr [esp+010h], 00000003Ch
           mov   ecx, esi
           mov   edx, dword ptr [esp+010h]
           mov   word ptr [esi+046h], 00000h
-          call  @FUN_00402120@8
+          call  @setActorFrameNo@8
           pop   ebp
           pop   ebx
           pop   edi
@@ -4162,7 +4162,7 @@ LAB_00403b4f:     mov   ecx, dword ptr [esi+00Ch]
           mov   dword ptr [ecx+020h], edx
           mov   edx, dword ptr [esp+010h]
           mov   ecx, esi
-          call  @FUN_00402120@8
+          call  @setActorFrameNo@8
           pop   ebp
           pop   ebx
           pop   edi
@@ -4193,7 +4193,7 @@ LAB_00403bcc:     movsx eax, word ptr [esi+048h]
 LAB_00403be8:     call  @playSound@4
           mov   edx, dword ptr [esp+010h]
           mov   ecx, esi
-          call  @FUN_00402120@8
+          call  @setActorFrameNo@8
           pop   ebp
           pop   ebx
           pop   edi
@@ -4214,7 +4214,7 @@ LAB_00403c15:     cmp   word ptr [edi+010h], 000000052h
           call  @addStylePoints@4
           mov   edx, dword ptr [esp+010h]
           mov   ecx, esi
-          call  @FUN_00402120@8
+          call  @setActorFrameNo@8
           pop   ebp
           pop   ebx
           pop   edi
@@ -4236,7 +4236,7 @@ LAB_00403c3d:     mov   eax, dword ptr [esp+010h]
           sar   eax, 1h
           mov   ecx, esi
           mov   word ptr [esi+048h], ax
-          call  @FUN_00402120@8
+          call  @setActorFrameNo@8
           pop   ebp
           pop   ebx
           pop   edi
@@ -4264,7 +4264,7 @@ LAB_00403cb4:     mov   ecx, 000000001h
           call  @playSound@4
           mov   edx, dword ptr [esp+010h]
           mov   ecx, esi
-          call  @FUN_00402120@8
+          call  @setActorFrameNo@8
           pop   ebp
           pop   ebx
           pop   edi
@@ -4293,7 +4293,7 @@ LAB_00403d1a:     mov   ecx, eax
           call  @addStylePoints@4
           mov   edx, dword ptr [esp+010h]
           mov   ecx, esi
-          call  @FUN_00402120@8
+          call  @setActorFrameNo@8
           pop   ebp
           pop   ebx
           pop   edi
@@ -4338,7 +4338,7 @@ LAB_00403d7e:     movsx eax, word ptr [esi+040h]
           sar   eax, 1h
           mov   ecx, esi
           mov   word ptr [esi+048h], ax
-          call  @FUN_00402120@8
+          call  @setActorFrameNo@8
           pop   ebp
           pop   ebx
           pop   edi
@@ -4359,7 +4359,7 @@ LAB_00403dcd:     cmp   word ptr [esi+048h], 000000000h
           call  @actorSetSpriteIdx@8
           mov   edx, dword ptr [esp+010h]
           mov   ecx, esi
-          call  @FUN_00402120@8
+          call  @setActorFrameNo@8
           pop   ebp
           pop   ebx
           pop   edi
@@ -4372,12 +4372,12 @@ LAB_00403dfa:     cmp   word ptr [edi+010h], 000000032h
           mov   edx, 000000038h
           mov   ecx, edi
           mov   dword ptr [edi+018h], 000000009h
-          call  @FUN_00402120@8
+          call  @setActorFrameNo@8
           mov   ecx, 000000010h
           call  @addStylePoints@4
           mov   edx, dword ptr [esp+010h]
           mov   ecx, esi
-          call  @FUN_00402120@8
+          call  @setActorFrameNo@8
           pop   ebp
           pop   ebx
           pop   edi
@@ -4390,7 +4390,7 @@ LAB_00403e39:     mov   ecx, 0FFFFFFE0h
           call  @playSound@4
           mov   edx, dword ptr [esp+010h]
           mov   ecx, esi
-          call  @FUN_00402120@8
+          call  @setActorFrameNo@8
           pop   ebp
           pop   ebx
           pop   edi
@@ -4407,7 +4407,7 @@ LAB_00403e60:     cmp   dword ptr [esp+014h], 000000009h
           call  @actorSetSpriteIdx@8
           mov   edx, dword ptr [esp+010h]
           mov   ecx, esi
-          call  @FUN_00402120@8
+          call  @setActorFrameNo@8
           pop   ebp
           pop   ebx
           pop   edi
@@ -4418,7 +4418,7 @@ LAB_00403e97:     mov   ecx, 000000006h
           call  @addStylePoints@4
           mov   edx, dword ptr [esp+010h]
           mov   ecx, esi
-          call  @FUN_00402120@8
+          call  @setActorFrameNo@8
           pop   ebp
           pop   ebx
           pop   edi
@@ -4443,7 +4443,7 @@ LAB_00403ed0:     cmp   bx, bp
           call  @playSound@4
           mov   edx, dword ptr [esp+010h]
           mov   ecx, esi
-          call  @FUN_00402120@8
+          call  @setActorFrameNo@8
           pop   ebp
           pop   ebx
           pop   edi
@@ -4461,7 +4461,7 @@ LAB_00403f15:     cmp   bx, bp
           mov   edx, eax
           mov   ecx, esi
           mov   dword ptr [esp+010h], eax
-          call  @FUN_00402120@8
+          call  @setActorFrameNo@8
           pop   ebp
           pop   ebx
           pop   edi
@@ -4503,7 +4503,7 @@ LAB_00403fb2:     mov   edx, 000000948h
           call  @assertFailed@8
 LAB_00403fc1:     mov   edx, dword ptr [esp+010h]
           mov   ecx, esi
-          call  @FUN_00402120@8
+          call  @setActorFrameNo@8
           pop   ebp
           pop   ebx
           pop   edi
@@ -4608,7 +4608,7 @@ LAB_00404091:
           db 090h
 @FUN_00404070@4 endp
 
-@FUN_004040a0@4 proc
+@updateAllPermObjectsInList@4 proc
           mov   eax, dword ptr [skierScreenYOffset]     ; <c5fc>
           push  ebx
           push  ebp
@@ -4635,7 +4635,7 @@ LAB_004040d6:     cmp   esi, dword ptr [ebx+004h]
           cmp   esi, dword ptr [ebx+004h]
 LAB_004040ed:     jae   LAB_0040411c
 LAB_004040ef:     mov   ecx, esi
-          call  @FUN_004041c0@4
+          call  @updatePermObject@4
           mov   ax, word ptr [esi+016h]
           sub   ax, word ptr [playerY]  ; <c5f2>
           cmp   ax, di
@@ -4643,7 +4643,7 @@ LAB_004040ef:     mov   ecx, esi
           cmp   ax, bp
           jge   LAB_00404112
           mov   ecx, esi
-          call  @FUN_00404130@4
+          call  @addActorForPermObject@4
 LAB_00404112:     mov   eax, dword ptr [ebx+004h]
           add   esi, 000000024h
           cmp   esi, eax
@@ -4669,9 +4669,9 @@ LAB_00404121:
           db 090h
           db 090h
           db 090h
-@FUN_004040a0@4 endp
+@updateAllPermObjectsInList@4 endp
 
-@FUN_00404130@4 proc
+@addActorForPermObject@4 proc
           sub   esp, 000000010h
           push  ebx
           push  ebp
@@ -4731,9 +4731,9 @@ LAB_004041ba:
           db 090h
           db 090h
           db 090h
-@FUN_00404130@4 endp
+@addActorForPermObject@4 endp
 
-@FUN_004041c0@4 proc
+@updatePermObject@4 proc
           push  esi
           mov   esi, ecx
           test  esi, esi
@@ -4762,7 +4762,7 @@ LAB_00404207:     mov   edx, 000000AF9h
           call  @assertFailed@8
           jmp   LAB_0040421f
 LAB_00404218:     mov   ecx, esi
-          call  @FUN_00404290@4
+          call  @updatePermObjectActorType4@4
 LAB_0040421f:     mov   edi, dword ptr [esi]
           test  edi, edi
           jz    LAB_0040427f
@@ -4790,7 +4790,7 @@ LAB_00404260:     mov   ax, word ptr [esi+018h]
           call  @updateActorPositionMaybe@16
           mov   edx, dword ptr [esi+010h]
           mov   ecx, eax
-          call  @FUN_00402120@8
+          call  @setActorFrameNo@8
 LAB_0040427f:     pop   edi
           pop   esi
           ret
@@ -4809,9 +4809,9 @@ LAB_00404282:
           db 090h
           db 090h
           db 090h
-@FUN_004041c0@4 endp
+@updatePermObject@4 endp
 
-@FUN_00404290@4 proc
+@updatePermObjectActorType4@4 proc
           push  esi
           mov   esi, ecx
           test  esi, esi
@@ -4879,7 +4879,7 @@ LAB_00404341:
           db 090h
           db 090h
           db 090h
-@FUN_00404290@4 endp
+@updatePermObjectActorType4@4 endp
 
 @FUN_00404350@4 proc
           sub   esp, 00000000Ch
@@ -5272,7 +5272,7 @@ LAB_00404798:     movsx eax, word ptr [esi+016h]
           jge   LAB_004047b8
           mov   ecx, esi
           add   esi, 000000024h
-          call  @FUN_00404130@4
+          call  @addActorForPermObject@4
           cmp   esi, dword ptr [edi+004h]
           jb    LAB_00404798
 LAB_004047b8:     pop   edi
@@ -5485,7 +5485,7 @@ _resetGame proc
           mov   dword ptr [playerActorPtrMaybe_1], esi  ; <c64c>
           mov   dword ptr [playerActor], esi    ; <c72c>
           mov   dword ptr [totalAreaOfActorSprites], esi        ; <c6fc>
-          call  _FUN_00404a70
+          call  _resetPermObjectCount
           mov   eax, 000000001h
           mov   dword ptr [isTurboMode], esi    ; <c670>
           mov   word ptr [playerY], si  ; <c5f2>
@@ -5550,8 +5550,8 @@ LAB_00404a64:
           db 090h
 _setupActorList endp
 
-_FUN_00404a70 proc
-          mov   word ptr [struct24Index], 00000h        ; <c702>
+_resetPermObjectCount proc
+          mov   word ptr [permObjectCount], 00000h      ; <c702>
           ret
 LAB_00404a7a:
           db 090h
@@ -5560,7 +5560,7 @@ LAB_00404a7a:
           db 090h
           db 090h
           db 090h
-_FUN_00404a70 endp
+_resetPermObjectCount endp
 
 COMMENT ~
 _setupGame proc
@@ -5578,7 +5578,7 @@ _setupGame proc
           jnz   LAB_00404aa8
           ret
 LAB_00404aa8:     call  _setupGameTitleActors
-          call  _FUN_00404b50
+          call  _setupPermObjects
           mov   dword ptr [isPaused], 000000000h        ; <c650>
           call  _startGameTimer
           mov   eax, 000000001h
@@ -5634,14 +5634,14 @@ LAB_00404b4f:     ret
 _startGameTimer endp
 ~
 
-_FUN_00404b50 proc
+_setupPermObjects proc
           sub   esp, 000000024h
           push  ebx
           push  ebp
           push  esi
           push  edi
           xor   edi, edi
-          mov   ecx, offset DAT_0040c630        ; <c630>
+          mov   ecx, offset PermObjectList_0040c630.startingObject      ; <c630>
           mov   word ptr [esp+02Eh], di
           mov   word ptr [esp+02Ch], di
           mov   word ptr [esp+02Ah], di
@@ -5669,20 +5669,20 @@ LAB_00404bb1:     mov   eax, dword ptr [windowClientRect.bottom]        ; <c6bc>
           jle   LAB_00404bda
           mov   word ptr [esp+026h], 00208h
 LAB_00404bda:     lea   edx, dword ptr [esp+010h]
-          mov   ecx, offset DAT_0040c630        ; <c630>
-          call  @FUN_00405120@8
+          mov   ecx, offset PermObjectList_0040c630.startingObject      ; <c630>
+          call  @addPermObject@8
           mov   ebp, 0FFFFFDC0h
           lea   edx, dword ptr [esp+010h]
-          mov   ecx, offset DAT_0040c630        ; <c630>
+          mov   ecx, offset PermObjectList_0040c630.startingObject      ; <c630>
           mov   word ptr [esp+018h], 00039h
           mov   word ptr [esp+024h], bp
           mov   word ptr [esp+026h], 00280h
-          call  @FUN_00405120@8
+          call  @addPermObject@8
           lea   edx, dword ptr [esp+010h]
-          mov   ecx, offset DAT_0040c630        ; <c630>
+          mov   ecx, offset PermObjectList_0040c630.startingObject      ; <c630>
           mov   word ptr [esp+018h], 0003Ah
           mov   word ptr [esp+024h], si
-          call  @FUN_00405120@8
+          call  @addPermObject@8
           mov   dword ptr [esp+01Ch], 00000000Ch
           mov   esi, 000000001h
           mov   dword ptr [DAT_0040c94c], edi   ; <c94c>
@@ -5703,9 +5703,9 @@ LAB_00404c40:     mov   edx, esi
           setz  cl
           mov   esi, ecx
           lea   edx, dword ptr [esp+010h]
-          mov   ecx, offset DAT_0040c630        ; <c630>
+          mov   ecx, offset PermObjectList_0040c630.startingObject      ; <c630>
           mov   word ptr [esp+024h], ax
-          call  @FUN_00405120@8
+          call  @addPermObject@8
           cmp   dword ptr [DAT_0040c94c], edi   ; <c94c>
           jnz   LAB_00404c89
           mov   dword ptr [DAT_0040c94c], eax   ; <c94c>
@@ -5714,18 +5714,18 @@ LAB_00404c89:     add   ebx, 000000140h
           jl    LAB_00404c40
           mov   esi, 000000011h
           lea   edx, dword ptr [esp+010h]
-          mov   ecx, offset DAT_0040c630        ; <c630>
+          mov   ecx, offset PermObjectList_0040c630.startingObject      ; <c630>
           mov   dword ptr [esp+01Ch], esi
           mov   word ptr [esp+018h], 0003Bh
           mov   word ptr [esp+024h], bp
           mov   word ptr [esp+026h], 021C0h
-          call  @FUN_00405120@8
+          call  @addPermObject@8
           lea   edx, dword ptr [esp+010h]
-          mov   ecx, offset DAT_0040c630        ; <c630>
+          mov   ecx, offset PermObjectList_0040c630.startingObject      ; <c630>
           mov   word ptr [esp+018h], 0003Ch
           mov   word ptr [esp+024h], 0FEC0h
-          call  @FUN_00405120@8
-          mov   ecx, offset DAT_0040c5e0        ; <c5e0>
+          call  @addPermObject@8
+          mov   ecx, offset PermObjectList_0040c5e0.startingObject      ; <c5e0>
           call  @setPointerToNull@4
           mov   edx, dword ptr [windowClientRect.right] ; <c6b8>
           mov   eax, dword ptr [playerX]        ; <c640>
@@ -5749,19 +5749,19 @@ LAB_00404d1c:     mov   eax, dword ptr [windowClientRect.bottom]        ; <c6bc>
           jle   LAB_00404d45
           mov   word ptr [esp+026h], 00208h
 LAB_00404d45:     lea   edx, dword ptr [esp+010h]
-          mov   ecx, offset DAT_0040c5e0        ; <c5e0>
-          call  @FUN_00405120@8
+          mov   ecx, offset PermObjectList_0040c5e0.startingObject      ; <c5e0>
+          call  @addPermObject@8
           lea   edx, dword ptr [esp+010h]
-          mov   ecx, offset DAT_0040c5e0        ; <c5e0>
+          mov   ecx, offset PermObjectList_0040c5e0.startingObject      ; <c5e0>
           mov   word ptr [esp+018h], 00039h
           mov   word ptr [esp+024h], si
           mov   word ptr [esp+026h], 00280h
-          call  @FUN_00405120@8
+          call  @addPermObject@8
           lea   edx, dword ptr [esp+010h]
-          mov   ecx, offset DAT_0040c5e0        ; <c5e0>
+          mov   ecx, offset PermObjectList_0040c5e0.startingObject      ; <c5e0>
           mov   word ptr [esp+018h], 0003Ah
           mov   word ptr [esp+024h], 00200h
-          call  @FUN_00405120@8
+          call  @addPermObject@8
           mov   esi, 000000001h
           mov   dword ptr [DAT_0040c950], edi   ; <c950>
           mov   ebx, 000000410h
@@ -5783,9 +5783,9 @@ LAB_00404da5:     mov   ecx, esi
           mov   word ptr [esp+024h], dx
           lea   edx, dword ptr [esp+010h]
           setz  al
-          mov   ecx, offset DAT_0040c5e0        ; <c5e0>
+          mov   ecx, offset PermObjectList_0040c5e0.startingObject      ; <c5e0>
           mov   esi, eax
-          call  @FUN_00405120@8
+          call  @addPermObject@8
           cmp   dword ptr [DAT_0040c950], edi   ; <c950>
           jnz   LAB_00404df8
           mov   dword ptr [DAT_0040c950], eax   ; <c950>
@@ -5804,18 +5804,18 @@ LAB_00404df8:     mov   ecx, 00000000Dh
           jl    LAB_00404da5
           mov   esi, 000000011h
           lea   edx, dword ptr [esp+010h]
-          mov   ecx, offset DAT_0040c5e0        ; <c5e0>
+          mov   ecx, offset PermObjectList_0040c5e0.startingObject      ; <c5e0>
           mov   dword ptr [esp+01Ch], esi
           mov   word ptr [esp+018h], 0003Bh
           mov   word ptr [esp+024h], 00140h
           mov   word ptr [esp+026h], bp
-          call  @FUN_00405120@8
+          call  @addPermObject@8
           lea   edx, dword ptr [esp+010h]
-          mov   ecx, offset DAT_0040c5e0        ; <c5e0>
+          mov   ecx, offset PermObjectList_0040c5e0.startingObject      ; <c5e0>
           mov   word ptr [esp+018h], 0003Ch
           mov   word ptr [esp+024h], 00200h
-          call  @FUN_00405120@8
-          mov   ecx, offset DAT_0040c658        ; <c658>
+          call  @addPermObject@8
+          mov   ecx, offset PermObjectList_0040c658.startingObject      ; <c658>
           call  @setPointerToNull@4
           mov   eax, dword ptr [windowClientRect.bottom]        ; <c6bc>
           mov   ebx, dword ptr [skierScreenYOffset]     ; <c5fc>
@@ -5830,33 +5830,33 @@ LAB_00404df8:     mov   ecx, 00000000Dh
           jle   LAB_00404ec1
           mov   word ptr [esp+026h], 00208h
 LAB_00404ec1:     lea   edx, dword ptr [esp+010h]
-          mov   ecx, offset DAT_0040c658        ; <c658>
-          call  @FUN_00405120@8
+          mov   ecx, offset PermObjectList_0040c658.startingObject      ; <c658>
+          call  @addPermObject@8
           mov   ebx, 0FFFFFF60h
           lea   edx, dword ptr [esp+010h]
-          mov   ecx, offset DAT_0040c658        ; <c658>
+          mov   ecx, offset PermObjectList_0040c658.startingObject      ; <c658>
           mov   word ptr [esp+018h], 00039h
           mov   word ptr [esp+024h], bx
           mov   word ptr [esp+026h], 00280h
-          call  @FUN_00405120@8
+          call  @addPermObject@8
           mov   esi, 0000000A0h
           lea   edx, dword ptr [esp+010h]
-          mov   ecx, offset DAT_0040c658        ; <c658>
+          mov   ecx, offset PermObjectList_0040c658.startingObject      ; <c658>
           mov   word ptr [esp+018h], 0003Ah
           mov   word ptr [esp+024h], si
-          call  @FUN_00405120@8
+          call  @addPermObject@8
           lea   edx, dword ptr [esp+010h]
-          mov   ecx, offset DAT_0040c658        ; <c658>
+          mov   ecx, offset PermObjectList_0040c658.startingObject      ; <c658>
           mov   word ptr [esp+018h], 0003Bh
           mov   word ptr [esp+024h], bx
           mov   word ptr [esp+026h], bp
-          call  @FUN_00405120@8
+          call  @addPermObject@8
           lea   edx, dword ptr [esp+010h]
-          mov   ecx, offset DAT_0040c658        ; <c658>
+          mov   ecx, offset PermObjectList_0040c658.startingObject      ; <c658>
           mov   word ptr [esp+018h], 0003Ch
           mov   word ptr [esp+024h], si
-          call  @FUN_00405120@8
-          mov   ecx, offset DAT_0040c738        ; <c738>
+          call  @addPermObject@8
+          mov   ecx, offset PermObjectList_0040c738.startingObject      ; <c738>
           mov   dword ptr [DAT_0040c968], edi   ; <c968>
           mov   dword ptr [isFsGameMode], edi   ; <c954>
           call  @setPointerToNull@4
@@ -5864,7 +5864,7 @@ LAB_00404ec1:     lea   edx, dword ptr [esp+010h]
           mov   ebp, 000000040h
           mov   ebx, 0FFFFFF80h
 LAB_00404f72:     lea   edx, dword ptr [esp+010h]
-          mov   ecx, offset DAT_0040c738        ; <c738>
+          mov   ecx, offset PermObjectList_0040c738.startingObject      ; <c738>
           mov   dword ptr [esp+01Ch], 00000000Dh
           mov   word ptr [esp+018h], bp
           mov   word ptr [esp+024h], bx
@@ -5873,11 +5873,11 @@ LAB_00404f72:     lea   edx, dword ptr [esp+010h]
           mov   word ptr [esp+02Eh], di
           mov   word ptr [esp+02Ch], di
           mov   word ptr [esp+02Ah], di
-          call  @FUN_00405120@8
+          call  @addPermObject@8
           add   esi, 000000800h
           cmp   si, 05C00h
           jle   LAB_00404f72
-          mov   ecx, offset DAT_0040c720        ; <c720>
+          mov   ecx, offset PermObjectList_0040c720.startingObject      ; <c720>
           call  @setPointerToNull@4
           mov   esi, 0FFFFFC00h
           mov   ebx, 000000004h
@@ -5891,24 +5891,24 @@ LAB_00404fd1:     cmp   si, 0FC00h
           mov   word ptr [esp+026h], si
           jle   LAB_0040501b
           lea   edx, dword ptr [esp+010h]
-          mov   ecx, offset DAT_0040c720        ; <c720>
+          mov   ecx, offset PermObjectList_0040c720.startingObject      ; <c720>
           mov   dword ptr [esp+020h], 000000027h
           mov   word ptr [esp+024h], 0FF90h
           mov   word ptr [esp+02Ch], 0FFFEh
-          call  @FUN_00405120@8
+          call  @addPermObject@8
 LAB_0040501b:     cmp   si, 05C00h
           jge   LAB_00405044
           lea   edx, dword ptr [esp+010h]
-          mov   ecx, offset DAT_0040c720        ; <c720>
+          mov   ecx, offset PermObjectList_0040c720.startingObject      ; <c720>
           mov   dword ptr [esp+020h], 000000029h
           mov   word ptr [esp+024h], 0FF70h
           mov   word ptr [esp+02Ch], bp
-          call  @FUN_00405120@8
+          call  @addPermObject@8
 LAB_00405044:     add   esi, 000000800h
           cmp   si, 05C00h
           jle   LAB_00404fd1
           lea   edx, dword ptr [esp+010h]
-          mov   ecx, offset DAT_0040c720        ; <c720>
+          mov   ecx, offset PermObjectList_0040c720.startingObject      ; <c720>
           mov   dword ptr [esp+01Ch], 000000007h
           mov   dword ptr [esp+020h], 00000002Ah
           mov   word ptr [esp+018h], di
@@ -5918,23 +5918,23 @@ LAB_00405044:     add   esi, 000000800h
           mov   word ptr [esp+02Eh], di
           mov   word ptr [esp+02Ch], di
           mov   word ptr [esp+02Ah], di
-          call  @FUN_00405120@8
+          call  @addPermObject@8
           lea   edx, dword ptr [esp+010h]
-          mov   ecx, offset DAT_0040c720        ; <c720>
+          mov   ecx, offset PermObjectList_0040c720.startingObject      ; <c720>
           mov   dword ptr [esp+01Ch], 000000008h
           mov   word ptr [esp+024h], 03EBCh
-          call  @FUN_00405120@8
+          call  @addPermObject@8
           lea   edx, dword ptr [esp+010h]
-          mov   ecx, offset DAT_0040c720        ; <c720>
+          mov   ecx, offset PermObjectList_0040c720.startingObject      ; <c720>
           mov   dword ptr [esp+01Ch], 000000005h
           mov   word ptr [esp+024h], di
           mov   word ptr [esp+026h], 0F7F4h
-          call  @FUN_00405120@8
+          call  @addPermObject@8
           lea   edx, dword ptr [esp+010h]
-          mov   ecx, offset DAT_0040c720        ; <c720>
+          mov   ecx, offset PermObjectList_0040c720.startingObject      ; <c720>
           mov   dword ptr [esp+01Ch], 000000006h
           mov   word ptr [esp+026h], 07D3Ch
-          call  @FUN_00405120@8
+          call  @addPermObject@8
           pop   edi
           pop   esi
           pop   ebp
@@ -5950,7 +5950,7 @@ LAB_004050f8:
           db 090h
           db 090h
           db 090h
-_FUN_00404b50 endp
+_setupPermObjects endp
 
 COMMENT ~
 @setPointerToNull@4 proc
@@ -5970,19 +5970,19 @@ LAB_0040511e:
 @setPointerToNull@4 endp
 ~
 
-@FUN_00405120@8 proc
+@addPermObject@8 proc
           push  ebx
           push  esi
           push  edi
           mov   edi, ecx
-          mov   cx, word ptr [struct24Index]    ; <c702>
+          mov   cx, word ptr [permObjectCount]  ; <c702>
           xor   eax, eax
           mov   ax, cx
           mov   esi, edx
           mov   edx, dword ptr [PTR_0040c758]   ; <c758>
           inc   cx
           lea   eax, dword ptr [eax+eax*8]
-          mov   word ptr [struct24Index], cx    ; <c702>
+          mov   word ptr [permObjectCount], cx  ; <c702>
           test  edi, edi
           lea   ebx, dword ptr [edx+eax*4]
           jnz   LAB_0040515b
@@ -5994,7 +5994,7 @@ LAB_0040515b:     test  esi, esi
           mov   edx, 000000A1Ch
           mov   ecx, offset sourceFilename      ; <c090>
           call  @assertFailed@8
-LAB_0040516e:     cmp   word ptr [struct24Index], 00100h        ; <c702>
+LAB_0040516e:     cmp   word ptr [permObjectCount], 00100h      ; <c702>
           jbe   LAB_00405188
           mov   edx, 000000A1Dh
           mov   ecx, offset sourceFilename      ; <c090>
@@ -6033,7 +6033,7 @@ LAB_004051db:
           db 090h
           db 090h
           db 090h
-@FUN_00405120@8 endp
+@addPermObject@8 endp
 
 COMMENT ~
 _setupGameTitleActors proc
@@ -7711,7 +7711,7 @@ LAB_0040636f:     mov   ecx, dword ptr [eax+01Ch]
           jz    LAB_004063a3
           mov   edx, esi
           mov   ecx, eax
-          call  @FUN_00402120@8
+          call  @setActorFrameNo@8
           mov   eax, dword ptr [redrawRequired] ; <c610>
           test  eax, eax
           jz    LAB_004063a3
@@ -8022,7 +8022,7 @@ LAB_00406571:     mov   eax, dword ptr [playerActor]    ; <c72c>
 LAB_004065ab:     call  @getSkierInAirSpriteFromMousePosition@8
 LAB_004065b0:     mov   ecx, dword ptr [playerActor]    ; <c72c>
           mov   edx, eax
-          call  @FUN_00402120@8
+          call  @setActorFrameNo@8
 LAB_004065bd:     mov   word ptr [prevMouseX], di       ; <c700>
           mov   word ptr [prevMouseY], si       ; <c70c>
           pop   edi
@@ -8190,7 +8190,7 @@ LAB_0040672a:     mov   edx, 000000014h
 LAB_00406731:     mov   edx, 000000015h
 LAB_00406736:     cmp   edx, dword ptr [ecx+01Ch]
           jz    LAB_00406763
-          call  @FUN_00402120@8
+          call  @setActorFrameNo@8
           mov   eax, dword ptr [redrawRequired] ; <c610>
           test  eax, eax
           jz    LAB_00406763
