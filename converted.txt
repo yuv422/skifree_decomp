@@ -43,3 +43,9 @@ _setupGame
 @areRectanglesEqual@8
 @addActorOfTypeWithSpriteIdx@8
 _setupGameTitleActors
+_resetPermObjectCount
+_setupActorList
+@updateActorPositionWithVelocityMaybe@4
+@playSound@4
+@getSpriteIdxForActorType@4
+@enlargeRect@8

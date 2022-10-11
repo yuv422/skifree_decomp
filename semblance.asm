@@ -1070,6 +1070,7 @@ LAB_00401b14:
           db 090h
 @FUN_00401a60@8 endp
 
+COMMENT ~
 @enlargeRect@8 proc
           push  esi
           push  edi
@@ -1109,6 +1110,7 @@ LAB_00401b7d:     pop   edi
           pop   esi
           ret
 @enlargeRect@8 endp
+~
 
 @formatAndPrintStatusStrings@4 proc
           sub   esp, 000000018h
@@ -2428,6 +2430,7 @@ LAB_00402844:
           db 090h
 _randomActorType2 endp
 
+COMMENT ~
 @getSpriteIdxForActorType@4 proc
           lea   eax, dword ptr [ecx-00Bh]
           cmp   eax, 000000005h
@@ -2478,6 +2481,7 @@ DAT_004028d4  dword offset LAB_00402888
 DAT_004028d8  dword offset LAB_0040289b
 DAT_004028dc  dword offset LAB_004028ae
 @getSpriteIdxForActorType@4 endp
+~
 
 @updateActor@4 proc
           push  esi
@@ -2726,6 +2730,7 @@ LAB_00402b88:
           db 090h
 @updateActor@4 endp
 
+COMMENT ~
 @playSound@4 proc
           mov   eax, dword ptr [isSoundDisabled]        ; <c794>
           push  esi
@@ -2760,7 +2765,9 @@ LAB_00402bda:
           db 090h
           db 090h
 @playSound@4 endp
+~
 
+COMMENT ~
 @updateActorPositionWithVelocityMaybe@4 proc
           push  ebx
           push  ebp
@@ -2817,6 +2824,7 @@ LAB_00402c5d:
           db 090h
           db 090h
 @updateActorPositionWithVelocityMaybe@4 endp
+~
 
 @updateSsGameMode@12 proc
           mov   eax, dword ptr [playerActor]    ; <c72c>
@@ -5506,6 +5514,7 @@ LAB_004049ff:
           db 090h
 _resetGame endp
 
+COMMENT ~
 _setupActorList proc
           push  esi
           mov   esi, dword ptr [actors] ; <c648>
@@ -5549,7 +5558,9 @@ LAB_00404a64:
           db 090h
           db 090h
 _setupActorList endp
+~
 
+COMMENT ~
 _resetPermObjectCount proc
           mov   word ptr [permObjectCount], 00000h      ; <c702>
           ret
@@ -5561,6 +5572,7 @@ LAB_00404a7a:
           db 090h
           db 090h
 _resetPermObjectCount endp
+~
 
 COMMENT ~
 _setupGame proc

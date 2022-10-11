@@ -82,6 +82,8 @@ void __fastcall handleWindowMoveMessage(HWND hWnd);
 void updateWindowsActiveStatus();
 void __fastcall setPointerToNull(void **param_1);
 Actor *getFreeActor();
+BOOL setupGame();
+USHORT __fastcall random(short maxValue);
 
 
 
@@ -94,7 +96,6 @@ extern char s_nosound_0040c0fc[];
 //
 // ASM Functions
 //
-extern int setupGame();
 extern int resetGame();
 extern void updateGameState();
 extern void __fastcall drawWindow(HDC hdc, RECT *rect);
@@ -181,6 +182,7 @@ extern BOOL isFsGameMode;
 extern int stylePoints;
 extern short playerX;
 extern short playerY;
+extern short permObjectCount;
 
 
 extern BOOL (WINAPI *sndPlaySoundAFuncPtr)(LPCSTR, UINT);
@@ -545,6 +547,75 @@ BOOL __fastcall loadSound(UINT resourceId, Sound *sound) {
     return FALSE;
 }
 
+USHORT __fastcall getSpriteIdxForActorType(int actorType) {
+    USHORT uVar1;
+
+    switch(actorType) {
+        case 0xb:
+            return 0x1b;
+        default:
+            assertFailed(sourceFilename,1571);
+            return 0;
+        case 0xd:
+            break;
+        case 0xe:
+            uVar1 = random(4);
+            return 0x2e - (USHORT)(uVar1 != 0);
+        case 0xf:
+            uVar1 = random(3);
+            return 0x30 - (USHORT)(uVar1 != 0);
+        case 0x10:
+            return 0x34;
+    }
+    uVar1 = random(8);
+    if (uVar1 == 0) {
+        return 0x32;
+    }
+    if (uVar1 != 1) {
+        return 0x31;
+    }
+    return 0x33;
+}
+
+void __fastcall playSound(Sound *sound) {
+    if (isSoundDisabled == 0) {
+        if ((sound->soundData == NULL) && (sound->soundResource != NULL)) {
+            sound->soundData = LockResource(sound->soundResource);
+        }
+        if ((sound->soundData != NULL) && (sndPlaySoundAFuncPtr != NULL)) {
+            /* 5 == SND_ASYNC | SND_MEMORY
+                */
+            (*sndPlaySoundAFuncPtr)(sound->soundData, SND_ASYNC | SND_MEMORY);
+        }
+    }
+}
+
+Actor * __fastcall updateActorPositionWithVelocityMaybe(Actor *actor) {
+    short newX;
+    short newY;
+    short inAir;
+
+    newX = actor->xPosMaybe + actor->HorizontalVelMaybe;
+    newY = actor->yPosMaybe + actor->verticalVelocityMaybe;
+    inAir = actor->isInAir + actor->inAirCounter;
+    if (actor == NULL) {
+        assertFailed(sourceFilename,1061);
+    }
+    if (isTurboMode != 0) {
+        newX = newX + actor->HorizontalVelMaybe;
+        newY = newY + actor->verticalVelocityMaybe;
+        inAir = inAir + actor->inAirCounter;
+    }
+    if (0 < inAir) {
+        actor->inAirCounter = actor->inAirCounter + -1;
+        return updateActorPositionMaybe(actor,newX,newY,inAir);
+    }
+    actor->inAirCounter = 0;
+    return updateActorPositionMaybe(actor,newX,newY,0);
+}
+
+
+
 void startGameTimer() {
     if (hSkiMainWnd && !isGameTimerRunning && !isPaused) {
         isGameTimerRunning = TRUE;
@@ -607,6 +678,27 @@ void pauseGame() {
         isGameTimerRunning = FALSE;
         KillTimer(hSkiMainWnd,0x29a);
         pauseStartTickCount = currentTickCount;
+    }
+}
+
+void __fastcall enlargeRect(RECT *rect1, RECT *rect2) {
+    if (rect2 == NULL) {
+        assertFailed(sourceFilename,365);
+    }
+    if (rect1 == NULL) {
+        assertFailed(sourceFilename,366);
+    }
+    if (rect2->left < rect1->left) {
+        rect1->left = rect2->left;
+    }
+    if (rect1->right < rect2->right) {
+        rect1->right = rect2->right;
+    }
+    if (rect2->top < rect1->top) {
+        rect1->top = rect2->top;
+    }
+    if (rect1->bottom < rect2->bottom) {
+        rect1->bottom = rect2->bottom;
     }
 }
 
@@ -925,6 +1017,29 @@ BOOL __fastcall calculateStatusWindowDimensions(HWND hWnd) {
     return 1;
 }
 
+void setupActorList() {
+    UINT uVar1;
+    UINT uVar2;
+    UINT uVar3;
+
+    uVar3 = 0;
+    actorListPtr = NULL;
+    currentFreeActor = actors;
+    uVar2 = 1;
+    uVar1 = 0;
+    do {
+        uVar3 = uVar3 + 1;
+        actors[uVar1].next = actors + uVar2;
+        uVar1 = uVar3 & 0xffff;
+        uVar2 = uVar1 + 1;
+    } while (uVar2 < 100);
+    actors[uVar3].next = (Actor *)0x0;
+}
+
+void resetPermObjectCount() {
+    permObjectCount = 0;
+}
+
 BOOL setupGame() {
     Actor *actor;
     short newY;
@@ -940,7 +1055,7 @@ BOOL setupGame() {
     }
     setupGameTitleActors();
     setupPermObjects();
-    isPaused = 0;
+    isPaused = FALSE;
     startGameTimer();
     return TRUE;
 }

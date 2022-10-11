@@ -29,6 +29,12 @@ extern _handleGameReset: proc
 extern @addStylePoints@4: proc
 extern @areRectanglesEqual@8: proc
 extern @addActorOfTypeWithSpriteIdx@8: proc
+extern _resetPermObjectCount: proc
+extern _setupActorList: proc
+extern @updateActorPositionWithVelocityMaybe@4: proc
+extern @playSound@4: proc
+extern @getSpriteIdxForActorType@4: proc
+extern @enlargeRect@8: proc
 
 ; exports
 ; public _WinMain@16
