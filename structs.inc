@@ -34,7 +34,7 @@ PermObjectList ends
 
 Actor struct
     next dword ?
-    sprite dword ?
+    linkedActor dword ?
     spriteIdx1 dword ?
     unkActorPtr dword ?
     spriteIdx2 dword ?

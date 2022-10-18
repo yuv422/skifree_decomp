@@ -2883,7 +2883,7 @@ LAB_00402d11:     cmp   si, 00280h
           pop   ebp
           pop   ebx
           ret   00004h
-LAB_00402d25:     mov   ecx, dword ptr [DAT_0040c6f8]   ; <c6f8>
+LAB_00402d25:     mov   ecx, dword ptr [currentSlalomFlag]      ; <c6f8>
           mov   ax, word ptr [ecx+016h]
           cmp   si, ax
           jle   LAB_00402e1d
@@ -2897,7 +2897,7 @@ LAB_00402d25:     mov   ecx, dword ptr [DAT_0040c6f8]   ; <c6f8>
           movsx edx, bp
           movsx ecx, bx
           call  @FUN_00402e30@20
-          mov   ecx, dword ptr [DAT_0040c6f8]   ; <c6f8>
+          mov   ecx, dword ptr [currentSlalomFlag]      ; <c6f8>
           mov   dx, word ptr [ecx+008h]
           cmp   dx, 000000017h
           jnz   LAB_00402d6c
@@ -2912,13 +2912,13 @@ LAB_00402d78:     mov   eax, dword ptr [timedGameRelated]       ; <c948>
           sub   eax, 000001388h
           mov   dword ptr [timedGameRelated], eax       ; <c948>
 LAB_00402d8c:     mov   edx, edi
-          call  @FUN_00403130@8
-          mov   eax, dword ptr [DAT_0040c6f8]   ; <c6f8>
+          call  @permObjectSetSpriteIdx@8
+          mov   eax, dword ptr [currentSlalomFlag]      ; <c6f8>
           pop   edi
           add   eax, 000000024h
           pop   esi
           pop   ebp
-          mov   dword ptr [DAT_0040c6f8], eax   ; <c6f8>
+          mov   dword ptr [currentSlalomFlag], eax      ; <c6f8>
           pop   ebx
           ret   00004h
 LAB_00402da7:     mov   ax, word ptr [esp+014h]
@@ -2946,11 +2946,11 @@ LAB_00402da7:     mov   ax, word ptr [esp+014h]
           mov   dword ptr [isSsGameMode], 000000001h    ; <c95c>
           call  @FUN_00402e30@20
           mov   ecx, dword ptr [currentTickCount]       ; <c698>
-          mov   edx, dword ptr [DAT_0040c94c]   ; <c94c>
+          mov   edx, dword ptr [firstSlalomFlagLeft]    ; <c94c>
           mov   dword ptr [timedGameRelated], eax       ; <c948>
           sub   eax, ecx
           mov   dword ptr [elapsedTime], eax    ; <c944>
-          mov   dword ptr [DAT_0040c6f8], edx   ; <c6f8>
+          mov   dword ptr [currentSlalomFlag], edx      ; <c6f8>
 LAB_00402e1d:     pop   edi
           pop   esi
           pop   ebp
@@ -3265,7 +3265,7 @@ LAB_0040312b:
           db 090h
 @updateEntPackIniKeyValue@12 endp
 
-@FUN_00403130@8 proc
+@permObjectSetSpriteIdx@8 proc
           push  esi
           mov   esi, ecx
           push  edi
@@ -3305,7 +3305,7 @@ LAB_00403172:
           db 090h
           db 090h
           db 090h
-@FUN_00403130@8 endp
+@permObjectSetSpriteIdx@8 endp
 
 @updateFsGameMode@12 proc
           mov   eax, dword ptr [playerActor]    ; <c72c>
@@ -3429,7 +3429,7 @@ LAB_00403301:     cmp   si, 00280h
           pop   ebp
           pop   ebx
           ret   00004h
-LAB_00403315:     mov   ecx, dword ptr [DAT_0040c6f8]   ; <c6f8>
+LAB_00403315:     mov   ecx, dword ptr [currentSlalomFlag]      ; <c6f8>
           mov   ax, word ptr [ecx+016h]
           cmp   si, ax
           jle   LAB_0040340d
@@ -3443,7 +3443,7 @@ LAB_00403315:     mov   ecx, dword ptr [DAT_0040c6f8]   ; <c6f8>
           movsx edx, bp
           movsx ecx, bx
           call  @FUN_00402e30@20
-          mov   ecx, dword ptr [DAT_0040c6f8]   ; <c6f8>
+          mov   ecx, dword ptr [currentSlalomFlag]      ; <c6f8>
           mov   dx, word ptr [ecx+008h]
           cmp   dx, 000000017h
           jnz   LAB_0040335c
@@ -3458,13 +3458,13 @@ LAB_00403368:     mov   eax, dword ptr [timedGameRelated]       ; <c948>
           sub   eax, 000001388h
           mov   dword ptr [timedGameRelated], eax       ; <c948>
 LAB_0040337c:     mov   edx, edi
-          call  @FUN_00403130@8
-          mov   eax, dword ptr [DAT_0040c6f8]   ; <c6f8>
+          call  @permObjectSetSpriteIdx@8
+          mov   eax, dword ptr [currentSlalomFlag]      ; <c6f8>
           pop   edi
           add   eax, 000000024h
           pop   esi
           pop   ebp
-          mov   dword ptr [DAT_0040c6f8], eax   ; <c6f8>
+          mov   dword ptr [currentSlalomFlag], eax      ; <c6f8>
           pop   ebx
           ret   00004h
 LAB_00403397:     mov   ax, word ptr [esp+014h]
@@ -3492,11 +3492,11 @@ LAB_00403397:     mov   ax, word ptr [esp+014h]
           mov   dword ptr [isGsGameMode], 000000001h    ; <c958>
           call  @FUN_00402e30@20
           mov   ecx, dword ptr [currentTickCount]       ; <c698>
-          mov   edx, dword ptr [DAT_0040c950]   ; <c950>
+          mov   edx, dword ptr [FirstSlalomFlagRight]   ; <c950>
           mov   dword ptr [timedGameRelated], eax       ; <c948>
           sub   eax, ecx
           mov   dword ptr [elapsedTime], eax    ; <c944>
-          mov   dword ptr [DAT_0040c6f8], edx   ; <c6f8>
+          mov   dword ptr [currentSlalomFlag], edx      ; <c6f8>
 LAB_0040340d:     pop   edi
           pop   esi
           pop   ebp
@@ -3711,7 +3711,11 @@ LAB_00403609:
           db 090h
           db 090h
           db 090h
-@updateActorType2_dog@4:          push  esi
+@updateActorVelMaybe@8 endp
+
+COMMENT ~
+@updateActorType2_dog@4 proc
+          push  esi
           push  edi
           mov   edi, ecx
           mov   eax, dword ptr [edi+018h]
@@ -3823,7 +3827,12 @@ DAT_00403740  dword offset LAB_004036bb
           db 090h
           db 090h
           db 090h
-@updateActorType9_treeOnFire@4:   push  esi
+@updateActorType2_dog@4 endp
+~
+
+COMMENT ~
+@updateActorType9_treeOnFire@4 proc
+          push  esi
           push  edi
           mov   edi, ecx
           mov   eax, dword ptr [edi+018h]
@@ -3857,7 +3866,11 @@ LAB_004037ac:
           db 090h
           db 090h
           db 090h
-@updateActorTypeA_walkingTree@4:          push  esi
+@updateActorType9_treeOnFire@4 endp
+~
+
+@updateActorTypeA_walkingTree@4 proc
+          push  esi
           mov   esi, ecx
           push  edi
           mov   eax, dword ptr [esi+018h]
@@ -3963,7 +3976,10 @@ DAT_00403908  dword offset LAB_004038ce
           db 090h
           db 090h
           db 090h
-@updateActorType3_snowboarder@4:          push  esi
+@updateActorTypeA_walkingTree@4 endp
+
+@updateActorType3_snowboarder@4 proc
+          push  esi
           push  edi
           mov   edi, ecx
           mov   eax, dword ptr [edi+018h]
@@ -4052,7 +4068,7 @@ LAB_004039f7:
           db 090h
           db 090h
           db 090h
-@updateActorVelMaybe@8 endp
+@updateActorType3_snowboarder@4 endp
 
 @handleActorCollision@8 proc
           sub   esp, 00000000Ch
@@ -4082,11 +4098,11 @@ LAB_00403a3d:     push  ebx
           push  ebp
           mov   bp, word ptr [edi+042h]
           mov   ecx, esi
-          call  @FUN_00404070@4
+          call  @getLinkedActorIfExists@4
           mov   ax, word ptr [eax+042h]
           mov   ecx, edi
           mov   word ptr [esp+018h], ax
-          call  @FUN_00404070@4
+          call  @getLinkedActorIfExists@4
           mov   ax, word ptr [eax+042h]
           mov   ecx, dword ptr [esp+018h]
           cmp   bx, bp
@@ -4584,7 +4600,8 @@ LAB_00404054:
           db 090h
 @handleActorCollision@8 endp
 
-@FUN_00404070@4 proc
+COMMENT ~
+@getLinkedActorIfExists@4 proc
           push  esi
           mov   esi, ecx
           test  esi, esi
@@ -4614,7 +4631,8 @@ LAB_00404091:
           db 090h
           db 090h
           db 090h
-@FUN_00404070@4 endp
+@getLinkedActorIfExists@4 endp
+~
 
 @updateAllPermObjectsInList@4 proc
           mov   eax, dword ptr [skierScreenYOffset]     ; <c5fc>
@@ -5697,7 +5715,7 @@ LAB_00404bda:     lea   edx, dword ptr [esp+010h]
           call  @addPermObject@8
           mov   dword ptr [esp+01Ch], 00000000Ch
           mov   esi, 000000001h
-          mov   dword ptr [DAT_0040c94c], edi   ; <c94c>
+          mov   dword ptr [firstSlalomFlagLeft], edi    ; <c94c>
           mov   ebx, 0000003C0h
 LAB_00404c40:     mov   edx, esi
           mov   eax, esi
@@ -5718,9 +5736,9 @@ LAB_00404c40:     mov   edx, esi
           mov   ecx, offset PermObjectList_0040c630.startingObject      ; <c630>
           mov   word ptr [esp+024h], ax
           call  @addPermObject@8
-          cmp   dword ptr [DAT_0040c94c], edi   ; <c94c>
+          cmp   dword ptr [firstSlalomFlagLeft], edi    ; <c94c>
           jnz   LAB_00404c89
-          mov   dword ptr [DAT_0040c94c], eax   ; <c94c>
+          mov   dword ptr [firstSlalomFlagLeft], eax    ; <c94c>
 LAB_00404c89:     add   ebx, 000000140h
           cmp   bx, 021C0h
           jl    LAB_00404c40
@@ -5775,7 +5793,7 @@ LAB_00404d45:     lea   edx, dword ptr [esp+010h]
           mov   word ptr [esp+024h], 00200h
           call  @addPermObject@8
           mov   esi, 000000001h
-          mov   dword ptr [DAT_0040c950], edi   ; <c950>
+          mov   dword ptr [FirstSlalomFlagRight], edi   ; <c950>
           mov   ebx, 000000410h
           mov   ebp, 000004100h
 LAB_00404da5:     mov   ecx, esi
@@ -5798,9 +5816,9 @@ LAB_00404da5:     mov   ecx, esi
           mov   ecx, offset PermObjectList_0040c5e0.startingObject      ; <c5e0>
           mov   esi, eax
           call  @addPermObject@8
-          cmp   dword ptr [DAT_0040c950], edi   ; <c950>
+          cmp   dword ptr [FirstSlalomFlagRight], edi   ; <c950>
           jnz   LAB_00404df8
-          mov   dword ptr [DAT_0040c950], eax   ; <c950>
+          mov   dword ptr [FirstSlalomFlagRight], eax   ; <c950>
 LAB_00404df8:     mov   ecx, 00000000Dh
           mov   dword ptr [esp+01Ch], ecx
           call  @getSpriteIdxForActorType@4

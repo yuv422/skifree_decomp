@@ -43,7 +43,7 @@
 00402e30:@FUN_00402e30@20
 00402e80:_resetPlayerFrameNo
 00402ec0:@updateEntPackIniKeyValue@12
-00403130:@FUN_00403130@8
+00403130:@permObjectSetSpriteIdx@8
 00403180:@updateFsGameMode@12
 00403250:@updateGsGameMode@12
 00403420:@addStylePoints@4
@@ -54,7 +54,7 @@
 004037b0:@updateActorTypeA_walkingTree@4
 00403910:@updateActorType3_snowboarder@4
 00403a00:@handleActorCollision@8
-00404070:@FUN_00404070@4
+00404070:@getLinkedActorIfExists@4
 004040a0:@updateAllPermObjectsInList@4
 00404130:@addActorForPermObject@4
 004041c0:@updatePermObject@4
@@ -296,7 +296,7 @@
 0040c01c:DAT_0040c01c
 0040c020:DAT_0040c020
 0040c030:blankTemplateActor.next
-0040c034:blankTemplateActor.unk_0x4
+0040c034:blankTemplateActor.linkedActor
 0040c038:blankTemplateActor.spriteIdx1
 0040c03c:blankTemplateActor.permObject
 0040c040:blankTemplateActor.spriteIdx2
@@ -439,7 +439,7 @@
 0040c6ec:largeBitmapDC_1bpp
 0040c6f0:sound_9.soundResource
 0040c6f4:sound_9.soundData
-0040c6f8:DAT_0040c6f8
+0040c6f8:currentSlalomFlag
 0040c6fc:totalAreaOfActorSprites
 0040c700:prevMouseX
 0040c702:permObjectCount
@@ -504,8 +504,8 @@
 0040c940:timerCallbackFuncPtr
 0040c944:elapsedTime
 0040c948:timedGameRelated
-0040c94c:DAT_0040c94c
-0040c950:DAT_0040c950
+0040c94c:firstSlalomFlagLeft
+0040c950:FirstSlalomFlagRight
 0040c954:isFsGameMode
 0040c958:isGsGameMode
 0040c95c:isSsGameMode

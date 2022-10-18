@@ -232,7 +232,7 @@ EXTERN C sound_7:Sound
 EXTERN C scratchBitmapHeight: far
 EXTERN C largeBitmapDC_1bpp: far
 EXTERN C sound_9:Sound
-EXTERN C DAT_0040c6f8: far
+EXTERN C currentSlalomFlag: far
 EXTERN C totalAreaOfActorSprites: far
 EXTERN C prevMouseX: far
 EXTERN C permObjectCount: far
@@ -281,8 +281,8 @@ EXTERN C DAT_0040c93c: far
 EXTERN C timerCallbackFuncPtr: far
 EXTERN C elapsedTime: far
 EXTERN C timedGameRelated: far
-EXTERN C DAT_0040c94c: far
-EXTERN C DAT_0040c950: far
+EXTERN C firstSlalomFlagLeft: far
+EXTERN C FirstSlalomFlagRight: far
 EXTERN C isFsGameMode: far
 EXTERN C isGsGameMode: far
 EXTERN C isSsGameMode: far

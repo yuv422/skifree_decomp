@@ -31,7 +31,7 @@ typedef struct PermObject {
 
 typedef struct Actor {
     struct Actor *next;
-    Sprite *sprite;
+    struct Actor *linkedActor;
     UINT spriteIdx1;
     struct PermObject *permObject;
     UINT spriteIdx2;
@@ -75,6 +75,7 @@ void pauseGame();
 void togglePausedState();
 void __fastcall freeSoundResource(Sound *sound);
 void cleanupSound();
+void __fastcall playSound(Sound *sound);
 Actor * __fastcall addActor(Actor *actor, BOOL insertBack);
 HBITMAP __fastcall loadBitmapResource(UINT resourceId);
 BOOL __fastcall loadBitmaps(HWND hWnd);
@@ -84,6 +85,8 @@ void __fastcall setPointerToNull(void **param_1);
 Actor *getFreeActor();
 BOOL setupGame();
 USHORT __fastcall random(short maxValue);
+Actor *__fastcall updateActorPositionWithVelocityMaybe(Actor *actor);
+Actor *__fastcall addActorOfTypeWithSpriteIdx(int actorType,USHORT spriteIdx);
 
 
 
@@ -348,6 +351,88 @@ int allocateMemory() {
 
     showErrorMessage(s_insufficient_local_memory);
     return 0;
+}
+
+void __fastcall updateActorType2_dog(Actor *actor) {
+    short sVar1;
+    short uVar2;
+    Actor *pAVar3;
+    short newY;
+    UINT ActorframeNo;
+    short inAir;
+
+    ActorframeNo = actor->frameNo;
+    if (actor->typeMaybe != 2) {
+        assertFailed(sourceFilename,2162);
+    }
+    switch(ActorframeNo) {
+        case 0x1b:
+            uVar2 = random(3);
+            actor->verticalVelocityMaybe = uVar2 - 1;
+            pAVar3 = updateActorPositionWithVelocityMaybe(actor);
+            setActorFrameNo(pAVar3,0x1c);
+            return;
+        case 0x1c:
+            actor->HorizontalVelMaybe = 4;
+            pAVar3 = updateActorPositionWithVelocityMaybe(actor);
+            setActorFrameNo(pAVar3,0x1b);
+            return;
+        case 0x1d:
+            actor->verticalVelocityMaybe = 0;
+            actor->HorizontalVelMaybe = 0;
+            uVar2 = random(0x20);
+            pAVar3 = updateActorPositionWithVelocityMaybe(actor);
+            setActorFrameNo(pAVar3,(-(uVar2 != 0) & 3) + 0x1b); // TODO what should this logic be?
+            return;
+        case 0x1e:
+            uVar2 = random(100);
+            if (uVar2 != 0) {
+                pAVar3 = updateActorPositionWithVelocityMaybe(actor);
+                setActorFrameNo(pAVar3,0x1d);
+                return;
+            }
+            inAir = actor->isInAir;
+            sVar1 = actor->xPosMaybe;
+            newY = actor->yPosMaybe + -2;
+            /* dog wee */
+            pAVar3 = addActorOfTypeWithSpriteIdx(0x11,0x52);
+            updateActorPositionMaybe(pAVar3,sVar1 - 4,newY,inAir);
+            ActorframeNo = 0x1b;
+            playSound(&sound_8);
+    }
+    pAVar3 = updateActorPositionWithVelocityMaybe(actor);
+    setActorFrameNo(pAVar3,ActorframeNo);
+}
+
+void __fastcall updateActorType9_treeOnFire(Actor *actor) {
+    int frameNo = actor->frameNo;
+    if (actor->typeMaybe != 9) {
+        assertFailed(sourceFilename,2204);
+    }
+    if ((int)frameNo < 0x38) {
+        assertFailed(sourceFilename,2205);
+    }
+    if (0x3b < (int)frameNo) {
+        assertFailed(sourceFilename,2206);
+    }
+    frameNo = frameNo + 1;
+    if (0x3b < (int)frameNo) {
+        frameNo = 0x38;
+    }
+    setActorFrameNo(actor,frameNo);
+}
+
+Actor * __fastcall getLinkedActorIfExists(Actor *actor) {
+    Actor *pAVar1;
+
+    if (actor == NULL) {
+        assertFailed(sourceFilename,965);
+    }
+    pAVar1 = actor->linkedActor;
+    if (actor->linkedActor == NULL) {
+        pAVar1 = actor;
+    }
+    return pAVar1;
 }
 
 int __fastcall showErrorMessage(LPCSTR text) {

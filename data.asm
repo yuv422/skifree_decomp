@@ -312,8 +312,8 @@ PUBLIC C largeBitmapDC_1bpp
 largeBitmapDC_1bpp byte 4 DUP (00h)
 PUBLIC C sound_9
 sound_9 byte 8 DUP (00h)
-PUBLIC C DAT_0040c6f8
-DAT_0040c6f8 byte 4 DUP (00h)
+PUBLIC C currentSlalomFlag
+currentSlalomFlag byte 4 DUP (00h)
 PUBLIC C totalAreaOfActorSprites
 totalAreaOfActorSprites byte 4 DUP (00h)
 PUBLIC C prevMouseX
@@ -445,10 +445,10 @@ PUBLIC C elapsedTime
 elapsedTime byte 4 DUP (00h)
 PUBLIC C timedGameRelated
 timedGameRelated byte 4 DUP (00h)
-PUBLIC C DAT_0040c94c
-DAT_0040c94c byte 4 DUP (00h)
-PUBLIC C DAT_0040c950
-DAT_0040c950 byte 4 DUP (00h)
+PUBLIC C firstSlalomFlagLeft
+firstSlalomFlagLeft byte 4 DUP (00h)
+PUBLIC C FirstSlalomFlagRight
+FirstSlalomFlagRight byte 4 DUP (00h)
 PUBLIC C isFsGameMode
 isFsGameMode byte 4 DUP (00h)
 PUBLIC C isGsGameMode

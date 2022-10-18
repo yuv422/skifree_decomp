@@ -215,6 +215,174 @@ SOURCE=.\StdAfx.h
 # Begin Group "Resource Files"
 
 # PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
+# Begin Source File
+
+SOURCE=.\resources\iconski.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\resources\ski32_1.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\resources\ski32_2.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\resources\ski32_22.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\resources\ski32_23.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\resources\ski32_24.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\resources\ski32_25.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\resources\ski32_26.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\resources\ski32_27.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\resources\ski32_28.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\resources\ski32_29.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\resources\ski32_30.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\resources\ski32_34.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\resources\ski32_35.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\resources\ski32_36.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\resources\ski32_37.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\resources\ski32_38.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\resources\ski32_39.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\resources\ski32_4.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\resources\ski32_41.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\resources\ski32_42.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\resources\ski32_43.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\resources\ski32_44.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\resources\ski32_45.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\resources\ski32_53.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\resources\ski32_54.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\resources\ski32_55.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\resources\ski32_59.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\resources\ski32_60.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\resources\ski32_63.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\resources\ski32_64.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\resources\ski32_65.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\resources\ski32_80.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\resources\ski32_81.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\resources\ski32_82.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\resources\ski32_83.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\resources\ski32_84.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\resources\ski32_85.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\resources\ski32_86.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\resources\ski32_87.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\resources\ski32_88.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\resources\ski32_89.bmp
+# End Source File
 # End Group
 # End Target
 # End Project

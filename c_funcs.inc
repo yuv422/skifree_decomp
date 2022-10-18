@@ -35,6 +35,9 @@ extern @updateActorPositionWithVelocityMaybe@4: proc
 extern @playSound@4: proc
 extern @getSpriteIdxForActorType@4: proc
 extern @enlargeRect@8: proc
+extern @getLinkedActorIfExists@4: proc
+extern @updateActorType9_treeOnFire@4: proc
+extern @updateActorType2_dog@4: proc
 
 ; exports
 ; public _WinMain@16

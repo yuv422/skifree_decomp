@@ -49,3 +49,6 @@ _setupActorList
 @playSound@4
 @getSpriteIdxForActorType@4
 @enlargeRect@8
+@getLinkedActorIfExists@4
+@updateActorType9_treeOnFire@4
+@updateActorType2_dog@4
