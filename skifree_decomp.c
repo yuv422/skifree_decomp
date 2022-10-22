@@ -4,81 +4,7 @@
 
 #include "stdafx.h"
 
-typedef struct {
-    HDC hdc1;
-    HDC hdc2;
-    short sheetYOffset;
-    short width;
-    short height;
-    short totalPixels;
-} Sprite;
-
-typedef struct PermObject {
-    struct Actor *actor;
-    Sprite *spritePtr;
-    short spriteIdx;
-    // 2 bytes padding
-    int actorTypeMaybe;
-    int actorFrameNo;
-    short maybeX;
-    short maybeY;
-    short unk_0x18;
-    short unk_0x1a;
-    short unk_0x1c;
-    short unk_0x1e;
-    int unk_0x20;
-} PermObject;
-
-typedef struct Actor {
-    struct Actor *next;
-    struct Actor *linkedActor;
-    struct Actor *actorPtr;
-    struct PermObject *permObject;
-    UINT spriteIdx2;
-    Sprite *spritePtr;
-    int typeMaybe;
-    UINT frameNo;
-    RECT someRect;
-    RECT rect;
-    short xPosMaybe;
-    short yPosMaybe;
-    short isInAir;
-    short HorizontalVelMaybe;
-    short verticalVelocityMaybe;
-    short inAirCounter;
-    UINT flags;
-} Actor;
-
-typedef struct {
-    short unk_0;
-    short unk_2;
-    short unk_4;
-    short unk_6;
-    short xRelated;
-    short unk_a;
-    UINT frameNo;
-} ActorVelStruct;
-
-typedef struct {
-    HGLOBAL soundResource;
-    LPVOID soundData;
-} Sound;
-
-#define NUM_ACTORS 100
-#define NUM_SPRITES 90
-#define NUM_STRINGS 20
-#define NUM_PERM_OBJECTS 256
-
-// Actor bit flags
-
-#define FLAG_1  1
-#define FLAG_2  2
-#define FLAG_4  4
-#define FLAG_8  8
-#define FLAG_10 10
-#define FLAG_20 20
-#define FLAG_40 40
-#define FLAG_80 80
+#include "types.h"
 
 
 int __fastcall initWindows(HINSTANCE param_1, HINSTANCE param_2, int param_3);
@@ -111,14 +37,11 @@ USHORT __fastcall random(short maxValue);
 Actor *__fastcall updateActorPositionWithVelocityMaybe(Actor *actor);
 Actor *__fastcall addActorOfTypeWithSpriteIdx(int actorType,USHORT spriteIdx);
 void __fastcall actorSetFlag8IfFlag1IsUnset(Actor *actor);
+void removeFlag8ActorsFromList();
 
 
 
 
-extern char s_assertErrorFormat[];
-extern char s_Assertion_Failed_0040c0a8[];
-extern char s_insufficient_local_memory[];
-extern char s_nosound_0040c0fc[];
 
 //
 // ASM Functions
@@ -140,82 +63,7 @@ extern void setupPermObjects();
 extern Actor * __fastcall actorSetSpriteIdx(Actor *actor, USHORT spriteIdx);
 extern Actor * __fastcall updateActorVelMaybe(Actor *actor,ActorVelStruct *param_2);
 
-extern char sourceFilename[];
-extern HWND hSkiMainWnd;
-extern HWND hSkiStatusWnd;
-extern char **stringCache;
-extern HINSTANCE skiFreeHInstance;
-extern char s_out_o_memory[];
-extern Sprite *sprites;
-extern Actor *actors;
-extern Actor *actorListPtr;
-extern Actor *playerActor;
-extern Actor *playerActorPtrMaybe_1;
-extern void *PTR_0040c758;
-extern int isSoundDisabled;
-extern USHORT SCREEN_WIDTH;
-extern USHORT SCREEN_HEIGHT;
-extern HBRUSH whiteBrush;
-extern BOOL isPaused;
-extern BOOL isMinimised;
-extern UINT mainWndActivationFlags;
-extern BOOL inputEnabled;
-extern int skierScreenXOffset;
-extern int skierScreenYOffset;
-extern BOOL redrawRequired;
-extern DWORD timerFrameDurationInMillis;
-extern DWORD currentTickCount;
-extern DWORD prevTickCount;
-extern DWORD pauseStartTickCount;
-extern DWORD statusWindowLastUpdateTime;
-extern DWORD timedGameRelated;
-extern RECT windowClientRect;
-extern RECT statusBorderRect;
-extern HDC mainWindowDC;
-extern HDC statusWindowDC;
-extern Sound sound_1;
-extern Sound sound_2;
-extern Sound sound_3;
-extern Sound sound_4;
-extern Sound sound_5;
-extern Sound sound_6;
-extern Sound sound_7;
-extern Sound sound_8;
-extern Sound sound_9;
-extern LPCSTR statusWindowNameStrPtr;
-extern HGDIOBJ statusWindowFont;
-extern short textLineHeight;
-extern short statusWindowHeight;
-extern short statusWindowTotalTextWidth;
-extern short statusWindowLabelWidth;
-extern BOOL isGameTimerRunning;
-extern BOOL isSsGameMode;
-extern BOOL isGsGameMode;
-extern int updateTimerDurationMillis;
-extern void *DAT_0040c78c;
-extern Actor blankTemplateActor;
-extern Actor *currentFreeActor;
-extern BOOL isTurboMode;
-extern HDC smallBitmapDC;
-extern HDC smallBitmapDC_1bpp;
-extern HDC largeBitmapDC;
-extern HDC largeBitmapDC_1bpp;
-extern HDC bitmapSourceDC;
-extern HGDIOBJ smallBitmapSheet;
-extern HGDIOBJ smallBitmapSheet_1bpp;
-extern HGDIOBJ largeBitmapSheet;
-extern HGDIOBJ largeBitmapSheet_1bpp;
-extern HGDIOBJ scratchBitmap;
-extern BOOL isFsGameMode;
-extern int stylePoints;
-extern short playerX;
-extern short playerY;
-extern short permObjectCount;
-extern ActorVelStruct beginnerActorMovementTbl;
-
-
-extern BOOL (WINAPI *sndPlaySoundAFuncPtr)(LPCSTR, UINT);
-extern void (CALLBACK* timerCallbackFuncPtr)(HWND, UINT, UINT, DWORD);
+#include "data.h"
 
 #define ski_assert(exp, line) (void)( (exp) || (assertFailed(sourceFilename, line), 0) ) // TODO remove need for src param.
 
@@ -1401,5 +1249,35 @@ void __fastcall actorSetFlag8IfFlag1IsUnset(Actor *actor) {
             actor->linkedActor->linkedActor = NULL;
         }
         actor->flags |= FLAG_8;
+    }
+}
+
+void removeFlag8ActorsFromList() {
+    Actor *currentActor;
+    Actor *prevActor;
+
+    currentActor = actorListPtr;
+    prevActor = (Actor *)&actorListPtr;
+    if (actorListPtr) {
+        do {
+            if ((currentActor->flags & FLAG_8) != 0) {
+                if (currentActor->permObject) {
+                    ski_assert(currentActor->permObject->actor == currentActor, 886);
+                    currentActor->permObject->actor = NULL;
+                }
+                if (currentActor == playerActor) {
+                    playerActor = NULL;
+                }
+                if (currentActor == playerActorPtrMaybe_1) {
+                    playerActorPtrMaybe_1 = NULL;
+                }
+                prevActor->next = currentActor->next;
+                currentActor->next = currentFreeActor;
+                currentFreeActor = currentActor;
+            } else {
+                prevActor = currentActor;
+            }
+            currentActor = prevActor->next;
+        } while (currentActor != NULL);
     }
 }

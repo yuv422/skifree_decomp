@@ -376,6 +376,7 @@ LAB_00401384:
 @actorSetFlag8IfFlag1IsUnset@4 endp
 ~
 
+COMMENT ~
 _removeFlag8ActorsFromList proc
           push  ebp
           push  esi
@@ -430,6 +431,7 @@ LAB_00401405:
           db 090h
           db 090h
 _removeFlag8ActorsFromList endp
+~
 
 COMMENT ~
 @updateActorSpriteRect@4 proc

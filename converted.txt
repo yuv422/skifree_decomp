@@ -54,3 +54,4 @@ _setupActorList
 @updateActorType2_dog@4
 @updateActorType1_Beginner@4
 @actorSetFlag8IfFlag1IsUnset@4
+_removeFlag8ActorsFromList

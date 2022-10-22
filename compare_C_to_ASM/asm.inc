@@ -1,23 +1,45 @@
-@actorSetFlag8IfFlag1IsUnset@4 proc
+_removeFlag8ActorsFromList proc
+          push  ebp
           push  esi
-          mov   esi, ecx
-          test  esi, esi
-          jnz   LAB_00401366
-          mov   edx, 000000361h
+          mov   esi, dword ptr [actorListPtr]   ; <c618>
+          xor   ebp, ebp
+          push  edi
+          cmp   esi, ebp
+          mov   edi, offset actorListPtr        ; <c618>
+          jz    LAB_00401401
+LAB_004013a4:     test  byte ptr [esi+04Ch], 008h
+          jz    LAB_004013f9
+          mov   eax, dword ptr [esi+00Ch]
+          cmp   eax, ebp
+          jz    LAB_004013c9
+          cmp   dword ptr [eax], esi
+          jz    LAB_004013c4
+          mov   edx, 000000376h
           mov   ecx, offset sourceFilename      ; <c090>
           call  @assertFailed@8
-LAB_00401366:     test  byte ptr [esi+04Ch], 001h
-          jnz   LAB_00401382
-          mov   eax, dword ptr [esi+004h]
-          test  eax, eax
-          jz    LAB_0040137a
-          mov   dword ptr [eax+004h], 000000000h
-LAB_0040137a:     mov   eax, dword ptr [esi+04Ch]
-          or    al, 008h
-          mov   dword ptr [esi+04Ch], eax
-LAB_00401382:     pop   esi
+LAB_004013c4:     mov   eax, dword ptr [esi+00Ch]
+          mov   dword ptr [eax], ebp
+LAB_004013c9:     cmp   esi, dword ptr [playerActor]    ; <c72c>
+          jnz   LAB_004013d7
+          mov   dword ptr [playerActor], ebp    ; <c72c>
+LAB_004013d7:     cmp   esi, dword ptr [playerActorPtrMaybe_1]  ; <c64c>
+          jnz   LAB_004013e5
+          mov   dword ptr [playerActorPtrMaybe_1], ebp  ; <c64c>
+LAB_004013e5:     mov   ecx, dword ptr [esi]
+          mov   dword ptr [edi], ecx
+          mov   edx, dword ptr [currentFreeActor]       ; <c744>
+          mov   dword ptr [esi], edx
+          mov   dword ptr [currentFreeActor], esi       ; <c744>
+          jmp   LAB_004013fb
+LAB_004013f9:     mov   edi, esi
+LAB_004013fb:     mov   esi, dword ptr [edi]
+          cmp   esi, ebp
+          jnz   LAB_004013a4
+LAB_00401401:     pop   edi
+          pop   esi
+          pop   ebp
           ret
-LAB_00401384:
+LAB_00401405:
           db 090h
           db 090h
           db 090h
@@ -29,5 +51,4 @@ LAB_00401384:
           db 090h
           db 090h
           db 090h
-          db 090h
-@actorSetFlag8IfFlag1IsUnset@4 endp
+_removeFlag8ActorsFromList endp
