@@ -39,6 +39,7 @@ extern @getLinkedActorIfExists@4: proc
 extern @updateActorType9_treeOnFire@4: proc
 extern @updateActorType2_dog@4: proc
 extern @updateActorType1_Beginner@4: proc
+extern @actorSetFlag8IfFlag1IsUnset@4: proc
 
 ; exports
 ; public _WinMain@16

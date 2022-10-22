@@ -67,6 +67,19 @@ typedef struct {
 #define NUM_ACTORS 100
 #define NUM_SPRITES 90
 #define NUM_STRINGS 20
+#define NUM_PERM_OBJECTS 256
+
+// Actor bit flags
+
+#define FLAG_1  1
+#define FLAG_2  2
+#define FLAG_4  4
+#define FLAG_8  8
+#define FLAG_10 10
+#define FLAG_20 20
+#define FLAG_40 40
+#define FLAG_80 80
+
 
 int __fastcall initWindows(HINSTANCE param_1, HINSTANCE param_2, int param_3);
 void __fastcall assertFailed(char *srcFilename, int lineNumber);
@@ -97,6 +110,7 @@ BOOL setupGame();
 USHORT __fastcall random(short maxValue);
 Actor *__fastcall updateActorPositionWithVelocityMaybe(Actor *actor);
 Actor *__fastcall addActorOfTypeWithSpriteIdx(int actorType,USHORT spriteIdx);
+void __fastcall actorSetFlag8IfFlag1IsUnset(Actor *actor);
 
 
 
@@ -1377,4 +1391,15 @@ void __fastcall statusWindowReleaseDC(HWND hWnd) {
         SelectObject(statusWindowDC,statusWindowFont);
     }
     ReleaseDC(hWnd, statusWindowDC);
+}
+
+void __fastcall actorSetFlag8IfFlag1IsUnset(Actor *actor) {
+    ski_assert(actor, 865);
+
+    if ((actor->flags & FLAG_1) == 0) {
+        if (actor->linkedActor) {
+            actor->linkedActor->linkedActor = NULL;
+        }
+        actor->flags |= FLAG_8;
+    }
 }

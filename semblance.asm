@@ -340,6 +340,7 @@ LAB_0040134f:
 @areRectanglesEqual@8 endp
 ~
 
+COMMENT ~
 @actorSetFlag8IfFlag1IsUnset@4 proc
           push  esi
           mov   esi, ecx
@@ -373,6 +374,7 @@ LAB_00401384:
           db 090h
           db 090h
 @actorSetFlag8IfFlag1IsUnset@4 endp
+~
 
 _removeFlag8ActorsFromList proc
           push  ebp
