@@ -3637,7 +3637,11 @@ LAB_00403533:
           db 090h
           db 090h
           db 090h
-@updateActorType1_Beginner@4:     push  esi
+@updateActorVelMaybe@8 endp
+
+COMMENT ~
+@updateActorType1_Beginner@4 proc
+          push  esi
           mov   esi, ecx
           push  edi
           mov   edi, dword ptr [esi+01Ch]
@@ -3711,7 +3715,8 @@ LAB_00403609:
           db 090h
           db 090h
           db 090h
-@updateActorVelMaybe@8 endp
+@updateActorType1_Beginner@4 endp
+~
 
 COMMENT ~
 @updateActorType2_dog@4 proc

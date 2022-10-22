@@ -114,6 +114,7 @@ extern void __fastcall handleKeydownMessage(UINT charCode);
 extern void handleMouseClick(void);
 extern void setupPermObjects();
 extern Actor * __fastcall actorSetSpriteIdx(Actor *actor, USHORT spriteIdx);
+extern Actor * __fastcall updateActorVelMaybe(Actor *actor,short *param_2);
 
 extern char sourceFilename[];
 extern HWND hSkiMainWnd;
@@ -186,6 +187,7 @@ extern int stylePoints;
 extern short playerX;
 extern short playerY;
 extern short permObjectCount;
+extern short DAT_0040a490;
 
 
 extern BOOL (WINAPI *sndPlaySoundAFuncPtr)(LPCSTR, UINT);
@@ -353,6 +355,47 @@ int allocateMemory() {
     return 0;
 }
 
+Actor * __fastcall updateActorType1_Beginner(Actor *actor) {
+    USHORT uVar1;
+    Actor *pAVar2;
+    UINT ActorframeNo;
+
+    ActorframeNo = actor->frameNo;
+    if (actor == NULL) {
+        assertFailed(sourceFilename,2130);
+    }
+    if (actor->typeMaybe != 1) {
+        assertFailed(sourceFilename,2131);
+    }
+    if (24 < (int)ActorframeNo) {
+        return actor;
+    }
+    pAVar2 = updateActorPositionWithVelocityMaybe(actor);
+    if (4 < ActorframeNo - 22) {
+        assertFailed(sourceFilename,2135);
+    }
+    pAVar2 = updateActorVelMaybe(pAVar2,(short *)(&DAT_0040a490 + (ActorframeNo - 22) * 8));
+    uVar1 = random(0xc);
+    if (uVar1 == 0) {
+        uVar1 = random(3);
+        if (uVar1 == 0) {
+            ActorframeNo = 0x16;
+        }
+        else {
+            if (uVar1 == 1) {
+                pAVar2 = setActorFrameNo(pAVar2,0x17);
+                return pAVar2;
+            }
+            if (uVar1 == 2) {
+                pAVar2 = setActorFrameNo(pAVar2,0x18);
+                return pAVar2;
+            }
+        }
+    }
+    pAVar2 = setActorFrameNo(pAVar2,ActorframeNo);
+    return pAVar2;
+}
+
 void __fastcall updateActorType2_dog(Actor *actor) {
     short sVar1;
     short uVar2;
@@ -382,7 +425,7 @@ void __fastcall updateActorType2_dog(Actor *actor) {
             actor->HorizontalVelMaybe = 0;
             uVar2 = random(0x20);
             pAVar3 = updateActorPositionWithVelocityMaybe(actor);
-            setActorFrameNo(pAVar3,(-(uVar2 != 0) & 3) + 0x1b); // TODO what should this logic be?
+            setActorFrameNo(pAVar3,(-(uVar2 != 0) & 3) + 0x1b); // TODO uVar2 != 0 ? 3 : 0
             return;
         case 0x1e:
             uVar2 = random(100);

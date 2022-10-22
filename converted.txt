@@ -52,3 +52,4 @@ _setupActorList
 @getLinkedActorIfExists@4
 @updateActorType9_treeOnFire@4
 @updateActorType2_dog@4
+@updateActorType1_Beginner@4
