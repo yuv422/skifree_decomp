@@ -2609,7 +2609,7 @@ LAB_00402a55:     mov   ecx, esi
 LAB_00402a72:     mov   edx, edi
           mov   ecx, esi
           shl   edx, 004h
-          add   edx, offset DAT_0040a308        ; <a308>
+          add   edx, offset ActorVelStruct_ARRAY_0040a308       ; <a308>
           call  @updateActorVelMaybe@8
           mov   esi, eax
           lea   eax, dword ptr [edi-007h]
@@ -3669,7 +3669,7 @@ LAB_0040356f:     cmp   edi, 000000019h
 LAB_00403598:     lea   edx, dword ptr [edi-016h]
           mov   ecx, esi
           shl   edx, 004h
-          add   edx, offset DAT_0040a490        ; <a490>
+          add   edx, offset beginnerActorMovementTbl    ; <a490>
           call  @updateActorVelMaybe@8
           mov   ecx, 00000000Ch
           mov   esi, eax
@@ -4006,7 +4006,7 @@ LAB_0040392e:     mov   ecx, edi
 LAB_0040394e:     lea   edx, dword ptr [esi-01Fh]
           mov   ecx, edi
           shl   edx, 004h
-          add   edx, offset DAT_0040a4e0        ; <a4e0>
+          add   edx, offset snowboarderActorMovementTbl ; <a4e0>
           call  @updateActorVelMaybe@8
           mov   edi, eax
           mov   eax, esi

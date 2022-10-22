@@ -228,32 +228,30 @@ db 3 DUP (00h), 05h, 3 DUP (00h), 0ah, 3 DUP (00h), 03h, 3 DUP (00h), 06h, 3 DUP
 db 3 DUP (00h), 10h, 3 DUP (00h), 0dh, 3 DUP (00h), 0dh, 3 DUP (00h), 10h, 3 DUP (00h), 0fh, 3 DUP (00h), 0eh, 3 DUP (00h), 0eh, 3 DUP (00h), 0fh
 db 3 DUP (00h), 14h, 3 DUP (00h), 15h, 3 DUP (00h), 14h, 3 DUP (00h), 15h, 3 DUP (00h), 10h, 3 DUP (00h), 0dh, 3 DUP (00h), 0dh, 3 DUP (00h), 10h
 db 3 DUP (00h)
-PUBLIC C DAT_0040a308
-DAT_0040a308 byte 01h
-db 00h, 10h, 13 DUP (00h), 01h, 00h, 0ch, 00h, 01h, 00h, 01h, 00h, 2 DUP (0ffh), 2 DUP (00h), 01h, 3 DUP (00h), 01h
-db 00h, 06h, 00h, 01h, 00h, 04h, 00h, 2 DUP (0ffh), 2 DUP (00h), 02h, 3 DUP (00h), 01h, 3 DUP (00h), 01h, 00h, 08h
-db 00h, 2 DUP (0ffh), 2 DUP (00h), 03h, 3 DUP (00h), 01h, 00h, 0ch, 00h, 01h, 00h, 01h, 00h, 01h, 3 DUP (00h), 04h
-db 3 DUP (00h), 01h, 00h, 06h, 00h, 01h, 00h, 04h, 00h, 01h, 3 DUP (00h), 05h, 3 DUP (00h), 01h, 3 DUP (00h), 01h
-db 00h, 08h, 00h, 01h, 3 DUP (00h), 06h, 3 DUP (00h), 01h, 3 DUP (00h), 01h, 00h, 08h, 00h, 2 DUP (0ffh), 2 DUP (00h), 07h
-db 3 DUP (00h), 01h, 3 DUP (00h), 01h, 00h, 08h, 00h, 01h, 3 DUP (00h), 08h, 3 DUP (00h), 01h, 11 DUP (00h), 09h, 3 DUP (00h), 01h
-db 11 DUP (00h), 0ah, 15 DUP (00h), 0bh, 15 DUP (00h), 0ch, 3 DUP (00h), 01h, 00h, 18h, 9 DUP (00h), 0dh, 3 DUP (00h), 01h, 00h, 16h
-db 9 DUP (00h), 0eh, 3 DUP (00h), 01h, 00h, 16h, 9 DUP (00h), 0fh, 3 DUP (00h), 01h, 00h, 14h, 9 DUP (00h), 10h, 3 DUP (00h), 01h
-db 00h, 18h, 9 DUP (00h), 11h, 3 DUP (00h), 01h, 00h, 14h, 9 DUP (00h)
+PUBLIC C ActorVelStruct_ARRAY_0040a308
+ActorVelStruct_ARRAY_0040a308 byte 01h, 00h, 10h, 13 DUP (00h), 01h, 00h, 0ch, 00h, 01h, 00h, 01h, 00h, 2 DUP (0ffh), 2 DUP (00h), 01h, 3 DUP (00h)
+db 01h, 00h, 06h, 00h, 01h, 00h, 04h, 00h, 2 DUP (0ffh), 2 DUP (00h), 02h, 3 DUP (00h), 01h, 3 DUP (00h), 01h, 00h
+db 08h, 00h, 2 DUP (0ffh), 2 DUP (00h), 03h, 3 DUP (00h), 01h, 00h, 0ch, 00h, 01h, 00h, 01h, 00h, 01h, 3 DUP (00h)
+db 04h, 3 DUP (00h), 01h, 00h, 06h, 00h, 01h, 00h, 04h, 00h, 01h, 3 DUP (00h), 05h, 3 DUP (00h), 01h, 3 DUP (00h)
+db 01h, 00h, 08h, 00h, 01h, 3 DUP (00h), 06h, 3 DUP (00h), 01h, 3 DUP (00h), 01h, 00h, 08h, 00h, 2 DUP (0ffh), 2 DUP (00h)
+db 07h, 3 DUP (00h), 01h, 3 DUP (00h), 01h, 00h, 08h, 00h, 01h, 3 DUP (00h), 08h, 3 DUP (00h), 01h, 11 DUP (00h), 09h, 3 DUP (00h)
+db 01h, 11 DUP (00h), 0ah, 15 DUP (00h), 0bh, 15 DUP (00h), 0ch, 3 DUP (00h), 01h, 00h, 18h, 9 DUP (00h), 0dh, 3 DUP (00h), 01h, 00h
+db 16h, 9 DUP (00h), 0eh, 3 DUP (00h), 01h, 00h, 16h, 9 DUP (00h), 0fh, 3 DUP (00h), 01h, 00h, 14h, 9 DUP (00h), 10h, 3 DUP (00h)
+db 01h, 00h, 18h, 9 DUP (00h), 11h, 3 DUP (00h)
+db 01h, 00h, 14h, 9 DUP (00h)
 PUBLIC C UINT_ARRAY_0040a434
 UINT_ARRAY_0040a434 byte 12h, 3 DUP (00h), 01h, 00h, 14h, 9 DUP (00h), 13h, 3 DUP (00h), 01h, 00h, 16h, 9 DUP (00h), 14h, 3 DUP (00h), 01h, 00h
 db 16h, 9 DUP (00h), 15h, 7 DUP (00h), 03h, 3 DUP (00h), 06h, 3 DUP (00h)
 db 0bh, 3 DUP (00h), 0bh, 3 DUP (00h), 0bh, 3 DUP (00h), 0bh, 3 DUP (00h), 0bh, 3 DUP (00h), 0bh, 7 DUP (00h)
-PUBLIC C DAT_0040a490
-DAT_0040a490 byte 01h
-db 00h, 01h, 9 DUP (00h), 16h, 3 DUP (00h), 01h, 00h, 01h, 00h, 01h, 00h, 04h, 00h, 2 DUP (0ffh), 2 DUP (00h), 17h
-db 3 DUP (00h), 01h, 00h, 01h, 00h, 01h, 00h, 04h, 00h, 01h, 3 DUP (00h), 18h, 15 DUP (00h), 19h, 15 DUP (00h), 1ah
-db 3 DUP (00h)
-PUBLIC C DAT_0040a4e0
-DAT_0040a4e0 byte 02h
-db 00h, 12h, 00h, 02h, 00h, 01h, 00h, 2 DUP (0ffh), 2 DUP (00h), 1fh, 3 DUP (00h), 02h, 00h, 12h, 00h, 02h
-db 00h, 01h, 00h, 01h, 3 DUP (00h), 20h, 3 DUP (00h), 01h, 00h, 16h, 9 DUP (00h), 21h, 3 DUP (00h), 01h, 00h, 04h
-db 9 DUP (00h), 22h, 3 DUP (00h), 01h, 00h, 04h, 9 DUP (00h), 23h, 3 DUP (00h), 01h, 00h, 04h, 9 DUP (00h), 24h, 3 DUP (00h), 01h
-db 00h, 04h, 9 DUP (00h), 25h, 3 DUP (00h), 01h, 00h, 04h, 9 DUP (00h), 26h, 3 DUP (00h)
+PUBLIC C beginnerActorMovementTbl
+beginnerActorMovementTbl byte 01h, 00h, 01h, 9 DUP (00h), 16h, 3 DUP (00h), 01h, 00h, 01h, 00h, 01h, 00h, 04h, 00h, 2 DUP (0ffh), 2 DUP (00h)
+db 17h, 3 DUP (00h), 01h, 00h, 01h, 00h, 01h, 00h, 04h, 00h, 01h, 3 DUP (00h), 18h, 15 DUP (00h), 19h, 15 DUP (00h)
+db 1ah, 3 DUP (00h)
+PUBLIC C snowboarderActorMovementTbl
+snowboarderActorMovementTbl byte 02h, 00h, 12h, 00h, 02h, 00h, 01h, 00h, 2 DUP (0ffh), 2 DUP (00h), 1fh, 3 DUP (00h), 02h, 00h, 12h, 00h
+db 02h, 00h, 01h, 00h, 01h, 3 DUP (00h), 20h, 3 DUP (00h), 01h, 00h, 16h, 9 DUP (00h), 21h, 3 DUP (00h), 01h, 00h
+db 04h, 9 DUP (00h), 22h, 3 DUP (00h), 01h, 00h, 04h, 9 DUP (00h), 23h, 3 DUP (00h), 01h, 00h, 04h, 9 DUP (00h), 24h, 3 DUP (00h)
+db 01h, 00h, 04h, 9 DUP (00h), 25h, 3 DUP (00h), 01h, 00h, 04h, 9 DUP (00h), 26h, 3 DUP (00h)
 PUBLIC C DAT_0040a560
 DAT_0040a560 byte 0ffh
 db 3 DUP (0ffh), 5ah, 6eh, 40h, 00h, 2 DUP (6eh), 40h, 00h, 72h, 75h, 6eh, 74h, 69h, 6dh, 65h, 20h

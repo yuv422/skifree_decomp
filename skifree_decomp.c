@@ -32,7 +32,7 @@ typedef struct PermObject {
 typedef struct Actor {
     struct Actor *next;
     struct Actor *linkedActor;
-    UINT spriteIdx1;
+    struct Actor *actorPtr;
     struct PermObject *permObject;
     UINT spriteIdx2;
     Sprite *spritePtr;
@@ -48,6 +48,16 @@ typedef struct Actor {
     short inAirCounter;
     UINT flags;
 } Actor;
+
+typedef struct {
+    short unk_0;
+    short unk_2;
+    short unk_4;
+    short unk_6;
+    short xRelated;
+    short unk_a;
+    UINT frameNo;
+} ActorVelStruct;
 
 typedef struct {
     HGLOBAL soundResource;
@@ -114,7 +124,7 @@ extern void __fastcall handleKeydownMessage(UINT charCode);
 extern void handleMouseClick(void);
 extern void setupPermObjects();
 extern Actor * __fastcall actorSetSpriteIdx(Actor *actor, USHORT spriteIdx);
-extern Actor * __fastcall updateActorVelMaybe(Actor *actor,short *param_2);
+extern Actor * __fastcall updateActorVelMaybe(Actor *actor,ActorVelStruct *param_2);
 
 extern char sourceFilename[];
 extern HWND hSkiMainWnd;
@@ -187,7 +197,7 @@ extern int stylePoints;
 extern short playerX;
 extern short playerY;
 extern short permObjectCount;
-extern short DAT_0040a490;
+extern ActorVelStruct beginnerActorMovementTbl;
 
 
 extern BOOL (WINAPI *sndPlaySoundAFuncPtr)(LPCSTR, UINT);
@@ -374,7 +384,7 @@ Actor * __fastcall updateActorType1_Beginner(Actor *actor) {
     if (4 < ActorframeNo - 22) {
         assertFailed(sourceFilename,2135);
     }
-    pAVar2 = updateActorVelMaybe(pAVar2,(short *)(&DAT_0040a490 + (ActorframeNo - 22) * 8));
+    pAVar2 = updateActorVelMaybe(pAVar2,&beginnerActorMovementTbl + (ActorframeNo - 22));
     uVar1 = random(0xc);
     if (uVar1 == 0) {
         uVar1 = random(3);

@@ -267,10 +267,10 @@
 0040a22c:UINT_ARRAY_0040a22c
 0040a258:DAT_0040a258
 0040a25c:DAT_0040a25c
-0040a308:DAT_0040a308
+0040a308:ActorVelStruct_ARRAY_0040a308
 0040a434:UINT_ARRAY_0040a434
-0040a490:DAT_0040a490
-0040a4e0:DAT_0040a4e0
+0040a490:beginnerActorMovementTbl
+0040a4e0:snowboarderActorMovementTbl
 0040a560:DAT_0040a560
 0040a7a4:not_enough_space_for_arg_str
 0040a7d0:floating_point_not_loaded_str
@@ -297,7 +297,7 @@
 0040c020:DAT_0040c020
 0040c030:blankTemplateActor.next
 0040c034:blankTemplateActor.linkedActor
-0040c038:blankTemplateActor.spriteIdx1
+0040c038:blankTemplateActor.actorPtr
 0040c03c:blankTemplateActor.permObject
 0040c040:blankTemplateActor.spriteIdx2
 0040c044:blankTemplateActor.spritePtr

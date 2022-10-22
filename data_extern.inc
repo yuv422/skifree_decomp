@@ -100,10 +100,10 @@ EXTERN C actorFrameToSpriteTbl: far
 EXTERN C UINT_ARRAY_0040a22c: far
 EXTERN C DAT_0040a258: far
 EXTERN C DAT_0040a25c: far
-EXTERN C DAT_0040a308: far
+EXTERN C ActorVelStruct_ARRAY_0040a308: far
 EXTERN C UINT_ARRAY_0040a434: far
-EXTERN C DAT_0040a490: far
-EXTERN C DAT_0040a4e0: far
+EXTERN C beginnerActorMovementTbl: far
+EXTERN C snowboarderActorMovementTbl: far
 EXTERN C DAT_0040a560: far
 EXTERN C not_enough_space_for_arg_str: far
 EXTERN C floating_point_not_loaded_str: far

@@ -35,8 +35,8 @@ PermObjectList ends
 Actor struct
     next dword ?
     linkedActor dword ?
-    spriteIdx1 dword ?
-    unkActorPtr dword ?
+    actorPtr dword ?
+    permObject dword ?
     spriteIdx2 dword ?
     spritePtr dword ?
     typeMaybe dword ?
@@ -51,6 +51,16 @@ Actor struct
     inAirCounter word ?
     flags dword ?
 Actor ends
+
+ActorVelStruct struct
+    unk_0 word ?
+    unk_2 word ?
+    unk_4 word ?
+    unk_6 word ?
+    xRelated word ?
+    unk_a word ?
+    frameNo dword ?
+ActorVelStruct ends
 
 extern _malloc: proc
 extern _free: proc
