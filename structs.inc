@@ -37,7 +37,8 @@ Actor struct
     linkedActor dword ?
     actorPtr dword ?
     permObject dword ?
-    spriteIdx2 dword ?
+    spriteIdx2 word ?
+    padding word ?
     spritePtr dword ?
     typeMaybe dword ?
     frameNo dword ?

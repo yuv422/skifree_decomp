@@ -3,6 +3,7 @@
 #include "../types.h"
 
 extern void __fastcall assertFailed(char *srcFilename, int lineNumber);
+extern void __fastcall updateRectForSpriteAtLocation(RECT *rect, Sprite *sprite, short newX, short newY, short param_5);
 
 #include "../data.h"
 
@@ -11,32 +12,15 @@ extern void __fastcall assertFailed(char *srcFilename, int lineNumber);
 // FUNCTION GOES HERE
 //
 
-void removeFlag8ActorsFromList() {
-    Actor *currentActor;
-    Actor *prevActor;
+RECT * __fastcall updateActorSpriteRect(Actor *actor) {
+    ski_assert(actor, 931);
+    ski_assert((actor->flags & FLAG_4) == 0, 932);
+    ski_assert(actor->spriteIdx2 != 0, 933);
 
-    currentActor = actorListPtr;
-    prevActor = (Actor *)&actorListPtr;
-    if (actorListPtr) {
-        do {
-            if ((currentActor->flags & FLAG_8) != 0) {
-                if (currentActor->permObject) {
-                    ski_assert(currentActor->permObject->actor == currentActor, 886);
-                    currentActor->permObject->actor = NULL;
-                }
-                if (currentActor == playerActor) {
-                    playerActor = NULL;
-                }
-                if (currentActor == playerActorPtrMaybe_1) {
-                    playerActorPtrMaybe_1 = NULL;
-                }
-                prevActor->next = currentActor->next;
-                currentActor->next = currentFreeActor;
-                currentFreeActor = currentActor;
-            } else {
-                prevActor = currentActor;
-            }
-            currentActor = prevActor->next;
-        } while (currentActor != NULL);
+    if (&sprites[actor->spriteIdx2] != actor->spritePtr) {
+        assertFailed(sourceFilename,934);
     }
+    updateRectForSpriteAtLocation(&actor->someRect,actor->spritePtr,actor->xPosMaybe,actor->yPosMaybe,actor->isInAir);
+    actor->flags |= FLAG_4;
+    return &actor->someRect;
 }

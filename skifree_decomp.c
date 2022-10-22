@@ -841,20 +841,15 @@ void handleWindowSizeMessage(void) {
 }
 
 RECT * __fastcall updateActorSpriteRect(Actor *actor) {
-    if (actor == (Actor *)0x0) {
-        assertFailed(sourceFilename,931);
-    }
-    if ((actor->flags & 4) != 0) {
-        assertFailed(sourceFilename,932);
-    }
-    if (actor->spriteIdx2 == 0) {
-        assertFailed(sourceFilename,933);
-    }
-    if (sprites + actor->spriteIdx2 != actor->spritePtr) {
+    ski_assert(actor, 931);
+    ski_assert((actor->flags & FLAG_4) == 0, 932);
+    ski_assert(actor->spriteIdx2 != 0, 933);
+
+    if (&sprites[actor->spriteIdx2] != actor->spritePtr) {
         assertFailed(sourceFilename,934);
     }
     updateRectForSpriteAtLocation(&actor->someRect,actor->spritePtr,actor->xPosMaybe,actor->yPosMaybe,actor->isInAir);
-    actor->flags = actor->flags | 4;
+    actor->flags |= FLAG_4;
     return &actor->someRect;
 }
 

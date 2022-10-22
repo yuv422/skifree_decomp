@@ -37,7 +37,8 @@ typedef struct Actor {
     struct Actor *linkedActor;
     struct Actor *actorPtr;
     struct PermObject *permObject;
-    UINT spriteIdx2;
+    USHORT spriteIdx2;
+    //2 byte padding TODO check alignment of struct
     Sprite *spritePtr;
     int typeMaybe;
     UINT frameNo;
