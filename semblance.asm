@@ -157,7 +157,7 @@ LAB_0040119c:     test  byte ptr [edi+04Ch], bl
           jz    LAB_004011c7
 LAB_004011be:     mov   edx, esi
           mov   ecx, edi
-          call  @FUN_00401a60@8
+          call  @actorClearFlag10@8
 LAB_004011c7:     mov   esi, dword ptr [actorListPtr]   ; <c618>
 LAB_004011cd:     test  esi, esi
           jz    LAB_004011ec
@@ -924,6 +924,7 @@ LAB_00401962:
           db 090h
 @drawActor@8 endp
 
+COMMENT ~
 @changeScratchBitmapSize@8 proc
           push  ebx
           push  esi
@@ -997,8 +998,10 @@ LAB_00401a48:     pop   edi
           pop   ebx
           ret
 @changeScratchBitmapSize@8 endp
+~
 
-@FUN_00401a60@8 proc
+COMMENT ~
+@actorClearFlag10@8 proc
           push  ebx
           push  ebp
           push  esi
@@ -1072,7 +1075,8 @@ LAB_00401b14:
           db 090h
           db 090h
           db 090h
-@FUN_00401a60@8 endp
+@actorClearFlag10@8 endp
+~
 
 COMMENT ~
 @enlargeRect@8 proc

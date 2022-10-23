@@ -1,2 +1,2 @@
 ml /c /coff asm.asm
-cl /c /O2 c.c
+cl /nologo /ML /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /c c.c

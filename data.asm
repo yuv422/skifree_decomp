@@ -214,8 +214,7 @@ timerFrameDurationInMillis byte 4 DUP (00h)
 PUBLIC C sprites
 sprites byte 4 DUP (00h)
 PUBLIC C skierScreenYOffset
-skierScreenYOffset byte 2 DUP (00h)
-db 2 DUP (00h)
+skierScreenYOffset byte 4 DUP (00h)
 PUBLIC C pauseStartTickCount
 pauseStartTickCount byte 4 DUP (00h)
 db 4 DUP (00h)
@@ -321,8 +320,7 @@ prevMouseX byte 2 DUP (00h)
 PUBLIC C permObjectCount
 permObjectCount byte 2 DUP (00h)
 PUBLIC C skierScreenXOffset
-skierScreenXOffset byte 2 DUP (00h)
-db 2 DUP (00h)
+skierScreenXOffset byte 4 DUP (00h)
 PUBLIC C prevTickCount
 prevTickCount byte 4 DUP (00h)
 PUBLIC C prevMouseY

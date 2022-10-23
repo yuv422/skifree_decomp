@@ -38,7 +38,8 @@ Actor *__fastcall updateActorPositionWithVelocityMaybe(Actor *actor);
 Actor *__fastcall addActorOfTypeWithSpriteIdx(int actorType,USHORT spriteIdx);
 void __fastcall actorSetFlag8IfFlag1IsUnset(Actor *actor);
 void removeFlag8ActorsFromList();
-
+BOOL __fastcall changeScratchBitmapSize(short newWidth, short newHeight);
+void __fastcall actorClearFlag10(Actor *actor1, Actor *actor2);
 
 
 
@@ -682,22 +683,19 @@ void pauseGame() {
 }
 
 void __fastcall enlargeRect(RECT *rect1, RECT *rect2) {
-    if (rect2 == NULL) {
-        assertFailed(sourceFilename,365);
-    }
-    if (rect1 == NULL) {
-        assertFailed(sourceFilename,366);
-    }
+    ski_assert(rect2, 365);
+    ski_assert(rect1, 366);
+
     if (rect2->left < rect1->left) {
         rect1->left = rect2->left;
     }
-    if (rect1->right < rect2->right) {
+    if (rect2->right > rect1->right) {
         rect1->right = rect2->right;
     }
     if (rect2->top < rect1->top) {
         rect1->top = rect2->top;
     }
-    if (rect1->bottom < rect2->bottom) {
+    if (rect2->bottom > rect1->bottom) {
         rect1->bottom = rect2->bottom;
     }
 }
@@ -1275,4 +1273,62 @@ void removeFlag8ActorsFromList() {
             currentActor = prevActor->next;
         } while (currentActor != NULL);
     }
+}
+
+BOOL __fastcall changeScratchBitmapSize(short newWidth, short newHeight) {
+    HGDIOBJ ho;
+    HBITMAP h;
+
+    if (((short)newWidth > (short)scratchBitmapWidth) ||
+        ((short)newHeight) > (short)scratchBitmapHeight) {
+        scratchBitmapWidth = (newWidth & 0xffc0) + 0x40;
+        scratchBitmapHeight = (newHeight & 0xffc0) + 0x40;
+        if (scratchBitmap != (HGDIOBJ)0x0) {
+            ho = SelectObject(bitmapSourceDC,scratchBitmap);
+            DeleteObject(ho);
+            scratchBitmap = (HGDIOBJ)0x0;
+        }
+        h = CreateCompatibleBitmap(mainWindowDC, scratchBitmapWidth, scratchBitmapHeight);
+        while (h == (HBITMAP)0x0) {
+            if (scratchBitmapWidth == newWidth && scratchBitmapHeight == newHeight) {
+                scratchBitmapWidth = 0;
+                scratchBitmapHeight = 0;
+                return FALSE;
+            }
+            scratchBitmapWidth = newWidth;
+            scratchBitmapHeight = newHeight;
+            h = CreateCompatibleBitmap(mainWindowDC, newWidth, newHeight);
+        }
+        scratchBitmap = SelectObject(bitmapSourceDC, h);
+    }
+    return TRUE;
+}
+
+void __fastcall actorClearFlag10(Actor *actor1, Actor *actor2) {
+    Actor *pAVar1;
+    Actor *pAVar2 = actor1;
+    Actor **ppAVar3;
+
+    ski_assert(actor1, 1252);
+    ski_assert(actor2, 1253);
+    ski_assert((actor1->flags & FLAG_10), 1254); // <---
+    ski_assert((actor2->flags & FLAG_10), 1255);
+    ski_assert(actor1 != actor2, 1256);
+
+    ppAVar3 = &actor1->actorPtr;
+    pAVar1 = actor1->actorPtr;
+
+    while (pAVar1 != (Actor *)0x0) {
+        pAVar2 = *ppAVar3;
+        if ((pAVar2->flags & FLAG_10) != 0) {
+            assertFailed(sourceFilename,1260);
+        }
+        ppAVar3 = &pAVar2->actorPtr;
+        pAVar1 = pAVar2->actorPtr;
+    }
+    pAVar2->actorPtr = actor2;
+
+    enlargeRect(&actor1->rect,&actor2->rect);
+    /* clear FLAG_10 */
+    actor2->flags &= 0xffffffef;
 }

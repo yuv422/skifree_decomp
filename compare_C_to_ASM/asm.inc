@@ -1,63 +1,39 @@
-@updateActorSpriteRect@4 proc
+@enlargeRect@8 proc
           push  esi
-          mov   esi, ecx
-          test  esi, esi
           push  edi
-          jnz   LAB_00401427
-          mov   edx, 0000003A3h
+          mov   edi, edx
+          mov   esi, ecx
+          test  edi, edi
+          jnz   LAB_00401b39
+          mov   edx, 00000016Dh
           mov   ecx, offset sourceFilename      ; <c090>
           call  @assertFailed@8
-LAB_00401427:     test  byte ptr [esi+04Ch], 004h
-          jz    LAB_0040143c
-          mov   edx, 0000003A4h
+LAB_00401b39:     test  esi, esi
+          jnz   LAB_00401b4c
+          mov   edx, 00000016Eh
           mov   ecx, offset sourceFilename      ; <c090>
           call  @assertFailed@8
-LAB_0040143c:     cmp   word ptr [esi+010h], 000000000h
-          jnz   LAB_00401452
-          mov   edx, 0000003A5h
-          mov   ecx, offset sourceFilename      ; <c090>
-          call  @assertFailed@8
-LAB_00401452:     mov   edx, dword ptr [sprites]        ; <c5f8>
-          mov   ecx, dword ptr [esi+014h]
-          xor   eax, eax
-          mov   ax, word ptr [esi+010h]
-          shl   eax, 004h
-          add   eax, edx
+LAB_00401b4c:     mov   eax, dword ptr [edi]
+          mov   ecx, dword ptr [esi]
           cmp   eax, ecx
-          jz    LAB_00401479
-          mov   edx, 0000003A6h
-          mov   ecx, offset sourceFilename      ; <c090>
-          call  @assertFailed@8
-LAB_00401479:     mov   cx, word ptr [esi+044h]
-          mov   dx, word ptr [esi+042h]
-          mov   ax, word ptr [esi+040h]
-          lea   edi, dword ptr [esi+020h]
-          push  ecx
-          push  edx
-          mov   edx, dword ptr [esi+014h]
-          push  eax
-          mov   ecx, edi
-          call  @updateRectForSpriteAtLocation@20
-          mov   eax, dword ptr [esi+04Ch]
-          or    al, 004h
-          mov   dword ptr [esi+04Ch], eax
-          mov   eax, edi
-          pop   edi
+          jge   LAB_00401b56
+          mov   dword ptr [esi], eax
+LAB_00401b56:     mov   eax, dword ptr [edi+008h]
+          mov   ecx, dword ptr [esi+008h]
+          cmp   eax, ecx
+          jle   LAB_00401b63
+          mov   dword ptr [esi+008h], eax
+LAB_00401b63:     mov   eax, dword ptr [edi+004h]
+          mov   ecx, dword ptr [esi+004h]
+          cmp   eax, ecx
+          jge   LAB_00401b70
+          mov   dword ptr [esi+004h], eax
+LAB_00401b70:     mov   edi, dword ptr [edi+00Ch]
+          mov   eax, dword ptr [esi+00Ch]
+          cmp   edi, eax
+          jle   LAB_00401b7d
+          mov   dword ptr [esi+00Ch], edi
+LAB_00401b7d:     pop   edi
           pop   esi
           ret
-LAB_004014a2:
-          db 090h
-          db 090h
-          db 090h
-          db 090h
-          db 090h
-          db 090h
-          db 090h
-          db 090h
-          db 090h
-          db 090h
-          db 090h
-          db 090h
-          db 090h
-          db 090h
-@updateActorSpriteRect@4 endp
+@enlargeRect@8 endp

@@ -10,7 +10,7 @@
 004014b0:@updateRectForSpriteAtLocation@20
 00401540:@drawActor@8
 00401970:@changeScratchBitmapSize@8
-00401a60:@FUN_00401a60@8
+00401a60:@actorClearFlag10@8
 00401b20:@enlargeRect@8
 00401b80:@formatAndPrintStatusStrings@4
 00401cf0:@getCachedString@4

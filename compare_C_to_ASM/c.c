@@ -3,7 +3,7 @@
 #include "../types.h"
 
 extern void __fastcall assertFailed(char *srcFilename, int lineNumber);
-extern void __fastcall updateRectForSpriteAtLocation(RECT *rect, Sprite *sprite, short newX, short newY, short param_5);
+extern void __fastcall enlargeRect(RECT *rect1, RECT *rect2);
 
 #include "../data.h"
 
@@ -12,15 +12,20 @@ extern void __fastcall updateRectForSpriteAtLocation(RECT *rect, Sprite *sprite,
 // FUNCTION GOES HERE
 //
 
-RECT * __fastcall updateActorSpriteRect(Actor *actor) {
-    ski_assert(actor, 931);
-    ski_assert((actor->flags & FLAG_4) == 0, 932);
-    ski_assert(actor->spriteIdx2 != 0, 933);
+void __fastcall enlargeRect(RECT *rect1, RECT *rect2) {
+    ski_assert(rect2, 365);
+    ski_assert(rect1, 366);
 
-    if (&sprites[actor->spriteIdx2] != actor->spritePtr) {
-        assertFailed(sourceFilename,934);
+    if (rect2->left < rect1->left) {
+        rect1->left = rect2->left;
     }
-    updateRectForSpriteAtLocation(&actor->someRect,actor->spritePtr,actor->xPosMaybe,actor->yPosMaybe,actor->isInAir);
-    actor->flags |= FLAG_4;
-    return &actor->someRect;
+    if (rect2->right > rect1->right) {
+        rect1->right = rect2->right;
+    }
+    if (rect2->top < rect1->top) {
+        rect1->top = rect2->top;
+    }
+    if (rect2->bottom > rect1->bottom) {
+        rect1->bottom = rect2->bottom;
+    }
 }

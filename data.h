@@ -82,7 +82,8 @@ extern short playerX;
 extern short playerY;
 extern short permObjectCount;
 extern ActorVelStruct beginnerActorMovementTbl;
-
+extern short scratchBitmapWidth;
+extern short scratchBitmapHeight;
 
 extern BOOL (WINAPI *sndPlaySoundAFuncPtr)(LPCSTR, UINT);
 extern void (CALLBACK* timerCallbackFuncPtr)(HWND, UINT, UINT, DWORD);

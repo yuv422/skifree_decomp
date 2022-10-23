@@ -79,9 +79,9 @@ typedef struct {
 #define FLAG_2  2
 #define FLAG_4  4
 #define FLAG_8  8
-#define FLAG_10 10
-#define FLAG_20 20
-#define FLAG_40 40
-#define FLAG_80 80
+#define FLAG_10 0x10
+#define FLAG_20 0x20
+#define FLAG_40 0x40
+#define FLAG_80 0x80
 
 #endif //SKIFREE_DECOMP_TYPES_H
