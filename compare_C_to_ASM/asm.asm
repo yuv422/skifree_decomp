@@ -9,8 +9,8 @@ include ..\\c_funcs.inc
 extern  _updateGameState: proc
 extern @drawWindow@8: proc
 extern @formatAndPrintStatusStrings@4: proc
-extern @FUN_00402220@4: proc
-
+extern @updateActorPositionMaybe@16: proc
+extern @getRandomOffscreenStartingPosition@12: proc
 
 include asm.inc
 

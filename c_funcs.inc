@@ -45,6 +45,8 @@ extern @changeScratchBitmapSize@8: proc
 extern @actorClearFlag10@8: proc
 extern @setActorFrameNo@8: proc
 extern @actorSetSpriteIdx@8: proc
+extern @duplicateAndLinkActor@4: proc
+extern @updateActorWithOffscreenStartingPosition@8: proc
 
 ; exports
 ; public _WinMain@16

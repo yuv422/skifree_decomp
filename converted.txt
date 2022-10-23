@@ -60,3 +60,5 @@ _removeFlag8ActorsFromList
 @setActorFrameNo@8
 @isSlowTile@4
 @actorSetSpriteIdx@8
+@duplicateAndLinkActor@4
+@updateActorWithOffscreenStartingPosition@8

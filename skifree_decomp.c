@@ -42,6 +42,7 @@ BOOL __fastcall changeScratchBitmapSize(short newWidth, short newHeight);
 void __fastcall actorClearFlag10(Actor *actor1, Actor *actor2);
 Actor * __fastcall setActorFrameNo(Actor *actor, UINT frameNo);
 Actor * __fastcall actorSetSpriteIdx(Actor *actor, USHORT spriteIdx);
+Actor * __fastcall duplicateAndLinkActor(Actor *actor);
 
 
 //
@@ -52,7 +53,6 @@ extern void updateGameState();
 extern void __fastcall drawWindow(HDC hdc, RECT *rect);
 extern void __fastcall formatAndPrintStatusStrings(HDC windowDC);
 extern void __fastcall updateRectForSpriteAtLocation(RECT *rect, Sprite *sprite, short newX, short newY, short param_5);
-extern Actor * __fastcall FUN_00402220(Actor *actor);
 extern void deleteWindowObjects();
 extern Actor * __fastcall updateActorPositionMaybe(Actor *actor, short newX, short newY, short inAir);
 extern BOOL __fastcall createBitmapSheets(HDC param_1);
@@ -63,6 +63,7 @@ extern void handleMouseClick(void);
 extern void setupPermObjects();
 extern Actor * __fastcall actorSetSpriteIdx(Actor *actor, USHORT spriteIdx);
 extern Actor * __fastcall updateActorVelMaybe(Actor *actor,ActorVelStruct *param_2);
+extern void __fastcall getRandomOffscreenStartingPosition(int borderType,short *xPos,short *yPos);
 
 #include "data.h"
 
@@ -707,34 +708,27 @@ Actor * __fastcall addActor(Actor *actor, BOOL insertBack) {
     Actor *targetActor;
 
     targetActor = currentFreeActor;
-    if (actor == (Actor *)0x0) {
-        assertFailed(sourceFilename,840);
-    }
-    if (targetActor == (Actor *)0x0) {
-        assertFailed(sourceFilename,857);
-        return (Actor *)0x0;
-    }
-    currentFreeActor = targetActor->next;
-//    pAVar2 = actor;
-//    pAVar3 = targetActor;
-//    for (iVar1 = 20; iVar1 != 0; iVar1 = iVar1 + -1) {
-//        pAVar3->next = pAVar2->next;
-//        pAVar2 = (Actor *)&pAVar2->unk_0x4;
-//        pAVar3 = (Actor *)&pAVar3->unk_0x4;
-//    }
+    ski_assert(actor, 840);
 
-    memcpy(targetActor, actor, sizeof(Actor));
+    if (targetActor) {
+        currentFreeActor = targetActor->next;
 
-    targetActor->permObject = NULL;
-    if (insertBack) {
-        targetActor->next = actor->next;
-        actor->next = targetActor;
+        memcpy(targetActor, actor, sizeof(Actor));
+
+        targetActor->permObject = NULL;
+        if (insertBack) {
+            targetActor->next = actor->next;
+            actor->next = targetActor;
+        } else {
+            targetActor->next = actorListPtr;
+            actorListPtr = targetActor;
+        }
+        return targetActor;
     } else {
-        targetActor->next = actorListPtr;
-        actorListPtr = targetActor;
+        assertFailed(sourceFilename,857);
     }
 
-    return targetActor;
+    return targetActor; // TODO fixme the original does `MOV EAX, EBX` but we seem to be doing `XOR EAX, EAX`
 }
 
 void __fastcall addStylePoints(int points) {
@@ -1356,7 +1350,7 @@ Actor * __fastcall actorSetSpriteIdx(Actor *actor, USHORT spriteIdx) {
     if (spriteIdx != actor->spriteIdx2) {
         totalAreaOfActorSprites = totalAreaOfActorSprites - actor->spritePtr->totalPixels;
         if ((actor->flags & FLAG_1) != 0) {
-            actor = FUN_00402220(actor);
+            actor = duplicateAndLinkActor(actor);
         }
         actor->spriteIdx2 = spriteIdx;
         actor->spritePtr = &sprites[spriteIdx];
@@ -1367,4 +1361,32 @@ Actor * __fastcall actorSetSpriteIdx(Actor *actor, USHORT spriteIdx) {
         actor->flags = ((isSlowTile(spriteIdx) & 1) << 6) | actor->flags & 0xffffffbf;
     }
     return actor;
+}
+
+Actor * __fastcall duplicateAndLinkActor(Actor *actor) {
+    Actor *pAVar1;
+
+    ski_assert(actor, 947);
+    ski_assert((actor->flags & FLAG_1), 949);
+
+    pAVar1 = addActor(actor,1);
+    actor->linkedActor = pAVar1;
+    if (pAVar1 != (Actor *)0x0) {
+        pAVar1->linkedActor = actor;
+        pAVar1->flags |= FLAG_2;
+        actor->flags &= 0xfffffffe; // Clear FLAG_1
+    }
+    return actor;
+}
+
+Actor * __fastcall updateActorWithOffscreenStartingPosition(Actor *actor, int borderType) {
+    short y;
+    short x;
+
+    if (actor) {
+        getRandomOffscreenStartingPosition(borderType,&x,&y);
+        return updateActorPositionMaybe(actor,x,y,0);
+    }
+
+    return actor; //TODO Null return optimisation present here.
 }

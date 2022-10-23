@@ -1711,7 +1711,7 @@ LAB_00402199:     cmp   di, word ptr [esi+010h]
           test  al, 001h
           jz    LAB_004021c4
           mov   ecx, esi
-          call  @FUN_00402220@4
+          call  @duplicateAndLinkActor@4
           mov   esi, eax
 LAB_004021c4:     mov   edx, edi
           mov   word ptr [esi+010h], di
@@ -1752,7 +1752,8 @@ LAB_00402218:
 @actorSetSpriteIdx@8 endp
 ~
 
-@FUN_00402220@4 proc
+COMMENT ~
+@duplicateAndLinkActor@4 proc
           push  esi
           mov   esi, ecx
           test  esi, esi
@@ -1792,7 +1793,8 @@ LAB_00402276:
           db 090h
           db 090h
           db 090h
-@FUN_00402220@4 endp
+@duplicateAndLinkActor@4 endp
+~
 
 COMMENT ~
 @addActor@8 proc
@@ -1911,6 +1913,7 @@ LAB_00402346:
 _getFreeActor endp
 ~
 
+COMMENT ~
 @updateActorWithOffscreenStartingPosition@8 proc
           sub   esp, 000000008h
           mov   eax, edx
@@ -1944,6 +1947,7 @@ LAB_0040238a:
           db 090h
           db 090h
 @updateActorWithOffscreenStartingPosition@8 endp
+~
 
 @updateActorPositionMaybe@16 proc
           push  ecx
@@ -1994,7 +1998,7 @@ LAB_00402404:     mov   eax, dword ptr [esi+04Ch]
           test  al, 001h
           jz    LAB_0040241c
           mov   ecx, esi
-          call  @FUN_00402220@4
+          call  @duplicateAndLinkActor@4
           mov   esi, eax
 LAB_0040241c:     test  edi, edi
           jz    LAB_00402433
@@ -2063,7 +2067,7 @@ LAB_0040249c:     cmp   esi, dword ptr [playerActorPtrMaybe_1]  ; <c64c>
           test  al, 001h
           jz    LAB_004024c0
           mov   ecx, esi
-          call  @FUN_00402220@4
+          call  @duplicateAndLinkActor@4
           mov   edx, dword ptr [esp+010h]
           jmp   LAB_004024c2
 LAB_004024c0:     mov   eax, esi
@@ -4180,7 +4184,7 @@ LAB_00403b19:     mov   ecx, offset sound_7.soundResource       ; <c6e0>
           test  byte ptr [edi+04Ch], 001h
           jz    LAB_00403b32
           mov   ecx, edi
-          call  @FUN_00402220@4
+          call  @duplicateAndLinkActor@4
           jmp   LAB_00403b34
 LAB_00403b32:     mov   eax, edi
 LAB_00403b34:     mov   ecx, eax
@@ -4327,7 +4331,7 @@ LAB_00403cfe:     cmp   word ptr [edi+010h], 000000056h
           test  byte ptr [edi+04Ch], 001h
           jz    LAB_00403d18
           mov   ecx, edi
-          call  @FUN_00402220@4
+          call  @duplicateAndLinkActor@4
           jmp   LAB_00403d1a
 LAB_00403d18:     mov   eax, edi
 LAB_00403d1a:     mov   ecx, eax
@@ -7514,7 +7518,7 @@ LAB_00406073:     mov   eax, dword ptr [esi+04Ch]
           test  al, 001h
           jz    LAB_0040608b
           mov   ecx, esi
-          call  @FUN_00402220@4
+          call  @duplicateAndLinkActor@4
           jmp   LAB_0040608d
 LAB_0040608b:     mov   eax, esi
 LAB_0040608d:     and   dword ptr [eax+04Ch], 0FFFFFFFBh

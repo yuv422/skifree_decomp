@@ -16,6 +16,9 @@ extern Actor * getFreeActor();
 extern Actor * __fastcall actorSetSpriteIdx(Actor *actor,USHORT spriteIdx);
 extern Actor * __fastcall FUN_00402220(Actor *actor);
 extern BOOL __fastcall isSlowTile(short spriteIdx);
+extern Actor * __fastcall addActor(Actor *actor, BOOL insertBack);
+extern void __fastcall getRandomOffscreenStartingPosition(int borderType,short *xPos,short *yPos);
+extern Actor * __fastcall updateActorPositionMaybe(Actor *actor,short newX,short newY,short inAir);
 
 #include "../data.h"
 
@@ -25,11 +28,16 @@ extern BOOL __fastcall isSlowTile(short spriteIdx);
 //
 
 
-BOOL __fastcall isSlowTile(short spriteIdx) {
-    if ((spriteIdx != 27) && (spriteIdx != 82)) {
-        return FALSE;
+Actor * __fastcall updateActorWithOffscreenStartingPosition(Actor *actor, int borderType) {
+    short y;
+    short x;
+
+    if (actor) {
+        getRandomOffscreenStartingPosition(borderType,&x,&y);
+        return updateActorPositionMaybe(actor,x,y,0);
     }
-    return TRUE;
+
+    return actor;
 }
 
 

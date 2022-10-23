@@ -21,7 +21,7 @@
 004020d0:@addActorOfType@8
 00402120:@setActorFrameNo@8
 00402180:@actorSetSpriteIdx@8
-00402220:@FUN_00402220@4
+00402220:@duplicateAndLinkActor@4
 00402280:@addActor@8
 00402310:@isSlowTile@4
 00402330:_getFreeActor
