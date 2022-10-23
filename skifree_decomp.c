@@ -40,8 +40,8 @@ void __fastcall actorSetFlag8IfFlag1IsUnset(Actor *actor);
 void removeFlag8ActorsFromList();
 BOOL __fastcall changeScratchBitmapSize(short newWidth, short newHeight);
 void __fastcall actorClearFlag10(Actor *actor1, Actor *actor2);
-
-
+Actor * __fastcall setActorFrameNo(Actor *actor, UINT frameNo);
+Actor * __fastcall actorSetSpriteIdx(Actor *actor, USHORT spriteIdx);
 
 
 //
@@ -52,7 +52,7 @@ extern void updateGameState();
 extern void __fastcall drawWindow(HDC hdc, RECT *rect);
 extern void __fastcall formatAndPrintStatusStrings(HDC windowDC);
 extern void __fastcall updateRectForSpriteAtLocation(RECT *rect, Sprite *sprite, short newX, short newY, short param_5);
-extern Actor * __fastcall setActorFrameNo(Actor *actor, UINT frameNo);
+extern Actor * __fastcall FUN_00402220(Actor *actor);
 extern void deleteWindowObjects();
 extern Actor * __fastcall updateActorPositionMaybe(Actor *actor, short newX, short newY, short inAir);
 extern BOOL __fastcall createBitmapSheets(HDC param_1);
@@ -78,11 +78,10 @@ void timerUpdateFunc() {
     updateGameState();
     drawWindow(mainWindowDC,&windowClientRect);
     redrawRequired = TRUE;
-    if (0x147 < (int)(currentTickCount - statusWindowLastUpdateTime)) {
+    if ((int)(currentTickCount - statusWindowLastUpdateTime) > 0x147) {
         formatAndPrintStatusStrings(statusWindowDC);
         return;
     }
-    redrawRequired = TRUE;
 }
 
 void __fastcall assertFailedDialog(LPCSTR lpCaption, LPCSTR lpText) {
@@ -701,7 +700,7 @@ void __fastcall enlargeRect(RECT *rect1, RECT *rect2) {
 }
 
 USHORT __fastcall random(short maxValue) {
-    return (USHORT)rand() % maxValue;
+    return (short)rand() % maxValue;
 }
 
 Actor * __fastcall addActor(Actor *actor, BOOL insertBack) {
@@ -752,22 +751,18 @@ Actor * getFreeActor() {
     return actor;
 }
 
-Actor * __fastcall addActorOfType(int actorType, UINT param_2) {
+Actor * __fastcall addActorOfType(int actorType, UINT frameNo) {
     Actor *actor;
 
     actor = getFreeActor();
     if (actor != NULL) {
-        if (actorType < 0) {
-            assertFailed(sourceFilename,1388);
-        }
-        if (0x11 < actorType) {
-            assertFailed(sourceFilename,1389);
-        }
+        ski_assert(actorType >= 0, 1388);
+        ski_assert(actorType < 0x12, 1389);
+
         actor->typeMaybe = actorType;
-        actor = setActorFrameNo(actor, param_2);
-        return actor;
+        actor = setActorFrameNo(actor, frameNo);
     }
-    return NULL;
+    return actor;
 }
 
 void handleGameReset() {
@@ -1331,4 +1326,45 @@ void __fastcall actorClearFlag10(Actor *actor1, Actor *actor2) {
     enlargeRect(&actor1->rect,&actor2->rect);
     /* clear FLAG_10 */
     actor2->flags &= 0xffffffef;
+}
+
+Actor * __fastcall setActorFrameNo(Actor *actor, UINT ActorframeNo) {
+    Actor *pAVar1;
+
+    ski_assert(actor, 1084);
+    ski_assert((int)ActorframeNo < 64, 1085);
+
+    if (actor->frameNo != ActorframeNo) {
+        ski_assert(ActorframeNo < 64, 1088);
+
+        pAVar1 = actorSetSpriteIdx(actor,actorFrameToSpriteTbl[ActorframeNo]);
+        pAVar1->frameNo = ActorframeNo;
+        return pAVar1;
+    }
+    return actor;
+}
+
+BOOL __fastcall isSlowTile(short spriteIdx) {
+    if ((spriteIdx != 27) && (spriteIdx != 82)) {
+        return FALSE;
+    }
+    return TRUE;
+}
+
+Actor * __fastcall actorSetSpriteIdx(Actor *actor, USHORT spriteIdx) {
+    ski_assert(actor, 979);
+    if (spriteIdx != actor->spriteIdx2) {
+        totalAreaOfActorSprites = totalAreaOfActorSprites - actor->spritePtr->totalPixels;
+        if ((actor->flags & FLAG_1) != 0) {
+            actor = FUN_00402220(actor);
+        }
+        actor->spriteIdx2 = spriteIdx;
+        actor->spritePtr = &sprites[spriteIdx];
+        totalAreaOfActorSprites = totalAreaOfActorSprites + actor->spritePtr->totalPixels;
+        actor->flags = actor->flags & (int)0xfffffffb;
+        actor->flags |= FLAG_20;
+
+        actor->flags = ((isSlowTile(spriteIdx) & 1) << 6) | actor->flags & 0xffffffbf;
+    }
+    return actor;
 }

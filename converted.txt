@@ -57,3 +57,6 @@ _setupActorList
 _removeFlag8ActorsFromList
 @changeScratchBitmapSize@8
 @actorClearFlag10@8
+@setActorFrameNo@8
+@isSlowTile@4
+@actorSetSpriteIdx@8

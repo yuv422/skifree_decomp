@@ -43,6 +43,8 @@ extern @actorSetFlag8IfFlag1IsUnset@4: proc
 extern _removeFlag8ActorsFromList: proc
 extern @changeScratchBitmapSize@8: proc
 extern @actorClearFlag10@8: proc
+extern @setActorFrameNo@8: proc
+extern @actorSetSpriteIdx@8: proc
 
 ; exports
 ; public _WinMain@16

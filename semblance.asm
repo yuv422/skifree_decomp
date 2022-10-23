@@ -1652,6 +1652,7 @@ LAB_0040211e:
 @addActorOfType@8 endp
 ~
 
+COMMENT ~
 @setActorFrameNo@8 proc
           push  esi
           push  edi
@@ -1686,7 +1687,9 @@ LAB_0040217b:     mov   eax, edi
           pop   esi
           ret
 @setActorFrameNo@8 endp
+~
 
+COMMENT ~
 @actorSetSpriteIdx@8 proc
           push  esi
           mov   esi, ecx
@@ -1747,6 +1750,7 @@ LAB_00402218:
           db 090h
           db 090h
 @actorSetSpriteIdx@8 endp
+~
 
 @FUN_00402220@4 proc
           push  esi
@@ -1861,6 +1865,7 @@ LAB_00402302:
 @addActor@8 endp
 ~
 
+COMMENT ~
 @isSlowTile@4 proc
           cmp   cx, 00000001Bh
           jz    LAB_0040231f
@@ -1883,6 +1888,7 @@ LAB_00402325:
           db 090h
           db 090h
 @isSlowTile@4 endp
+~
 
 COMMENT ~
 _getFreeActor proc

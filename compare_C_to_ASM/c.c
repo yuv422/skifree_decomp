@@ -2,8 +2,20 @@
 
 #include "../types.h"
 
+#include "../resource.h"
+
 extern void __fastcall assertFailed(char *srcFilename, int lineNumber);
 extern void __fastcall enlargeRect(RECT *rect1, RECT *rect2);
+extern char * __fastcall getCachedString(UINT stringIdx);
+extern int __fastcall formatElapsedTime(int totalMillis,LPSTR outputString);
+extern void __fastcall drawText(HDC hdc,LPCSTR textStr,short x,short *y,int textLen);
+extern void updateGameState();
+extern void __fastcall drawWindow(HDC hdc, RECT *rect);
+extern void __fastcall formatAndPrintStatusStrings(HDC windowDC);
+extern Actor * getFreeActor();
+extern Actor * __fastcall actorSetSpriteIdx(Actor *actor,USHORT spriteIdx);
+extern Actor * __fastcall FUN_00402220(Actor *actor);
+extern BOOL __fastcall isSlowTile(short spriteIdx);
 
 #include "../data.h"
 
@@ -12,20 +24,13 @@ extern void __fastcall enlargeRect(RECT *rect1, RECT *rect2);
 // FUNCTION GOES HERE
 //
 
-void __fastcall enlargeRect(RECT *rect1, RECT *rect2) {
-    ski_assert(rect2, 365);
-    ski_assert(rect1, 366);
 
-    if (rect2->left < rect1->left) {
-        rect1->left = rect2->left;
+BOOL __fastcall isSlowTile(short spriteIdx) {
+    if ((spriteIdx != 27) && (spriteIdx != 82)) {
+        return FALSE;
     }
-    if (rect2->right > rect1->right) {
-        rect1->right = rect2->right;
-    }
-    if (rect2->top < rect1->top) {
-        rect1->top = rect2->top;
-    }
-    if (rect2->bottom > rect1->bottom) {
-        rect1->bottom = rect2->bottom;
-    }
+    return TRUE;
 }
+
+
+

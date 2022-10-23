@@ -10,6 +10,8 @@ extern char s_Assertion_Failed_0040c0a8[];
 extern char s_insufficient_local_memory[];
 extern char s_nosound_0040c0fc[];
 
+extern USHORT actorFrameToSpriteTbl[];
+
 extern char sourceFilename[];
 extern HWND hSkiMainWnd;
 extern HWND hSkiStatusWnd;
@@ -84,6 +86,8 @@ extern short permObjectCount;
 extern ActorVelStruct beginnerActorMovementTbl;
 extern short scratchBitmapWidth;
 extern short scratchBitmapHeight;
+extern int elapsedTime;
+extern int totalAreaOfActorSprites;
 
 extern BOOL (WINAPI *sndPlaySoundAFuncPtr)(LPCSTR, UINT);
 extern void (CALLBACK* timerCallbackFuncPtr)(HWND, UINT, UINT, DWORD);
