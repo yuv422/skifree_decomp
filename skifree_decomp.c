@@ -1385,8 +1385,8 @@ Actor * __fastcall updateActorWithOffscreenStartingPosition(Actor *actor, int bo
 
     if (actor) {
         getRandomOffscreenStartingPosition(borderType,&x,&y);
-        return updateActorPositionMaybe(actor,x,y,0);
+        actor = updateActorPositionMaybe(actor,x,y,0);
     }
 
-    return actor; //TODO Null return optimisation present here.
+    return actor;
 }
