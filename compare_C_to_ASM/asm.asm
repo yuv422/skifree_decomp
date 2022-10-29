@@ -13,10 +13,10 @@ extern @formatAndPrintStatusStrings@4: proc
 ;extern @updateActorRectsAfterPlayerMove@8: proc
 ;extern @updateActorPositionMaybe@16: proc
 extern @random@4: proc
-extern _randomActorType1: proc
-extern _areaBasedActorType: proc
-extern _randomActorType3: proc
-extern _randomActorType2: proc
+;extern _randomActorType1: proc
+;extern _areaBasedActorType: proc
+;extern _randomActorType3: proc
+;extern _randomActorType2: proc
 
 include asm.inc
 

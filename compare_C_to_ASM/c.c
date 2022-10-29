@@ -38,17 +38,33 @@ extern Actor * __fastcall addActorOfTypeWithSpriteIdx(int actorType, USHORT spri
 //
 
 
-Actor * __fastcall addActorOfTypeWithSpriteIdx(int actorType, USHORT spriteIdx) {
-    Actor *actor;
+//int randomActorType3() {
+//    if (totalAreaOfActorSprites > windowWithMarginTotalArea / 16) {
+//        return 0x12;
+//    }
+//
+//    return random(0x40) != 0 ? 0xb + 2 : 2;
+//}
 
-    actor = getFreeActor();
-    if (actor != NULL) {
-        ski_assert(actorType >= 0, 1403);
-        ski_assert(actorType < 0x12, 1404);
+int randomActorType2() {
+    USHORT uVar1;
 
-        actor->typeMaybe = actorType;
-        actor = actorSetSpriteIdx(actor, spriteIdx);
-        return actor;
+    if (totalAreaOfActorSprites > windowWithMarginTotalArea / 32) {
+        return 0x12;
     }
-    return actor;
+
+    uVar1 = random(100);
+    if (uVar1 < 2) {
+        return 0xa;
+    }
+    if (uVar1 < 0x14) {
+        return 0xd;
+    }
+    if (uVar1 < 0x32) {
+        return 0xf;
+    }
+    if (uVar1 < 0x3c) {
+        return 0xb;
+    }
+    return uVar1 < 0x50 ? 0xe : 0x10;
 }

@@ -45,6 +45,10 @@ Actor * __fastcall actorSetSpriteIdx(Actor *actor, USHORT spriteIdx);
 Actor * __fastcall duplicateAndLinkActor(Actor *actor);
 void __fastcall updateActorRectsAfterPlayerMove(short newPlayerX, short newPlayerY);
 void __fastcall getRandomOffscreenStartingPosition(int borderType, short *xPos, short *yPos);
+int randomActorType1();
+int randomActorType2();
+int randomActorType3();
+int areaBasedActorType();
 
 //
 // ASM Functions
@@ -63,10 +67,6 @@ extern void __fastcall handleKeydownMessage(UINT charCode);
 extern void handleMouseClick(void);
 extern void setupPermObjects();
 extern Actor * __fastcall updateActorVelMaybe(Actor *actor,ActorVelStruct *param_2);
-extern int randomActorType1();
-extern int randomActorType2();
-extern int randomActorType3();
-extern int areaBasedActorType();
 
 #include "data.h"
 
@@ -1526,4 +1526,68 @@ Actor * __fastcall addRandomActor(int borderType) {
     }
 
     return actor;
+}
+
+int randomActorType1(void) {
+    USHORT uVar1;
+
+    if (totalAreaOfActorSprites > windowWithMarginTotalArea / 32) {
+        return 0x12;
+    }
+
+    uVar1 = random(1000);
+    if (uVar1 < 0x32) {
+        return 10;
+    }
+    if (uVar1 < 500) {
+        return 0xd;
+    }
+    if (uVar1 < 700) {
+        return 0xf;
+    }
+    if (uVar1 < 0x2ee) {
+        return 0xb;
+    }
+    if (uVar1 < 0x3b6) {
+        return 0xe;
+    }
+    if (uVar1 < 0x3ca) {
+        return 0x10;
+    }
+    return (uVar1 < 0x3de) ? 1 : 2;
+}
+
+int areaBasedActorType() {
+    return ((totalAreaOfActorSprites <= windowWithMarginTotalArea / 64) -  1 & 7) + 0xb;
+}
+
+int randomActorType3() {
+    if (totalAreaOfActorSprites > windowWithMarginTotalArea / 16) {
+        return 0x12;
+    }
+
+    return random(0x40) != 0 ? 0xb + 2 : 2;
+}
+
+int randomActorType2() {
+    USHORT uVar1;
+
+    if (totalAreaOfActorSprites > windowWithMarginTotalArea / 32) {
+        return 0x12;
+    }
+
+    uVar1 = random(100);
+    if (uVar1 < 2) {
+        return 0xa;
+    }
+    if (uVar1 < 0x14) {
+        return 0xd;
+    }
+    if (uVar1 < 0x32) {
+        return 0xf;
+    }
+    if (uVar1 < 0x3c) {
+        return 0xb;
+    }
+    return uVar1 < 0x50 ? 0xe : 0x10;
 }

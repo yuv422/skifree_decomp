@@ -2295,6 +2295,7 @@ LAB_004026ee:
 @addActorOfTypeWithSpriteIdx@8 endp
 ~
 
+COMMENT ~
 _randomActorType1 proc
           mov   eax, dword ptr [windowWithMarginTotalArea]      ; <c748>
           mov   ecx, dword ptr [totalAreaOfActorSprites]        ; <c6fc>
@@ -2344,7 +2345,9 @@ LAB_0040276a:
           db 090h
           db 090h
 _randomActorType1 endp
+~
 
+COMMENT ~
 _areaBasedActorType proc
           mov   eax, dword ptr [windowWithMarginTotalArea]      ; <c748>
           xor   ecx, ecx
@@ -2373,7 +2376,9 @@ LAB_00402795:
           db 090h
           db 090h
 _areaBasedActorType endp
+~
 
+COMMENT ~
 _randomActorType3 proc
           mov   eax, dword ptr [windowWithMarginTotalArea]      ; <c748>
           mov   ecx, dword ptr [totalAreaOfActorSprites]        ; <c6fc>
@@ -2406,7 +2411,9 @@ LAB_004027d4:
           db 090h
           db 090h
 _randomActorType3 endp
+~
 
+COMMENT ~
 _randomActorType2 proc
           mov   eax, dword ptr [windowWithMarginTotalArea]      ; <c748>
           mov   ecx, dword ptr [totalAreaOfActorSprites]        ; <c6fc>
@@ -2455,6 +2462,7 @@ LAB_00402844:
           db 090h
           db 090h
 _randomActorType2 endp
+~
 
 COMMENT ~
 @getSpriteIdxForActorType@4 proc

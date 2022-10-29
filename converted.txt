@@ -66,3 +66,7 @@ _removeFlag8ActorsFromList
 @updateActorRectsAfterPlayerMove@8
 @getRandomOffscreenStartingPosition@12
 @addRandomActor@4
+_randomActorType1
+_areaBasedActorType
+_randomActorType3
+_randomActorType2

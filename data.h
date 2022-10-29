@@ -91,6 +91,7 @@ extern int elapsedTime;
 extern int totalAreaOfActorSprites;
 extern int windowHeight;
 extern short windowWidth;
+extern int windowWithMarginTotalArea;
 
 extern BOOL (WINAPI *sndPlaySoundAFuncPtr)(LPCSTR, UINT);
 extern void (CALLBACK* timerCallbackFuncPtr)(HWND, UINT, UINT, DWORD);
