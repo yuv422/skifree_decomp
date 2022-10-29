@@ -62,3 +62,7 @@ _removeFlag8ActorsFromList
 @actorSetSpriteIdx@8
 @duplicateAndLinkActor@4
 @updateActorWithOffscreenStartingPosition@8
+@updateActorPositionMaybe@16
+@updateActorRectsAfterPlayerMove@8
+@getRandomOffscreenStartingPosition@12
+@addRandomActor@4

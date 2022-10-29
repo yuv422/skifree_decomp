@@ -84,4 +84,9 @@ typedef struct {
 #define FLAG_40 0x40
 #define FLAG_80 0x80
 
+#define BORDER_LEFT   0
+#define BORDER_RIGHT  1
+#define BORDER_TOP    2
+#define BORDER_BOTTOM 3
+
 #endif //SKIFREE_DECOMP_TYPES_H

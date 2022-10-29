@@ -11,6 +11,7 @@ extern char s_insufficient_local_memory[];
 extern char s_nosound_0040c0fc[];
 
 extern USHORT actorFrameToSpriteTbl[];
+extern UINT UINT_ARRAY_0040a22c[];
 
 extern char sourceFilename[];
 extern HWND hSkiMainWnd;
@@ -80,7 +81,7 @@ extern HGDIOBJ largeBitmapSheet_1bpp;
 extern HGDIOBJ scratchBitmap;
 extern BOOL isFsGameMode;
 extern int stylePoints;
-extern short playerX;
+extern int playerX;
 extern short playerY;
 extern short permObjectCount;
 extern ActorVelStruct beginnerActorMovementTbl;
@@ -88,6 +89,8 @@ extern short scratchBitmapWidth;
 extern short scratchBitmapHeight;
 extern int elapsedTime;
 extern int totalAreaOfActorSprites;
+extern int windowHeight;
+extern short windowWidth;
 
 extern BOOL (WINAPI *sndPlaySoundAFuncPtr)(LPCSTR, UINT);
 extern void (CALLBACK* timerCallbackFuncPtr)(HWND, UINT, UINT, DWORD);

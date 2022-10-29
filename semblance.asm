@@ -1949,6 +1949,7 @@ LAB_0040238a:
 @updateActorWithOffscreenStartingPosition@8 endp
 ~
 
+COMMENT ~
 @updateActorPositionMaybe@16 proc
           push  ecx
           push  ebx
@@ -2039,7 +2040,9 @@ LAB_00402468:
           db 090h
           db 090h
 @updateActorPositionMaybe@16 endp
+~
 
+COMMENT ~
 @updateActorRectsAfterPlayerMove@8 proc
           push  ecx
           push  ebx
@@ -2092,7 +2095,9 @@ LAB_004024ee:
           db 090h
           db 090h
 @updateActorRectsAfterPlayerMove@8 endp
+~
 
+COMMENT ~
 @getRandomOffscreenStartingPosition@12 proc
           mov   eax, dword ptr [playerX]        ; <c640>
           push  ebx
@@ -2160,7 +2165,9 @@ DAT_004025b4  dword offset LAB_00402528
 DAT_004025b8  dword offset LAB_0040255e
 DAT_004025bc  dword offset LAB_0040255e
 @getRandomOffscreenStartingPosition@12 endp
+~
 
+COMMENT ~
 @addRandomActor@4 proc
           sub   esp, 000000008h
           lea   eax, dword ptr [esp+000h]
@@ -2247,6 +2254,7 @@ LAB_00402695:
           db 090h
           db 090h
 @addRandomActor@4 endp
+~
 
 COMMENT ~
 @addActorOfTypeWithSpriteIdx@8 proc

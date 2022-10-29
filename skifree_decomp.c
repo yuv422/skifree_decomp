@@ -43,7 +43,8 @@ void __fastcall actorClearFlag10(Actor *actor1, Actor *actor2);
 Actor * __fastcall setActorFrameNo(Actor *actor, UINT frameNo);
 Actor * __fastcall actorSetSpriteIdx(Actor *actor, USHORT spriteIdx);
 Actor * __fastcall duplicateAndLinkActor(Actor *actor);
-
+void __fastcall updateActorRectsAfterPlayerMove(short newPlayerX, short newPlayerY);
+void __fastcall getRandomOffscreenStartingPosition(int borderType, short *xPos, short *yPos);
 
 //
 // ASM Functions
@@ -61,9 +62,11 @@ extern void __fastcall handleMouseMoveMessage(short xPos,short yPos);
 extern void __fastcall handleKeydownMessage(UINT charCode);
 extern void handleMouseClick(void);
 extern void setupPermObjects();
-extern Actor * __fastcall actorSetSpriteIdx(Actor *actor, USHORT spriteIdx);
 extern Actor * __fastcall updateActorVelMaybe(Actor *actor,ActorVelStruct *param_2);
-extern void __fastcall getRandomOffscreenStartingPosition(int borderType,short *xPos,short *yPos);
+extern int randomActorType1();
+extern int randomActorType2();
+extern int randomActorType3();
+extern int areaBasedActorType();
 
 #include "data.h"
 
@@ -363,17 +366,14 @@ Actor * __fastcall addActorOfTypeWithSpriteIdx(int actorType, USHORT spriteIdx) 
 
     actor = getFreeActor();
     if (actor != NULL) {
-        if (actorType < 0) {
-            assertFailed(sourceFilename,1403);
-        }
-        if (0x11 < actorType) {
-            assertFailed(sourceFilename,1404);
-        }
+        ski_assert(actorType >= 0, 1403);
+        ski_assert(actorType < 0x12, 1404);
+
         actor->typeMaybe = actorType;
         actor = actorSetSpriteIdx(actor, spriteIdx);
         return actor;
     }
-    return NULL;
+    return actor;
 }
 
 
@@ -1386,6 +1386,143 @@ Actor * __fastcall updateActorWithOffscreenStartingPosition(Actor *actor, int bo
     if (actor) {
         getRandomOffscreenStartingPosition(borderType,&x,&y);
         actor = updateActorPositionMaybe(actor,x,y,0);
+    }
+
+    return actor;
+}
+
+// TODO this function isn't byte perfect with the original
+Actor * __fastcall updateActorPositionMaybe(Actor *actor, short newX, short newY, short inAir) {
+    BOOL hasMoved;
+    BOOL bVar3;
+    BOOL bVar4;
+    BOOL isPlayer;
+    UINT flags;
+
+    if ((actor->xPosMaybe == newX) && (actor->yPosMaybe == newY)) {
+        hasMoved = FALSE;
+    }
+    else {
+        hasMoved = TRUE;
+    }
+    bVar4 = actor->isInAir != inAir;
+    isPlayer = actor == playerActorPtrMaybe_1;
+    ski_assert(actor, 1037);
+
+    if (isPlayer && hasMoved) {
+        updateActorRectsAfterPlayerMove(newX, newY);
+    }
+
+    if ( hasMoved || bVar4) {
+        flags = actor->flags;
+        if ((flags & FLAG_1) != 0) {
+            actor = duplicateAndLinkActor(actor);
+        }
+        if ((flags & FLAG_4) == 0 || !isPlayer || bVar4) {
+            bVar3 = 0;
+        } else {
+            bVar3 = 1;
+        }
+        actor->yPosMaybe = newY;
+        actor->xPosMaybe = newX;
+        actor->isInAir = inAir;
+        *(UINT *) &actor->flags = (UINT) (bVar3 | 8) << 2 | *(UINT *) &actor->flags & 0xfffffffb;
+    }
+    return actor;
+}
+
+//TODO not byte accurate
+void __fastcall updateActorRectsAfterPlayerMove(short newPlayerX, short newPlayerY) {
+    short dx = newPlayerX - playerX;
+    short dy = newPlayerY - playerY;
+    Actor *actor = actorListPtr;
+
+    for (; actor != NULL; actor = actor->next) {
+        if (actor != playerActorPtrMaybe_1 && (actor->flags & FLAG_4) != 0 && (actor->flags & FLAG_2) == 0) {
+            if ((actor->flags & FLAG_1) != 0) {
+                duplicateAndLinkActor(actor);
+            }
+
+            actor->someRect.left -= dx;
+            actor->someRect.right -= dx;
+            actor->someRect.top -= dy;
+            actor->someRect.bottom -= dy;
+        }
+    }
+
+    playerX = newPlayerX;
+    playerY = newPlayerY;
+}
+
+void __fastcall getRandomOffscreenStartingPosition(int borderType, short *xPos, short *yPos) {
+    short sVar1;
+
+    *xPos = (short)playerX - (short)skierScreenXOffset;
+    *yPos = playerY - (short)skierScreenYOffset;
+    switch(borderType) {
+        case BORDER_LEFT:
+        case BORDER_RIGHT:
+            if (borderType == BORDER_LEFT) {
+                sVar1 = (short)windowClientRect.left + -0x3c;
+            }
+            else {
+                sVar1 = (short)windowClientRect.right + 0x3c;
+            }
+            *xPos = *xPos + sVar1;
+            *yPos = *yPos + (short)windowClientRect.top + random(windowHeight);
+            return;
+        case BORDER_TOP:
+        case BORDER_BOTTOM:
+            break;
+        default:
+            assertFailed(sourceFilename,1454);
+            return;
+    }
+    *xPos = *xPos + random(windowWidth) + (short)windowClientRect.left;
+    if (borderType == BORDER_TOP) {
+        *yPos = *yPos + (short)windowClientRect.top + -0x3c;
+        return;
+    }
+    *yPos = *yPos + (short)windowClientRect.bottom + 0x3c;
+    return;
+}
+
+Actor * __fastcall addRandomActor(int borderType) {
+    USHORT spriteIdx;
+    int actorType;
+    Actor *actor = NULL;
+    short y;
+    short x;
+
+    getRandomOffscreenStartingPosition(borderType,&x,&y);
+    if ((((x < -576) || (-320 < x)) || (y < 640)) || (8640 < y)) {
+        if (((x < 320) || (512 < x)) || ((y < 640 || (16640 < y)))) {
+            if (((x < -160) || (160 < x)) || ((y < 640 || (16640 < y)))) {
+                actorType = randomActorType1();
+            }
+            else {
+                actorType = randomActorType2();
+            }
+        }
+        else {
+            actorType = randomActorType3();
+        }
+    }
+    else {
+        actorType = areaBasedActorType();
+    }
+    if (actorType != 0x12) {
+        if (actorType < 0xb) {
+            actor = addActorOfType(actorType,UINT_ARRAY_0040a22c[actorType]);
+        }
+        else {
+            spriteIdx = getSpriteIdxForActorType(actorType);
+            actor = addActorOfTypeWithSpriteIdx(actorType,spriteIdx);
+        }
+        if (actor != (Actor *)0x0) {
+            actor = updateActorPositionMaybe(actor,x,y,0);
+            return actor;
+        }
     }
 
     return actor;

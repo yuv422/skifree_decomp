@@ -47,6 +47,9 @@ extern @setActorFrameNo@8: proc
 extern @actorSetSpriteIdx@8: proc
 extern @duplicateAndLinkActor@4: proc
 extern @updateActorWithOffscreenStartingPosition@8: proc
+extern @updateActorPositionMaybe@16: proc
+extern @getRandomOffscreenStartingPosition@12: proc
+extern @addRandomActor@4: proc
 
 ; exports
 ; public _WinMain@16
