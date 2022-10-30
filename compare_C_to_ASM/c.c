@@ -29,6 +29,20 @@ extern int areaBasedActorType();
 extern Actor * __fastcall addActorOfType(int actorType, UINT frameNo);
 //extern short __fastcall getSpriteIdxForActorType(int actorType);
 extern Actor * __fastcall addActorOfTypeWithSpriteIdx(int actorType, USHORT spriteIdx);
+extern Actor * __fastcall updateActorType1_Beginner(Actor *actor);
+extern Actor * __fastcall updateActorType2_dog(Actor *actor);
+extern Actor * __fastcall updateActorType3_snowboarder(Actor *actor);
+extern Actor * __fastcall updateActorType9_treeOnFire(Actor *actor);
+extern Actor * __fastcall updateActorTypeA_walkingTree(Actor *actor);
+extern Actor *__fastcall updateActorPositionWithVelocityMaybe(Actor *actor);
+extern Actor * __fastcall updateActorVelMaybe(Actor *actor,ActorVelStruct *param_2);
+extern void __fastcall addStylePoints(int points);
+extern void __fastcall playSound(Sound *sound);
+extern Actor * __fastcall setActorFrameNo(Actor *actor, UINT frameNo);
+extern void __fastcall updateSsGameMode(Actor *actor,short param_2,short param_3);
+extern void __fastcall updateFsGameMode(Actor *actor,short param_2,short param_3);
+extern void __fastcall updateGsGameMode(Actor *actor,short param_2,short param_3);
+extern Actor * __fastcall updatePlayerActor(Actor *actor);
 
 #include "../data.h"
 
@@ -38,31 +52,26 @@ extern Actor * __fastcall addActorOfTypeWithSpriteIdx(int actorType, USHORT spri
 //
 
 
-USHORT __fastcall getSpriteIdxForActorType(int actorType) {
-    int uVar1;
+Actor * __fastcall updateActor(Actor *actor) {
+    ski_assert(actor, 2311);
+    ski_assert(actor->typeMaybe < 11 && !actor->permObject, 2312);
 
-    switch(actorType) {
-        case 0xb:
-            return 0x1b;
+    switch(actor->typeMaybe) {
+        case 0:
+            return updatePlayerActor(actor);
+        case 3:
+            return updateActorType3_snowboarder(actor);
+        case 2:
+            return updateActorType2_dog(actor);
+        case 1:
+            return updateActorType1_Beginner(actor);
         default:
-            assertFailed(sourceFilename,1571);
-            return 0;
-        case 0xd:
-            uVar1 = random(8);
-            // TODO bytes here don't match exactly
-            if (uVar1) {
-                if (uVar1 != 1) {
-                    return 0x31;
-                }
-                return 0x33;
-            }
-            return 0x32;
-        case 0xe:
-            return random(4) != 0 ? 0x2d : 0x2e;
-        case 0xf:
-            return random(3) != 0 ? 0x2f : 0x30;
-        case 0x10:
-            return 0x34;
+            assertFailed(sourceFilename,2335);
+            return actor;
+        case 9:
+            return updateActorType9_treeOnFire(actor);
+        case 10:
+            return updateActorTypeA_walkingTree(actor);
     }
 }
 

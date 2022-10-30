@@ -2517,6 +2517,7 @@ DAT_004028dc  dword offset LAB_004028ae
 @getSpriteIdxForActorType@4 endp
 ~
 
+COMMENT ~
 @updateActor@4 proc
           push  esi
           mov   esi, ecx
@@ -2539,7 +2540,7 @@ LAB_00402912:     mov   eax, dword ptr [esi+018h]
           jmp   dword ptr [eax*4+LAB_00402964]  ; <2964>
 LAB_00402921:     mov   ecx, esi
           pop   esi
-          jmp   LAB_00402990
+          jmp   @updatePlayerActor@4
 LAB_00402929:     mov   ecx, esi
           pop   esi
           jmp   @updateActorType3_snowboarder@4
@@ -2573,7 +2574,11 @@ DAT_00402980  dword offset LAB_00402951
 DAT_00402984  dword offset LAB_00402951
 DAT_00402988  dword offset LAB_00402941
 DAT_0040298c  dword offset LAB_00402949
-LAB_00402990:     push  ebx
+@updateActor@4 endp
+~
+
+@updatePlayerActor@4 proc
+          push  ebx
           push  ebp
           push  esi
           mov   esi, ecx
@@ -2762,7 +2767,7 @@ LAB_00402b88:
           db 090h
           db 090h
           db 090h
-@updateActor@4 endp
+@updatePlayerActor@4 endp
 
 COMMENT ~
 @playSound@4 proc

@@ -18,6 +18,10 @@ extern @random@4: proc
 ;extern _randomActorType3: proc
 ;extern _randomActorType2: proc
 
+extern @updatePlayerActor@4: proc
+extern @updateActorType3_snowboarder@4: proc
+extern @updateActorTypeA_walkingTree@4: proc
+
 include asm.inc
 
 end

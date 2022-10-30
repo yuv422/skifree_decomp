@@ -37,6 +37,7 @@
 004027e0:_randomActorType2
 00402850:@getSpriteIdxForActorType@4
 004028e0:@updateActor@4
+00402990:@updatePlayerActor@4
 00402ba0:@playSound@4
 00402be0:@updateActorPositionWithVelocityMaybe@4
 00402c60:@updateSsGameMode@12

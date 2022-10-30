@@ -49,6 +49,10 @@ int randomActorType1();
 int randomActorType2();
 int randomActorType3();
 int areaBasedActorType();
+Actor * __fastcall updateActorType1_Beginner(Actor *actor);
+Actor *__fastcall updateActorType2_dog(Actor *actor);
+Actor *__fastcall updateActorType9_treeOnFire(Actor *actor);
+Actor * __fastcall updateActor(Actor *actor);
 
 //
 // ASM Functions
@@ -67,6 +71,9 @@ extern void __fastcall handleKeydownMessage(UINT charCode);
 extern void handleMouseClick(void);
 extern void setupPermObjects();
 extern Actor * __fastcall updateActorVelMaybe(Actor *actor,ActorVelStruct *param_2);
+extern Actor * __fastcall updatePlayerActor(Actor *actor);
+extern Actor * __fastcall updateActorType3_snowboarder(Actor *actor);
+extern Actor * __fastcall updateActorTypeA_walkingTree(Actor *actor);
 
 #include "data.h"
 
@@ -272,7 +279,7 @@ Actor * __fastcall updateActorType1_Beginner(Actor *actor) {
     return pAVar2;
 }
 
-void __fastcall updateActorType2_dog(Actor *actor) {
+Actor *__fastcall updateActorType2_dog(Actor *actor) {
     short sVar1;
     short uVar2;
     Actor *pAVar3;
@@ -289,26 +296,22 @@ void __fastcall updateActorType2_dog(Actor *actor) {
             uVar2 = random(3);
             actor->verticalVelocityMaybe = uVar2 - 1;
             pAVar3 = updateActorPositionWithVelocityMaybe(actor);
-            setActorFrameNo(pAVar3,0x1c);
-            return;
+            return setActorFrameNo(pAVar3,0x1c);
         case 0x1c:
             actor->HorizontalVelMaybe = 4;
             pAVar3 = updateActorPositionWithVelocityMaybe(actor);
-            setActorFrameNo(pAVar3,0x1b);
-            return;
+            return setActorFrameNo(pAVar3,0x1b);
         case 0x1d:
             actor->verticalVelocityMaybe = 0;
             actor->HorizontalVelMaybe = 0;
             uVar2 = random(0x20);
             pAVar3 = updateActorPositionWithVelocityMaybe(actor);
-            setActorFrameNo(pAVar3,(-(uVar2 != 0) & 3) + 0x1b); // TODO uVar2 != 0 ? 3 : 0
-            return;
+            return setActorFrameNo(pAVar3,(-(uVar2 != 0) & 3) + 0x1b); // TODO uVar2 != 0 ? 3 : 0
         case 0x1e:
             uVar2 = random(100);
             if (uVar2 != 0) {
                 pAVar3 = updateActorPositionWithVelocityMaybe(actor);
-                setActorFrameNo(pAVar3,0x1d);
-                return;
+                return setActorFrameNo(pAVar3,0x1d);
             }
             inAir = actor->isInAir;
             sVar1 = actor->xPosMaybe;
@@ -320,10 +323,10 @@ void __fastcall updateActorType2_dog(Actor *actor) {
             playSound(&sound_8);
     }
     pAVar3 = updateActorPositionWithVelocityMaybe(actor);
-    setActorFrameNo(pAVar3,ActorframeNo);
+    return setActorFrameNo(pAVar3,ActorframeNo);
 }
 
-void __fastcall updateActorType9_treeOnFire(Actor *actor) {
+Actor *__fastcall updateActorType9_treeOnFire(Actor *actor) {
     int frameNo = actor->frameNo;
     if (actor->typeMaybe != 9) {
         assertFailed(sourceFilename,2204);
@@ -338,7 +341,7 @@ void __fastcall updateActorType9_treeOnFire(Actor *actor) {
     if (0x3b < (int)frameNo) {
         frameNo = 0x38;
     }
-    setActorFrameNo(actor,frameNo);
+    return setActorFrameNo(actor,frameNo);
 }
 
 Actor * __fastcall getLinkedActorIfExists(Actor *actor) {
@@ -1588,4 +1591,27 @@ int randomActorType2() {
         return 0xb;
     }
     return uVar1 < 0x50 ? 0xe : 0x10;
+}
+
+Actor * __fastcall updateActor(Actor *actor) {
+    ski_assert(actor, 2311);
+    ski_assert(actor->typeMaybe < 11 && !actor->permObject, 2312);
+
+    switch(actor->typeMaybe) {
+        case 0:
+            return updatePlayerActor(actor);
+        case 3:
+            return updateActorType3_snowboarder(actor);
+        case 2:
+            return updateActorType2_dog(actor);
+        case 1:
+            return updateActorType1_Beginner(actor);
+        default:
+            assertFailed(sourceFilename,2335);
+            return actor;
+        case 9:
+            return updateActorType9_treeOnFire(actor);
+        case 10:
+            return updateActorTypeA_walkingTree(actor);
+    }
 }

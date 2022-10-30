@@ -241,8 +241,9 @@ db 01h, 00h, 18h, 9 DUP (00h), 11h, 3 DUP (00h)
 db 01h, 00h, 14h, 9 DUP (00h)
 PUBLIC C UINT_ARRAY_0040a434
 UINT_ARRAY_0040a434 byte 12h, 3 DUP (00h), 01h, 00h, 14h, 9 DUP (00h), 13h, 3 DUP (00h), 01h, 00h, 16h, 9 DUP (00h), 14h, 3 DUP (00h), 01h, 00h
-db 16h, 9 DUP (00h), 15h, 7 DUP (00h), 03h, 3 DUP (00h), 06h, 3 DUP (00h)
-db 0bh, 3 DUP (00h), 0bh, 3 DUP (00h), 0bh, 3 DUP (00h), 0bh, 3 DUP (00h), 0bh, 3 DUP (00h), 0bh, 7 DUP (00h)
+db 16h, 9 DUP (00h), 15h, 7 DUP (00h), 03h, 3 DUP (00h), 06h, 3 DUP (00h), 0bh, 3 DUP (00h), 0bh, 3 DUP (00h), 0bh, 3 DUP (00h), 0bh, 3 DUP (00h)
+db 0bh, 3 DUP (00h), 0bh, 3 DUP (00h)
+db 4 DUP (00h)
 PUBLIC C beginnerActorMovementTbl
 beginnerActorMovementTbl byte 01h, 00h, 01h, 9 DUP (00h), 16h, 3 DUP (00h), 01h, 00h, 01h, 00h, 01h, 00h, 04h, 00h, 2 DUP (0ffh), 2 DUP (00h)
 db 17h, 3 DUP (00h), 01h, 00h, 01h, 00h, 01h, 00h, 04h, 00h, 01h, 3 DUP (00h), 18h, 15 DUP (00h), 19h, 15 DUP (00h)

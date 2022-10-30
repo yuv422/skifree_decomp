@@ -70,3 +70,4 @@ _randomActorType1
 _areaBasedActorType
 _randomActorType3
 _randomActorType2
+@updateActor@4
