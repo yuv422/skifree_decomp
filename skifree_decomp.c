@@ -33,7 +33,7 @@ void updateWindowsActiveStatus();
 void __fastcall setPointerToNull(void **param_1);
 Actor *getFreeActor();
 BOOL setupGame();
-USHORT __fastcall random(short maxValue);
+short __fastcall random(short maxValue);
 Actor *__fastcall updateActorPositionWithVelocityMaybe(Actor *actor);
 Actor *__fastcall addActorOfTypeWithSpriteIdx(int actorType,USHORT spriteIdx);
 void __fastcall actorSetFlag8IfFlag1IsUnset(Actor *actor);
@@ -549,7 +549,7 @@ BOOL __fastcall loadSound(UINT resourceId, Sound *sound) {
 }
 
 USHORT __fastcall getSpriteIdxForActorType(int actorType) {
-    USHORT uVar1;
+    int uVar1;
 
     switch(actorType) {
         case 0xb:
@@ -558,24 +558,22 @@ USHORT __fastcall getSpriteIdxForActorType(int actorType) {
             assertFailed(sourceFilename,1571);
             return 0;
         case 0xd:
-            break;
+            uVar1 = random(8);
+            // TODO bytes here don't match exactly
+            if (uVar1) {
+                if (uVar1 != 1) {
+                    return 0x31;
+                }
+                return 0x33;
+            }
+            return 0x32;
         case 0xe:
-            uVar1 = random(4);
-            return 0x2e - (USHORT)(uVar1 != 0);
+            return random(4) != 0 ? 0x2d : 0x2e;
         case 0xf:
-            uVar1 = random(3);
-            return 0x30 - (USHORT)(uVar1 != 0);
+            return random(3) != 0 ? 0x2f : 0x30;
         case 0x10:
             return 0x34;
     }
-    uVar1 = random(8);
-    if (uVar1 == 0) {
-        return 0x32;
-    }
-    if (uVar1 != 1) {
-        return 0x31;
-    }
-    return 0x33;
 }
 
 void __fastcall playSound(Sound *sound) {
@@ -700,7 +698,7 @@ void __fastcall enlargeRect(RECT *rect1, RECT *rect2) {
     }
 }
 
-USHORT __fastcall random(short maxValue) {
+short __fastcall random(short maxValue) {
     return (short)rand() % maxValue;
 }
 

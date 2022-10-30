@@ -21,13 +21,13 @@ extern void __fastcall getRandomOffscreenStartingPosition(int borderType,short *
 extern Actor * __fastcall updateActorPositionMaybe(Actor *actor,short newX,short newY,short inAir);
 extern Actor * __fastcall duplicateAndLinkActor(Actor *actor);
 //extern void __fastcall updateActorRectsAfterPlayerMove(short newPlayerX,short newPlayerY);
-USHORT __fastcall random(short maxValue);
+short __fastcall random(short maxValue);
 extern int randomActorType1();
 extern int randomActorType2();
 extern int randomActorType3();
 extern int areaBasedActorType();
 extern Actor * __fastcall addActorOfType(int actorType, UINT frameNo);
-extern short __fastcall getSpriteIdxForActorType(int actorType);
+//extern short __fastcall getSpriteIdxForActorType(int actorType);
 extern Actor * __fastcall addActorOfTypeWithSpriteIdx(int actorType, USHORT spriteIdx);
 
 #include "../data.h"
@@ -38,33 +38,31 @@ extern Actor * __fastcall addActorOfTypeWithSpriteIdx(int actorType, USHORT spri
 //
 
 
-//int randomActorType3() {
-//    if (totalAreaOfActorSprites > windowWithMarginTotalArea / 16) {
-//        return 0x12;
-//    }
-//
-//    return random(0x40) != 0 ? 0xb + 2 : 2;
-//}
+USHORT __fastcall getSpriteIdxForActorType(int actorType) {
+    int uVar1;
 
-int randomActorType2() {
-    USHORT uVar1;
-
-    if (totalAreaOfActorSprites > windowWithMarginTotalArea / 32) {
-        return 0x12;
+    switch(actorType) {
+        case 0xb:
+            return 0x1b;
+        default:
+            assertFailed(sourceFilename,1571);
+            return 0;
+        case 0xd:
+            uVar1 = random(8);
+            // TODO bytes here don't match exactly
+            if (uVar1) {
+                if (uVar1 != 1) {
+                    return 0x31;
+                }
+                return 0x33;
+            }
+            return 0x32;
+        case 0xe:
+            return random(4) != 0 ? 0x2d : 0x2e;
+        case 0xf:
+            return random(3) != 0 ? 0x2f : 0x30;
+        case 0x10:
+            return 0x34;
     }
-
-    uVar1 = random(100);
-    if (uVar1 < 2) {
-        return 0xa;
-    }
-    if (uVar1 < 0x14) {
-        return 0xd;
-    }
-    if (uVar1 < 0x32) {
-        return 0xf;
-    }
-    if (uVar1 < 0x3c) {
-        return 0xb;
-    }
-    return uVar1 < 0x50 ? 0xe : 0x10;
 }
+
