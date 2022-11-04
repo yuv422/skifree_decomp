@@ -43,6 +43,10 @@ extern void __fastcall updateSsGameMode(Actor *actor,short param_2,short param_3
 extern void __fastcall updateFsGameMode(Actor *actor,short param_2,short param_3);
 extern void __fastcall updateGsGameMode(Actor *actor,short param_2,short param_3);
 extern Actor * __fastcall updatePlayerActor(Actor *actor);
+//extern int __fastcall FUN_00402e30(int param_1,int param_2,int param_3,int param_4,int param_5);
+extern void resetPlayerFrameNo();
+extern void __fastcall updateEntPackIniKeyValue(LPCSTR configKey, int value, int isTime);
+extern void __fastcall permObjectSetSpriteIdx(PermObject *permObject, USHORT spriteIdx);
 
 #include "../data.h"
 
@@ -51,27 +55,17 @@ extern Actor * __fastcall updatePlayerActor(Actor *actor);
 // FUNCTION GOES HERE
 //
 
+void resetPlayerFrameNo() {
+    UINT ActorframeNo;
 
-Actor * __fastcall updateActor(Actor *actor) {
-    ski_assert(actor, 2311);
-    ski_assert(actor->typeMaybe < 11 && !actor->permObject, 2312);
-
-    switch(actor->typeMaybe) {
-        case 0:
-            return updatePlayerActor(actor);
-        case 3:
-            return updateActorType3_snowboarder(actor);
-        case 2:
-            return updateActorType2_dog(actor);
-        case 1:
-            return updateActorType1_Beginner(actor);
-        default:
-            assertFailed(sourceFilename,2335);
-            return actor;
-        case 9:
-            return updateActorType9_treeOnFire(actor);
-        case 10:
-            return updateActorTypeA_walkingTree(actor);
+    if (playerActor) {
+        ActorframeNo = playerActor->frameNo;
+        if ((ActorframeNo != 0xb) && (ActorframeNo != 0x11)) {
+            ActorframeNo = (playerActor->isInAir > 0) ? 0xe : 3;
+        }
+        setActorFrameNo(playerActor,ActorframeNo);
+        formatAndPrintStatusStrings(statusWindowDC);
     }
 }
+
 

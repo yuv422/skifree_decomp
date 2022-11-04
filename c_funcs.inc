@@ -51,6 +51,8 @@ extern @updateActorPositionMaybe@16: proc
 extern @getRandomOffscreenStartingPosition@12: proc
 extern @addRandomActor@4: proc
 extern @updateActor@4: proc
+extern @FUN_00402e30@20: proc
+extern _resetPlayerFrameNo: proc
 
 ; exports
 ; public _WinMain@16

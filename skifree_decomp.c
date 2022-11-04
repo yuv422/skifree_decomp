@@ -53,6 +53,10 @@ Actor * __fastcall updateActorType1_Beginner(Actor *actor);
 Actor *__fastcall updateActorType2_dog(Actor *actor);
 Actor *__fastcall updateActorType9_treeOnFire(Actor *actor);
 Actor * __fastcall updateActor(Actor *actor);
+Actor * __fastcall updatePlayerActor(Actor *actor);
+void __fastcall updateSsGameMode(Actor *actor, short xPos, short yPos);
+int __fastcall FUN_00402e30(int param_1,int param_2,int param_3,int param_4,int param_5);
+void resetPlayerFrameNo();
 
 //
 // ASM Functions
@@ -74,6 +78,12 @@ extern Actor * __fastcall updateActorVelMaybe(Actor *actor,ActorVelStruct *param
 extern Actor * __fastcall updatePlayerActor(Actor *actor);
 extern Actor * __fastcall updateActorType3_snowboarder(Actor *actor);
 extern Actor * __fastcall updateActorTypeA_walkingTree(Actor *actor);
+extern void __fastcall updateFsGameMode(Actor *actor, short xPos, short yPos);
+extern void __fastcall updateGsGameMode(Actor *actor, short xPos, short yPos);
+
+
+extern void __fastcall updateEntPackIniKeyValue(LPCSTR configKey, int value, int isTime);
+extern void __fastcall permObjectSetSpriteIdx(PermObject *permObject, USHORT spriteIdx);
 
 #include "data.h"
 
@@ -591,7 +601,7 @@ void __fastcall playSound(Sound *sound) {
         }
     }
 }
-
+// TODO problems in byte matching due to deadcode removal.
 Actor * __fastcall updateActorPositionWithVelocityMaybe(Actor *actor) {
     short newX;
     short newY;
@@ -600,16 +610,16 @@ Actor * __fastcall updateActorPositionWithVelocityMaybe(Actor *actor) {
     newX = actor->xPosMaybe + actor->HorizontalVelMaybe;
     newY = actor->yPosMaybe + actor->verticalVelocityMaybe;
     inAir = actor->isInAir + actor->inAirCounter;
-    if (actor == NULL) {
-        assertFailed(sourceFilename,1061);
-    }
+
+    ski_assert(actor, 1061);
+
     if (isTurboMode != 0) {
         newX = newX + actor->HorizontalVelMaybe;
         newY = newY + actor->verticalVelocityMaybe;
         inAir = inAir + actor->inAirCounter;
     }
-    if (0 < inAir) {
-        actor->inAirCounter = actor->inAirCounter + -1;
+    if (inAir > 0) {
+        actor->inAirCounter--;
         return updateActorPositionMaybe(actor,newX,newY,inAir);
     }
     actor->inAirCounter = 0;
@@ -1613,5 +1623,186 @@ Actor * __fastcall updateActor(Actor *actor) {
             return updateActorType9_treeOnFire(actor);
         case 10:
             return updateActorTypeA_walkingTree(actor);
+    }
+}
+
+// TODO not 100% byte accurate. missing assert and some other logic differences
+Actor * __fastcall updatePlayerActor(Actor *actor) {
+    short sVar1;
+    short uVar5;
+    Actor *pAVar2;
+    Sound *sound;
+    int points;
+    UINT ActorframeNo;
+    short xPos;
+    short yPos;
+
+    xPos = actor->xPosMaybe;
+    yPos = actor->yPosMaybe;
+    ActorframeNo = actor->frameNo;
+    ski_assert(actor, 2022);
+    ski_assert(actor->typeMaybe == 0, 2023);
+
+
+    if (ActorframeNo == 0xb) {
+        ski_assert(actor->isInAir == 0, 2027);
+        ski_assert(actor->inAirCounter == 0, 2028);
+
+        sVar1 = actor->HorizontalVelMaybe;
+        if ((sVar1 == 0) && (actor->verticalVelocityMaybe == 0)) {
+            ActorframeNo = 0xc;
+        }
+        if (sVar1 < 0) {
+            uVar5 = -1;
+        }
+        else {
+            uVar5 = (short)(sVar1 > 0);
+        }
+        actor->HorizontalVelMaybe = sVar1 - uVar5;
+        sVar1 = actor->verticalVelocityMaybe;
+        if (sVar1 < 0) {
+            actor->verticalVelocityMaybe = sVar1 + 1;
+        }
+        else {
+            actor->verticalVelocityMaybe = (sVar1 > 0) ? sVar1 - 1 : sVar1;
+        }
+    }
+    else {
+        pAVar2 = updateActorPositionWithVelocityMaybe(actor);
+        ski_assert(ActorframeNo < 22, 2040);
+
+        actor = updateActorVelMaybe(pAVar2,ActorVelStruct_ARRAY_0040a308 + ActorframeNo);
+        switch(ActorframeNo) {
+            case 8:
+            case 10:
+                ActorframeNo = 6;
+                break;
+            case 7:
+            case 9:
+                ActorframeNo = 3;
+                break;
+            case 0xd:
+            case 0xe:
+            case 0xf:
+            case 0x10:
+            case 0x11:
+            case 0x12:
+            case 0x13:
+            case 0x14:
+            case 0x15:
+                if (actor->isInAir == 0) {
+                    ski_assert(ActorframeNo - 0xd < 9, 2066);
+
+                    ActorframeNo = UINT_ARRAY_0040a434[ActorframeNo];
+                    if (ActorframeNo == 0x11) {
+                        addStylePoints(-0x40);
+                        sound = &sound_1;
+                    }
+                    else {
+                        sound = &sound_4;
+                    }
+                    playSound(sound);
+                }
+        }
+    }
+    pAVar2 = setActorFrameNo(actor,ActorframeNo);
+    switch(ActorframeNo) {
+        case 7:
+        case 8:
+        case 9:
+        case 10:
+            points = -1;
+            break;
+        default:
+            goto switchD_00402b0b_caseD_b;
+        case 0x14:
+        case 0x15:
+            points = 8;
+            break;
+        case 0x12:
+        case 0x13:
+            points = 4;
+            break;
+        case 0x10:
+            points = 2;
+            break;
+    }
+    addStylePoints(points);
+    switchD_00402b0b_caseD_b:
+    updateSsGameMode(pAVar2,xPos,yPos);
+    updateFsGameMode(pAVar2,xPos,yPos);
+    updateGsGameMode(pAVar2,xPos,yPos);
+    return pAVar2;
+}
+
+// TODO this isn't byte compatible.
+void __fastcall updateSsGameMode(Actor *actor,short xPos,short yPos) {
+    int iVar1;
+    USHORT spriteIdx;
+    short x;
+    short y;
+
+    if (actor == playerActor) {
+        x = actor->xPosMaybe;
+        y = actor->yPosMaybe;
+        ski_assert(actor->typeMaybe == 0, 1788);
+        if (isSsGameMode != 0) {
+            elapsedTime = currentTickCount - timedGameRelated;
+            if (y > 8640) {
+                iVar1 = FUN_00402e30(currentTickCount,prevTickCount,(int)y,(int)yPos,0x21c0);
+                isSsGameMode = 0;
+                elapsedTime = iVar1 - timedGameRelated;
+                INT_0040c964 = 1;
+                resetPlayerFrameNo();
+                updateEntPackIniKeyValue(iniSsConfigKey,elapsedTime,1); // TODO this is currently a jmp when it should be a call + ret
+                return;
+            }
+            if (y <= 0x280) {
+                isSsGameMode = 0;
+                return;
+            }
+            if (y > currentSlalomFlag->maybeY) {
+                spriteIdx = 0x19;
+                iVar1 = FUN_00402e30((int)x,(int)xPos,(int)y,(int)yPos,(int)currentSlalomFlag->maybeY);
+                if (((currentSlalomFlag->spriteIdx == 0x17) && ((short)iVar1 > currentSlalomFlag->maybeX))
+                    || ((currentSlalomFlag->spriteIdx == 0x18 && ((short)iVar1 < currentSlalomFlag->maybeX)))
+                        ) {
+                    spriteIdx = 0x1a;
+                    timedGameRelated = timedGameRelated - 5000;
+                }
+                permObjectSetSpriteIdx(currentSlalomFlag,spriteIdx);
+                currentSlalomFlag = currentSlalomFlag + 1;
+                return;
+            }
+        }
+        else {
+            if ((yPos <= 0x280) && (y > 0x280)) {
+                iVar1 = FUN_00402e30((int)x,(int)xPos,(int)y,(int)yPos,0x280);
+                if (((short)iVar1 >= -576) && ((short)iVar1 <= -320)) {
+                    isSsGameMode = 1;
+                    timedGameRelated = FUN_00402e30(currentTickCount,prevTickCount,(int)y,(int)yPos,0x280) ;
+                    elapsedTime = timedGameRelated - currentTickCount;
+                    currentSlalomFlag = firstSlalomFlagLeft;
+                }
+            }
+        }
+    }
+}
+
+int __fastcall FUN_00402e30(int param_1,int param_2,int param_3,int param_4,int param_5) {
+    ski_assert(param_3 != param_4, 1612);
+    return param_1 - ((param_1 - param_2) * (param_3 - param_5)) / (param_3 - param_4);
+}
+
+void resetPlayerFrameNo() {
+    UINT ActorframeNo;
+
+    if (playerActor) {
+        ActorframeNo = playerActor->frameNo;
+        if ((ActorframeNo != 0xb) && (ActorframeNo != 0x11)) {
+            ActorframeNo = (playerActor->isInAir > 0) ? 0xe : 3;
+        }
+        setActorFrameNo(playerActor,ActorframeNo);
+        formatAndPrintStatusStrings(statusWindowDC);
     }
 }

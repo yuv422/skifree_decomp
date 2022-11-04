@@ -71,3 +71,7 @@ _areaBasedActorType
 _randomActorType3
 _randomActorType2
 @updateActor@4
+@updatePlayerActor@4
+@updateSsGameMode@12
+@FUN_00402e30@20
+_resetPlayerFrameNo

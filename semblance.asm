@@ -2577,6 +2577,7 @@ DAT_0040298c  dword offset LAB_00402949
 @updateActor@4 endp
 ~
 
+COMMENT ~
 @updatePlayerActor@4 proc
           push  ebx
           push  ebp
@@ -2768,6 +2769,7 @@ LAB_00402b88:
           db 090h
           db 090h
 @updatePlayerActor@4 endp
+~
 
 COMMENT ~
 @playSound@4 proc
@@ -2865,6 +2867,7 @@ LAB_00402c5d:
 @updateActorPositionWithVelocityMaybe@4 endp
 ~
 
+COMMENT ~
 @updateSsGameMode@12 proc
           mov   eax, dword ptr [playerActor]    ; <c72c>
           push  ebx
@@ -2902,7 +2905,7 @@ LAB_00402c94:     cmp   dword ptr [isSsGameMode], edi   ; <c95c>
           mov   ecx, dword ptr [timedGameRelated]       ; <c948>
           mov   dword ptr [isSsGameMode], edi   ; <c95c>
           sub   eax, ecx
-          mov   dword ptr [DAT_0040c964], 000000001h    ; <c964>
+          mov   dword ptr [INT_0040c964], 000000001h    ; <c964>
           mov   dword ptr [elapsedTime], eax    ; <c944>
           call  _resetPlayerFrameNo
           mov   edx, dword ptr [elapsedTime]    ; <c944>
@@ -3009,7 +3012,9 @@ LAB_00402e24:
           db 090h
           db 090h
 @updateSsGameMode@12 endp
+~
 
+COMMENT ~
 @FUN_00402e30@20 proc
           push  ebx
           push  ebp
@@ -3056,7 +3061,9 @@ LAB_00402e72:
           db 090h
           db 090h
 @FUN_00402e30@20 endp
+~
 
+COMMENT ~
 _resetPlayerFrameNo proc
           mov   ecx, dword ptr [playerActor]    ; <c72c>
           test  ecx, ecx
@@ -3086,6 +3093,7 @@ LAB_00402eb8:
           db 090h
           db 090h
 _resetPlayerFrameNo endp
+~
 
 @updateEntPackIniKeyValue@12 proc
           sub   esp, 000000138h
@@ -3448,7 +3456,7 @@ LAB_00403284:     cmp   dword ptr [isGsGameMode], edi   ; <c958>
           mov   ecx, dword ptr [timedGameRelated]       ; <c948>
           mov   dword ptr [isGsGameMode], edi   ; <c958>
           sub   eax, ecx
-          mov   dword ptr [DAT_0040c960], 000000001h    ; <c960>
+          mov   dword ptr [INT_0040c960], 000000001h    ; <c960>
           mov   dword ptr [elapsedTime], eax    ; <c944>
           call  _resetPlayerFrameNo
           mov   edx, dword ptr [elapsedTime]    ; <c944>
@@ -5563,9 +5571,9 @@ _resetGame proc
           mov   word ptr [DAT_0040c5d8], si     ; <c5d8>
           mov   word ptr [DAT_0040c714], si     ; <c714>
           mov   dword ptr [stylePoints], esi    ; <c6a8>
-          mov   dword ptr [DAT_0040c964], esi   ; <c964>
+          mov   dword ptr [INT_0040c964], esi   ; <c964>
           mov   dword ptr [isSsGameMode], esi   ; <c95c>
-          mov   dword ptr [DAT_0040c960], esi   ; <c960>
+          mov   dword ptr [INT_0040c960], esi   ; <c960>
           mov   dword ptr [isGsGameMode], esi   ; <c958>
           mov   dword ptr [elapsedTime], esi    ; <c944>
           mov   dword ptr [updateTimerDurationMillis], 000000028h       ; <c678>

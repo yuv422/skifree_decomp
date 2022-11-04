@@ -9,6 +9,7 @@ extern char s_assertErrorFormat[];
 extern char s_Assertion_Failed_0040c0a8[];
 extern char s_insufficient_local_memory[];
 extern char s_nosound_0040c0fc[];
+extern char iniSsConfigKey[];
 
 extern USHORT actorFrameToSpriteTbl[];
 extern UINT UINT_ARRAY_0040a22c[];
@@ -94,6 +95,11 @@ extern int totalAreaOfActorSprites;
 extern int windowHeight;
 extern short windowWidth;
 extern int windowWithMarginTotalArea;
+extern PermObject *currentSlalomFlag;
+extern PermObject *firstSlalomFlagLeft;
+extern PermObject *firstSlalomFlagRight;
+extern int INT_0040c964;
+
 
 extern BOOL (WINAPI *sndPlaySoundAFuncPtr)(LPCSTR, UINT);
 extern void (CALLBACK* timerCallbackFuncPtr)(HWND, UINT, UINT, DWORD);
