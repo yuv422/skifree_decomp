@@ -1,23 +1,29 @@
-_resetPlayerFrameNo proc
-          mov   ecx, dword ptr [playerActor]    ; <c72c>
+@permObjectSetSpriteIdx@8 proc
+          push  esi
+          mov   esi, ecx
+          push  edi
+          mov   edi, edx
+          test  esi, esi
+          jnz   LAB_00403149
+          mov   edx, 0000006EDh
+          mov   ecx, offset sourceFilename      ; <c090>
+          call  @assertFailed@8
+LAB_00403149:     mov   eax, edi
+          mov   word ptr [esi+008h], di
+          mov   ecx, dword ptr [sprites]        ; <c5f8>
+          and   eax, 00000FFFFh
+          shl   eax, 004h
+          add   eax, ecx
+          mov   ecx, dword ptr [esi]
           test  ecx, ecx
-          jz    LAB_00402eb7
-          mov   edx, dword ptr [ecx+01Ch]
-          cmp   edx, 00000000Bh
-          jz    LAB_00402ea7
-          cmp   edx, 000000011h
-          jz    LAB_00402ea7
-          xor   edx, edx
-          cmp   word ptr [ecx+044h], dx
-          setle dl
-          dec   edx
-          and   edx, 00000000Bh
-          add   edx, 000000003h
-LAB_00402ea7:     call  @setActorFrameNo@8
-          mov   ecx, dword ptr [statusWindowDC] ; <c6cc>
-          jmp   @formatAndPrintStatusStrings@4
-LAB_00402eb7:     ret
-LAB_00402eb8:
+          mov   dword ptr [esi+004h], eax
+          jz    LAB_0040316f
+          mov   edx, edi
+          call  @actorSetSpriteIdx@8
+LAB_0040316f:     pop   edi
+          pop   esi
+          ret
+LAB_00403172:
           db 090h
           db 090h
           db 090h
@@ -26,4 +32,10 @@ LAB_00402eb8:
           db 090h
           db 090h
           db 090h
-_resetPlayerFrameNo endp
+          db 090h
+          db 090h
+          db 090h
+          db 090h
+          db 090h
+          db 090h
+@permObjectSetSpriteIdx@8 endp

@@ -7,13 +7,13 @@
 extern void __fastcall assertFailed(char *srcFilename, int lineNumber);
 extern void __fastcall enlargeRect(RECT *rect1, RECT *rect2);
 extern char * __fastcall getCachedString(UINT stringIdx);
-extern int __fastcall formatElapsedTime(int totalMillis,LPSTR outputString);
+extern short __fastcall formatElapsedTime(int totalMillis,LPSTR outputString);
 extern void __fastcall drawText(HDC hdc,LPCSTR textStr,short x,short *y,int textLen);
 extern void updateGameState();
 extern void __fastcall drawWindow(HDC hdc, RECT *rect);
 extern void __fastcall formatAndPrintStatusStrings(HDC windowDC);
 extern Actor * getFreeActor();
-extern Actor * __fastcall actorSetSpriteIdx(Actor *actor,USHORT spriteIdx);
+extern Actor * __fastcall actorSetSpriteIdx(Actor *actor, USHORT spriteIdx);
 extern Actor * __fastcall FUN_00402220(Actor *actor);
 extern BOOL __fastcall isSlowTile(short spriteIdx);
 extern Actor * __fastcall addActor(Actor *actor, BOOL insertBack);
@@ -46,7 +46,7 @@ extern Actor * __fastcall updatePlayerActor(Actor *actor);
 //extern int __fastcall FUN_00402e30(int param_1,int param_2,int param_3,int param_4,int param_5);
 extern void resetPlayerFrameNo();
 extern void __fastcall updateEntPackIniKeyValue(LPCSTR configKey, int value, int isTime);
-extern void __fastcall permObjectSetSpriteIdx(PermObject *permObject, USHORT spriteIdx);
+//extern void __fastcall permObjectSetSpriteIdx(PermObject *permObject, USHORT spriteIdx);
 
 #include "../data.h"
 
@@ -55,17 +55,15 @@ extern void __fastcall permObjectSetSpriteIdx(PermObject *permObject, USHORT spr
 // FUNCTION GOES HERE
 //
 
-void resetPlayerFrameNo() {
-    UINT ActorframeNo;
+void __fastcall permObjectSetSpriteIdx(PermObject *permObject, USHORT spriteIdx) {
+    ski_assert(permObject, 1773);
 
-    if (playerActor) {
-        ActorframeNo = playerActor->frameNo;
-        if ((ActorframeNo != 0xb) && (ActorframeNo != 0x11)) {
-            ActorframeNo = (playerActor->isInAir > 0) ? 0xe : 3;
-        }
-        setActorFrameNo(playerActor,ActorframeNo);
-        formatAndPrintStatusStrings(statusWindowDC);
+    permObject->spriteIdx = spriteIdx;
+    permObject->spritePtr = sprites + spriteIdx;
+    if (permObject->actor) {
+        actorSetSpriteIdx(permObject->actor,spriteIdx);
     }
 }
+
 
 

@@ -53,6 +53,8 @@ extern @addRandomActor@4: proc
 extern @updateActor@4: proc
 extern @FUN_00402e30@20: proc
 extern _resetPlayerFrameNo: proc
+extern @updateEntPackIniKeyValue@12: proc
+extern @permObjectSetSpriteIdx@8: proc
 
 ; exports
 ; public _WinMain@16

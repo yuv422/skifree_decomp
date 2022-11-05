@@ -27,8 +27,8 @@ extern @updateFsGameMode@12: proc
 extern @updateGsGameMode@12: proc
 ;extern @FUN_00402e30@20: proc
 ;extern _resetPlayerFrameNo: proc
-extern @updateEntPackIniKeyValue@12: proc
-extern @permObjectSetSpriteIdx@8: proc
+;extern @updateEntPackIniKeyValue@12: proc
+;extern @permObjectSetSpriteIdx@8: proc
 
 include asm.inc
 

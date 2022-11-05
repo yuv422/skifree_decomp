@@ -75,7 +75,6 @@ extern void __fastcall handleKeydownMessage(UINT charCode);
 extern void handleMouseClick(void);
 extern void setupPermObjects();
 extern Actor * __fastcall updateActorVelMaybe(Actor *actor,ActorVelStruct *param_2);
-extern Actor * __fastcall updatePlayerActor(Actor *actor);
 extern Actor * __fastcall updateActorType3_snowboarder(Actor *actor);
 extern Actor * __fastcall updateActorTypeA_walkingTree(Actor *actor);
 extern void __fastcall updateFsGameMode(Actor *actor, short xPos, short yPos);
@@ -162,7 +161,7 @@ char * __fastcall getCachedString(UINT stringIdx) {
     return stringCache[stringIdx];
 }
 
-void __fastcall formatElapsedTime(int totalMillis, LPSTR outputString) {
+short __fastcall formatElapsedTime(int totalMillis, LPSTR outputString) {
     int iVar1;
     char *pcVar2;
     UINT uVar3;
@@ -176,7 +175,7 @@ void __fastcall formatElapsedTime(int totalMillis, LPSTR outputString) {
     uVar3 = iVar1 % 60 & 0xffff;
     uVar4 = iVar1 / 60 & 0xffff;
     pcVar2 = getCachedString(IDS_TIME_FORMAT);
-    wsprintfA(outputString,pcVar2,uVar4,uVar3,uVar5,uVar6);
+    return (short)wsprintfA(outputString,pcVar2,uVar4,uVar3,uVar5,uVar6);
 }
 
 void __fastcall drawText(HDC hdc, LPCSTR textStr, short x, short *y, int textLen) {
@@ -1804,5 +1803,167 @@ void resetPlayerFrameNo() {
         }
         setActorFrameNo(playerActor,ActorframeNo);
         formatAndPrintStatusStrings(statusWindowDC);
+    }
+}
+
+// TODO not byte compatible with the original
+void __fastcall updateEntPackIniKeyValue(LPCSTR configKey,int value,int isTime) {
+    char cVar1;
+    int *valuePtr;
+    UINT uVar2;
+    int iVar3;
+    USHORT uVar4 = 0;
+    USHORT yourscoreIdx;
+    char *pcVar5;
+    LPSTR outputString;
+    USHORT uVar6;
+    char *bufPtr;
+    int hiScoreTbl [10];
+    char lineBuf [256];
+
+    bufPtr = lineBuf;
+
+    if (isTime != 0) {
+        value = -value;
+    }
+    GetPrivateProfileStringA
+            (entpack_ini_section_name_ski,configKey,(LPCSTR)&statusWindowNameStrPtr,lineBuf,0x100,
+             s_entpack_ini);
+    while ((bufPtr[0] != '\0' && (uVar4 < 10))) {
+        cVar1 = *bufPtr;
+        while (cVar1 == ' ') {
+            pcVar5 = bufPtr + 1;
+            bufPtr = bufPtr + 1;
+            cVar1 = *pcVar5;
+        }
+        cVar1 = *bufPtr;
+        pcVar5 = bufPtr;
+        if (cVar1 != ' ') {
+            do {
+                if (cVar1 == '\0') break;
+                cVar1 = pcVar5[1];
+                pcVar5 = pcVar5 + 1;
+            } while (cVar1 != ' ');
+            if (pcVar5 != bufPtr) {
+                if (*pcVar5 != '\0') {
+                    *pcVar5 = '\0';
+                    pcVar5 = pcVar5 + 1;
+                }
+                hiScoreTbl[uVar4] = atol(bufPtr);
+                uVar4++;
+                bufPtr = pcVar5;
+            }
+        }
+//        lineBuf[0] = *bufPtr;
+    }
+    yourscoreIdx = 0;
+    if (uVar4 > 0) {
+        do {
+            if (value > hiScoreTbl[yourscoreIdx]) break;
+            yourscoreIdx = yourscoreIdx + 1;
+        } while (yourscoreIdx < uVar4);
+        if (yourscoreIdx >= 10) goto LAB_00402fe2;
+    }
+    if (uVar4 == 10) {
+        uVar4 = 9;
+    }
+    uVar6 = uVar4;
+    if (uVar4 > yourscoreIdx) {
+        valuePtr = hiScoreTbl + uVar4;
+        iVar3 = (UINT)uVar4 - (UINT)yourscoreIdx;
+        do {
+            uVar6 = uVar6 - 1;
+            *valuePtr = valuePtr[-1];
+            valuePtr--;
+            iVar3 = iVar3 + -1;
+        } while (iVar3 != 0);
+    }
+    uVar4 = uVar4 + 1;
+    hiScoreTbl[uVar6] = value;
+    LAB_00402fe2:
+    bufPtr = lineBuf;
+    if (uVar4 > 0) {
+        valuePtr = hiScoreTbl;
+        uVar2 = (UINT)uVar4;
+        do {
+            iVar3 = wsprintfA(bufPtr,scoreFormatString,*valuePtr);
+            bufPtr = bufPtr + iVar3;
+            valuePtr = valuePtr + 1;
+            uVar2 = uVar2 - 1;
+        } while (uVar2 != 0);
+    }
+    WritePrivateProfileStringA(entpack_ini_section_name_ski,configKey,lineBuf,s_entpack_ini);
+    uVar6 = 0;
+    bufPtr = lineBuf;
+    if (uVar4 > 0) {
+        for(valuePtr = hiScoreTbl; uVar6 < uVar4; uVar6++, valuePtr++) {
+            if (uVar6 > 0) {
+                *bufPtr = '\n';
+                bufPtr++;
+            }
+            if (isTime != 0) {
+                uVar2 = formatElapsedTime(-*valuePtr,bufPtr);
+                uVar2 = uVar2 & 0xffff;
+            }
+            else {
+                uVar2 = wsprintfA(bufPtr,stylePointsFormatString,*valuePtr);
+            }
+            bufPtr = bufPtr + uVar2;
+            if (uVar6 == yourscoreIdx) {
+                pcVar5 = getCachedString(IDS_THATS_YOU);
+                uVar2 = wsprintfA(bufPtr,scoreStringFormatString,pcVar5);
+                bufPtr = bufPtr + uVar2;
+            }
+        }
+//        valuePtr = hiScoreTbl;
+//        do {
+//            if (uVar6 > 0) {
+//                *bufPtr = '\n';
+//                bufPtr++;
+//            }
+//            if (isTime != 0) {
+//                uVar2 = formatElapsedTime(-*valuePtr,bufPtr);
+//                uVar2 = uVar2 & 0xffff;
+//            }
+//            else {
+//                uVar2 = wsprintfA(bufPtr,stylePointsFormatString,*valuePtr);
+//            }
+//            bufPtr = bufPtr + uVar2;
+//            if (uVar6 == yourscoreIdx) {
+//                pcVar5 = getCachedString(IDS_THATS_YOU);
+//                uVar2 = wsprintfA(bufPtr,scoreStringFormatString,pcVar5);
+//                bufPtr = bufPtr + uVar2;
+//            }
+//            uVar6++;
+//            valuePtr++;
+//        } while (uVar6 < uVar4);
+    }
+    if (yourscoreIdx == 10) {
+        iVar3 = wsprintfA(bufPtr,newlineString);
+        outputString = bufPtr + iVar3;
+//        outputString = bufPtr + wsprintfA(bufPtr,newlineString);
+        if (isTime != 0) {
+            uVar2 = formatElapsedTime(-value,outputString);
+            uVar2 = uVar2 & 0xffff;
+        }
+        else {
+            uVar2 = wsprintfA(outputString,stylePointsFormatString,value);
+        }
+        bufPtr = getCachedString(IDS_TRY_AGAIN);
+        wsprintfA(outputString + uVar2,scoreStringFormatString,bufPtr);
+    }
+    bufPtr = getCachedString(IDS_HIGH_SCORES);
+    MessageBoxA(hSkiMainWnd,lineBuf,bufPtr,0);
+    return;
+}
+
+// TODO not byte compatible. jmp actorSetSpriteIdx rather than call.
+void __fastcall permObjectSetSpriteIdx(PermObject *permObject, USHORT spriteIdx) {
+    ski_assert(permObject, 1773);
+
+    permObject->spriteIdx = spriteIdx;
+    permObject->spritePtr = sprites + spriteIdx;
+    if (permObject->actor) {
+        actorSetSpriteIdx(permObject->actor,spriteIdx);
     }
 }

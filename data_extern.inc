@@ -136,10 +136,10 @@ EXTERN C s_Assertion_Failed_0040c0a8: far
 EXTERN C s_assertErrorFormat: far
 EXTERN C s_out_o_memory: far
 EXTERN C iniSsConfigKey: far
-EXTERN C DAT_0040c0dc: far
-EXTERN C DAT_0040c0e0: far
+EXTERN C newlineString: far
+EXTERN C scoreStringFormatString: far
 EXTERN C stylePointsFormatString: far
-EXTERN C DAT_0040c0ec: far
+EXTERN C scoreFormatString: far
 EXTERN C iniFsConfigKey: far
 EXTERN C iniGsConfigKey: far
 EXTERN C s_nosound_0040c0fc: far

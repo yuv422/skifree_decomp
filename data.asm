@@ -49,18 +49,18 @@ s_out_o_memory byte 5bh, 6fh, 75h, 74h, 20h, 6fh, 27h, 20h, 6dh, 65h, 6dh, 6fh, 
 PUBLIC C iniSsConfigKey
 iniSsConfigKey byte 2 DUP (53h), 00h
 db 00h
-PUBLIC C DAT_0040c0dc
-DAT_0040c0dc byte 0ah
-db 0ah, 2 DUP (00h)
-PUBLIC C DAT_0040c0e0
-DAT_0040c0e0 byte 25h
-db 73h, 2 DUP (00h)
+PUBLIC C newlineString
+newlineString byte 2 DUP (0ah), 00h
+db 00h
+PUBLIC C scoreStringFormatString
+scoreStringFormatString byte 25h, 73h, 00h
+db 00h
 PUBLIC C stylePointsFormatString
 stylePointsFormatString byte 25h
 db 39h, 6ch, 64h, 4 DUP (00h)
-PUBLIC C DAT_0040c0ec
-DAT_0040c0ec byte 25h
-db 6ch, 64h, 20h, 4 DUP (00h)
+PUBLIC C scoreFormatString
+scoreFormatString byte 25h, 6ch, 64h, 20h, 00h
+db 3 DUP (00h)
 PUBLIC C iniFsConfigKey
 iniFsConfigKey byte 46h, 53h, 00h
 db 00h

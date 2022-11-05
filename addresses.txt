@@ -320,10 +320,10 @@
 0040c0bc:s_assertErrorFormat
 0040c0c8:s_out_o_memory
 0040c0d8:iniSsConfigKey
-0040c0dc:DAT_0040c0dc
-0040c0e0:DAT_0040c0e0
+0040c0dc:newlineString
+0040c0e0:scoreStringFormatString
 0040c0e4:stylePointsFormatString
-0040c0ec:DAT_0040c0ec
+0040c0ec:scoreFormatString
 0040c0f4:iniFsConfigKey
 0040c0f8:iniGsConfigKey
 0040c0fc:s_nosound_0040c0fc

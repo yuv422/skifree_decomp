@@ -3095,6 +3095,7 @@ LAB_00402eb8:
 _resetPlayerFrameNo endp
 ~
 
+COMMENT ~
 @updateEntPackIniKeyValue@12 proc
           sub   esp, 000000138h
           mov   eax, dword ptr [esp+00000013Ch]
@@ -3202,7 +3203,7 @@ LAB_00402fe2:     mov   ebp, dword ptr [__imp__wsprintfA]       ; <wsprintfA>
           and   ebx, 00000FFFFh
 LAB_00402ffb:     mov   eax, dword ptr [esi]
           push  eax
-          push  offset DAT_0040c0ec     ; <c0ec>
+          push  offset scoreFormatString        ; <c0ec>
           push  edi
           call  ebp
           add   esp, 00000000Ch
@@ -3248,7 +3249,7 @@ LAB_00403072:     add   esi, eax
           mov   ecx, 000000010h
           call  @getCachedString@4
           push  eax
-          push  offset DAT_0040c0e0     ; <c0e0>
+          push  offset scoreStringFormatString  ; <c0e0>
           push  esi
           call  ebp
           add   esp, 00000000Ch
@@ -3259,7 +3260,7 @@ LAB_00403093:     inc   edi
           jb    LAB_0040303e
 LAB_0040309e:     cmp   word ptr [esp+018h], 00000000Ah
           jnz   LAB_00403100
-          push  offset DAT_0040c0dc     ; <c0dc>
+          push  offset newlineString    ; <c0dc>
           push  esi
           call  ebp
           add   esi, eax
@@ -3285,7 +3286,7 @@ LAB_004030e8:     mov   ecx, 000000011h
           call  @getCachedString@4
           add   edi, esi
           push  eax
-          push  offset DAT_0040c0e0     ; <c0e0>
+          push  offset scoreStringFormatString  ; <c0e0>
           push  edi
           call  ebp
           add   esp, 00000000Ch
@@ -3311,7 +3312,9 @@ LAB_0040312b:
           db 090h
           db 090h
 @updateEntPackIniKeyValue@12 endp
+~
 
+COMMENT ~
 @permObjectSetSpriteIdx@8 proc
           push  esi
           mov   esi, ecx
@@ -3353,6 +3356,7 @@ LAB_00403172:
           db 090h
           db 090h
 @permObjectSetSpriteIdx@8 endp
+~
 
 @updateFsGameMode@12 proc
           mov   eax, dword ptr [playerActor]    ; <c72c>
