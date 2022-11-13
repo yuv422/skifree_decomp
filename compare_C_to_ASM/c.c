@@ -33,20 +33,20 @@ extern Actor * __fastcall updateActorType1_Beginner(Actor *actor);
 extern Actor * __fastcall updateActorType2_dog(Actor *actor);
 extern Actor * __fastcall updateActorType3_snowboarder(Actor *actor);
 extern Actor * __fastcall updateActorType9_treeOnFire(Actor *actor);
-extern Actor * __fastcall updateActorTypeA_walkingTree(Actor *actor);
+;extern Actor * __fastcall updateActorTypeA_walkingTree(Actor *actor);
 extern Actor *__fastcall updateActorPositionWithVelocityMaybe(Actor *actor);
 extern Actor * __fastcall updateActorVelMaybe(Actor *actor,ActorVelStruct *param_2);
 extern void __fastcall addStylePoints(int points);
 extern void __fastcall playSound(Sound *sound);
-extern Actor * __fastcall setActorFrameNo(Actor *actor, UINT frameNo);
+extern Actor * __fastcall setActorFrameNo(Actor *actor, int frameNo);
 extern void __fastcall updateSsGameMode(Actor *actor,short param_2,short param_3);
 extern void __fastcall updateFsGameMode(Actor *actor,short param_2,short param_3);
 extern void __fastcall updateGsGameMode(Actor *actor,short param_2,short param_3);
 extern Actor * __fastcall updatePlayerActor(Actor *actor);
-//extern int __fastcall FUN_00402e30(int param_1,int param_2,int param_3,int param_4,int param_5);
+extern int __fastcall FUN_00402e30(int param_1,int param_2,int param_3,int param_4,int param_5);
 extern void resetPlayerFrameNo();
 extern void __fastcall updateEntPackIniKeyValue(LPCSTR configKey, int value, int isTime);
-//extern void __fastcall permObjectSetSpriteIdx(PermObject *permObject, USHORT spriteIdx);
+extern void __fastcall permObjectSetSpriteIdx(PermObject *permObject, USHORT spriteIdx);
 
 #include "../data.h"
 
@@ -55,15 +55,41 @@ extern void __fastcall updateEntPackIniKeyValue(LPCSTR configKey, int value, int
 // FUNCTION GOES HERE
 //
 
-void __fastcall permObjectSetSpriteIdx(PermObject *permObject, USHORT spriteIdx) {
-    ski_assert(permObject, 1773);
 
-    permObject->spriteIdx = spriteIdx;
-    permObject->spritePtr = sprites + spriteIdx;
-    if (permObject->actor) {
-        actorSetSpriteIdx(permObject->actor,spriteIdx);
+Actor * __fastcall updateActorType3_snowboarder(Actor *actor) {
+    UINT ActorframeNo;
+
+    ActorframeNo = actor->frameNo;
+    ski_assert(actor->typeMaybe == 3, 2274);
+
+    actor = updateActorPositionWithVelocityMaybe(actor);
+    ski_assert(ActorframeNo - 0x1f < 8, 2277);
+
+    actor = updateActorVelMaybe(actor,&snowboarderActorMovementTbl[ActorframeNo - 0x1f]);
+    if (ActorframeNo == 0x1f) {
+        if (random(10) == 0) {
+            ActorframeNo = 0x20;
+        }
     }
-}
+    else if (ActorframeNo == 0x20) {
+        if (random(10) == 0) {
+            return setActorFrameNo(actor,0x1f);
+        }
+    }
+    else if (ActorframeNo == 0x21) {
+        if (actor->isInAir == 0) {
+            return setActorFrameNo(actor,0x20);
+        }
+    }
+    else {
+        ski_assert(((int)ActorframeNo >= 0x22) && ((int)ActorframeNo < 0x27), 2298);
 
+        ActorframeNo++;
+        if (ActorframeNo == 0x27) {
+            return setActorFrameNo(actor,0x20);
+        }
+    }
+    return setActorFrameNo(actor,ActorframeNo);
+}
 
 

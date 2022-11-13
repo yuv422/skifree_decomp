@@ -3358,6 +3358,7 @@ LAB_00403172:
 @permObjectSetSpriteIdx@8 endp
 ~
 
+COMMENT ~
 @updateFsGameMode@12 proc
           mov   eax, dword ptr [playerActor]    ; <c72c>
           push  ebx
@@ -3380,7 +3381,7 @@ LAB_004031b1:     mov   eax, dword ptr [isFsGameMode]   ; <c954>
           cmp   si, 04100h
           jle   LAB_004031f2
           mov   dword ptr [isFsGameMode], 000000000h    ; <c954>
-          mov   dword ptr [DAT_0040c968], 000000001h    ; <c968>
+          mov   dword ptr [INT_0040c968], 000000001h    ; <c968>
           call  _resetPlayerFrameNo
           mov   edx, dword ptr [stylePoints]    ; <c6a8>
           mov   ecx, offset iniFsConfigKey      ; <c0f4>
@@ -3422,7 +3423,9 @@ LAB_00403249:     pop   edi
 LAB_0040324f:
           db 090h
 @updateFsGameMode@12 endp
+~
 
+COMMENT ~
 @updateGsGameMode@12 proc
           mov   eax, dword ptr [playerActor]    ; <c72c>
           push  ebx
@@ -3567,6 +3570,7 @@ LAB_00403414:
           db 090h
           db 090h
 @updateGsGameMode@12 endp
+~
 
 COMMENT ~
 @addStylePoints@4 proc
@@ -3578,6 +3582,7 @@ LAB_0040342f:     ret
 @addStylePoints@4 endp
 ~
 
+COMMENT ~
 @updateActorVelMaybe@8 proc
           push  ecx
           push  ebx
@@ -3689,6 +3694,7 @@ LAB_00403533:
           db 090h
           db 090h
 @updateActorVelMaybe@8 endp
+~
 
 COMMENT ~
 @updateActorType1_Beginner@4 proc
@@ -3925,6 +3931,7 @@ LAB_004037ac:
 @updateActorType9_treeOnFire@4 endp
 ~
 
+COMMENT ~
 @updateActorTypeA_walkingTree@4 proc
           push  esi
           mov   esi, ecx
@@ -4033,7 +4040,9 @@ DAT_00403908  dword offset LAB_004038ce
           db 090h
           db 090h
 @updateActorTypeA_walkingTree@4 endp
+~
 
+COMMENT ~
 @updateActorType3_snowboarder@4 proc
           push  esi
           push  edi
@@ -4125,6 +4134,7 @@ LAB_004039f7:
           db 090h
           db 090h
 @updateActorType3_snowboarder@4 endp
+~
 
 @handleActorCollision@8 proc
           sub   esp, 00000000Ch
@@ -5943,7 +5953,7 @@ LAB_00404ec1:     lea   edx, dword ptr [esp+010h]
           mov   word ptr [esp+024h], si
           call  @addPermObject@8
           mov   ecx, offset PermObjectList_0040c738.startingObject      ; <c738>
-          mov   dword ptr [DAT_0040c968], edi   ; <c968>
+          mov   dword ptr [INT_0040c968], edi   ; <c968>
           mov   dword ptr [isFsGameMode], edi   ; <c954>
           call  @setPointerToNull@4
           mov   esi, 0FFFFFC00h

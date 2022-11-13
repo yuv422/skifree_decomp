@@ -16,10 +16,13 @@ extern char scoreFormatString[];
 extern char stylePointsFormatString[];
 extern char scoreStringFormatString[];
 extern char newlineString[];
+extern char iniFsConfigKey[];
+extern char iniGsConfigKey[];
 
 extern USHORT actorFrameToSpriteTbl[];
 extern UINT UINT_ARRAY_0040a22c[];
 extern ActorVelStruct ActorVelStruct_ARRAY_0040a308[];
+extern ActorVelStruct snowboarderActorMovementTbl[];
 extern UINT UINT_ARRAY_0040a434[];
 
 extern char sourceFilename[];
@@ -103,8 +106,10 @@ extern short windowWidth;
 extern int windowWithMarginTotalArea;
 extern PermObject *currentSlalomFlag;
 extern PermObject *firstSlalomFlagLeft;
-extern PermObject *firstSlalomFlagRight;
+extern PermObject *FirstSlalomFlagRight;
 extern int INT_0040c964;
+extern int INT_0040c968;
+extern int INT_0040c960;
 
 
 extern BOOL (WINAPI *sndPlaySoundAFuncPtr)(LPCSTR, UINT);

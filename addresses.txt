@@ -512,7 +512,7 @@
 0040c95c:isSsGameMode
 0040c960:INT_0040c960
 0040c964:INT_0040c964
-0040c968:DAT_0040c968
+0040c968:INT_0040c968
 0040c96c:__sbh_sizeHeaderList
 0040c970:__sbh_indGroupDefer
 0040c974:__sbh_pHeaderScan

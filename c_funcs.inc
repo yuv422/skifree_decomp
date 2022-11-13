@@ -55,6 +55,7 @@ extern @FUN_00402e30@20: proc
 extern _resetPlayerFrameNo: proc
 extern @updateEntPackIniKeyValue@12: proc
 extern @permObjectSetSpriteIdx@8: proc
+extern @updateActorVelMaybe@8: proc
 
 ; exports
 ; public _WinMain@16

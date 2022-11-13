@@ -57,6 +57,10 @@ Actor * __fastcall updatePlayerActor(Actor *actor);
 void __fastcall updateSsGameMode(Actor *actor, short xPos, short yPos);
 int __fastcall FUN_00402e30(int param_1,int param_2,int param_3,int param_4,int param_5);
 void resetPlayerFrameNo();
+void __fastcall updateFsGameMode(Actor *actor, short xPos, short yPos);
+void __fastcall updateGsGameMode(Actor *actor, short xPos, short yPos);
+Actor * __fastcall updateActorTypeA_walkingTree(Actor *actor);
+Actor * __fastcall updateActorType3_snowboarder(Actor *actor);
 
 //
 // ASM Functions
@@ -74,11 +78,10 @@ extern void __fastcall handleMouseMoveMessage(short xPos,short yPos);
 extern void __fastcall handleKeydownMessage(UINT charCode);
 extern void handleMouseClick(void);
 extern void setupPermObjects();
-extern Actor * __fastcall updateActorVelMaybe(Actor *actor,ActorVelStruct *param_2);
-extern Actor * __fastcall updateActorType3_snowboarder(Actor *actor);
-extern Actor * __fastcall updateActorTypeA_walkingTree(Actor *actor);
-extern void __fastcall updateFsGameMode(Actor *actor, short xPos, short yPos);
-extern void __fastcall updateGsGameMode(Actor *actor, short xPos, short yPos);
+extern Actor * __fastcall updateActorVelMaybe(Actor *actor, ActorVelStruct *param_2);
+
+
+
 
 
 extern void __fastcall updateEntPackIniKeyValue(LPCSTR configKey, int value, int isTime);
@@ -247,8 +250,9 @@ int allocateMemory() {
     return 0;
 }
 
+// TODO not byte perfect
 Actor * __fastcall updateActorType1_Beginner(Actor *actor) {
-    USHORT uVar1;
+    int uVar1;
     Actor *pAVar2;
     UINT ActorframeNo;
 
@@ -259,35 +263,28 @@ Actor * __fastcall updateActorType1_Beginner(Actor *actor) {
     if (actor->typeMaybe != 1) {
         assertFailed(sourceFilename,2131);
     }
-    if (24 < (int)ActorframeNo) {
-        return actor;
-    }
-    pAVar2 = updateActorPositionWithVelocityMaybe(actor);
-    if (4 < ActorframeNo - 22) {
-        assertFailed(sourceFilename,2135);
-    }
-    pAVar2 = updateActorVelMaybe(pAVar2,&beginnerActorMovementTbl + (ActorframeNo - 22));
-    uVar1 = random(0xc);
-    if (uVar1 == 0) {
-        uVar1 = random(3);
-        if (uVar1 == 0) {
-            ActorframeNo = 0x16;
+    if (ActorframeNo < 25) {
+        pAVar2 = updateActorPositionWithVelocityMaybe(actor);
+        if (ActorframeNo - 22 >= 5) {
+            assertFailed(sourceFilename, 2135);
         }
-        else {
-            if (uVar1 == 1) {
-                pAVar2 = setActorFrameNo(pAVar2,0x17);
-                return pAVar2;
-            }
-            if (uVar1 == 2) {
-                pAVar2 = setActorFrameNo(pAVar2,0x18);
-                return pAVar2;
+        pAVar2 = updateActorVelMaybe(pAVar2, &beginnerActorMovementTbl + (ActorframeNo - 22));
+        if (random(0xc) == 0) {
+            uVar1 = random(3);
+            if (uVar1 == 0) {
+                ActorframeNo = 0x16;
+            } else if (uVar1 == 1) {
+                return setActorFrameNo(pAVar2, 0x17);
+            } else if (uVar1 == 2) {
+                return setActorFrameNo(pAVar2, 0x18);
             }
         }
+        return setActorFrameNo(pAVar2, ActorframeNo);
     }
-    pAVar2 = setActorFrameNo(pAVar2,ActorframeNo);
-    return pAVar2;
+    return actor;
 }
 
+//TODO not byte perfect
 Actor *__fastcall updateActorType2_dog(Actor *actor) {
     short sVar1;
     short uVar2;
@@ -315,7 +312,7 @@ Actor *__fastcall updateActorType2_dog(Actor *actor) {
             actor->HorizontalVelMaybe = 0;
             uVar2 = random(0x20);
             pAVar3 = updateActorPositionWithVelocityMaybe(actor);
-            return setActorFrameNo(pAVar3,(-(uVar2 != 0) & 3) + 0x1b); // TODO uVar2 != 0 ? 3 : 0
+            return setActorFrameNo(pAVar3, uVar2 != 0 ? 0x1b + 3 : 0x1b);
         case 0x1e:
             uVar2 = random(100);
             if (uVar2 != 0) {
@@ -337,20 +334,15 @@ Actor *__fastcall updateActorType2_dog(Actor *actor) {
 
 Actor *__fastcall updateActorType9_treeOnFire(Actor *actor) {
     int frameNo = actor->frameNo;
-    if (actor->typeMaybe != 9) {
-        assertFailed(sourceFilename,2204);
-    }
-    if ((int)frameNo < 0x38) {
-        assertFailed(sourceFilename,2205);
-    }
-    if (0x3b < (int)frameNo) {
-        assertFailed(sourceFilename,2206);
-    }
-    frameNo = frameNo + 1;
-    if (0x3b < (int)frameNo) {
+    ski_assert(actor->typeMaybe == 9, 2204);
+    ski_assert(frameNo >= 0x38, 2205);
+    ski_assert(frameNo < 0x3c, 2206);
+
+    frameNo++;
+    if (frameNo >= 0x3c) {
         frameNo = 0x38;
     }
-    return setActorFrameNo(actor,frameNo);
+    return setActorFrameNo(actor, frameNo);
 }
 
 Actor * __fastcall getLinkedActorIfExists(Actor *actor) {
@@ -1966,4 +1958,254 @@ void __fastcall permObjectSetSpriteIdx(PermObject *permObject, USHORT spriteIdx)
     if (permObject->actor) {
         actorSetSpriteIdx(permObject->actor,spriteIdx);
     }
+}
+
+// TODO not byte compatible. Another jmp instead of call.
+void __fastcall updateFsGameMode(Actor *actor, short xPos, short yPos) {
+    int iVar1;
+    short x;
+    short y;
+
+    if (actor == playerActor) {
+        x = actor->xPosMaybe;
+        y = actor->yPosMaybe;
+        ski_assert(actor->typeMaybe == 0, 1839);
+
+        if (isFsGameMode != 0) {
+            if (0x4100 < y) {
+                isFsGameMode = 0;
+                INT_0040c968 = 1;
+                resetPlayerFrameNo();
+                updateEntPackIniKeyValue(iniFsConfigKey,stylePoints,0);
+                return;
+            }
+            if (y <= 0x280) {
+                isFsGameMode = 0;
+                return;
+            }
+        }
+        else {
+            if ((yPos <= 0x280) && (0x280 < y)) {
+                iVar1 = FUN_00402e30((int)x, (int)xPos, (int)y, (int)yPos, 0x280);
+                if (((short)iVar1 >= -160) && ((short)iVar1 <= 160)) {
+                    isFsGameMode = 1;
+                }
+            }
+        }
+    }
+}
+
+// TODO not byte compatible. Another jmp instead of call.
+void __fastcall updateGsGameMode(Actor *actor, short xPos, short yPos) {
+    int iVar1;
+    USHORT spriteIdx;
+    short x;
+    short y;
+
+    if (actor == playerActor) {
+        x = actor->xPosMaybe;
+        y = actor->yPosMaybe;
+        ski_assert(actor->typeMaybe == 0, 1870);
+        if (isGsGameMode != 0) {
+            elapsedTime = currentTickCount - timedGameRelated;
+            if (0x4100 < y) {
+                iVar1 = FUN_00402e30(currentTickCount, prevTickCount, (int)y, (int)yPos, 0x4100);
+                isGsGameMode = 0;
+                elapsedTime = iVar1 - timedGameRelated;
+                INT_0040c960 = 1;
+                resetPlayerFrameNo();
+                updateEntPackIniKeyValue(iniGsConfigKey,elapsedTime,1);
+                return;
+            }
+            if (y <= 640) {
+                isGsGameMode = 0;
+                return;
+            }
+            /* FIXME this decomp isn't right */
+            if (y > currentSlalomFlag->maybeY) {
+                spriteIdx = 0x19;
+                iVar1 = FUN_00402e30((int)x, (int)xPos, (int)y, (int)yPos, (int)currentSlalomFlag->maybeY)
+                        ;
+                if (((currentSlalomFlag->spriteIdx == 0x17) && ((short)iVar1 > currentSlalomFlag->maybeX))
+                    || ((currentSlalomFlag->spriteIdx == 0x18 && ((short)iVar1 < currentSlalomFlag->maybeX)))
+                        ) {
+                    spriteIdx = 0x1a;
+                    timedGameRelated = timedGameRelated - 5000;
+                }
+                permObjectSetSpriteIdx(currentSlalomFlag,spriteIdx);
+                currentSlalomFlag = currentSlalomFlag + 1;
+                return;
+            }
+        }
+        else {
+            if ((yPos <= 0x280) && (0x280 < y)) {
+                iVar1 = FUN_00402e30((int)x, (int)xPos, (int)y, (int)yPos, 0x280);
+                if (((short)iVar1 >= 320) && ((short)iVar1 <= 0x200)) {
+                    isGsGameMode = 1;
+                    timedGameRelated = FUN_00402e30(currentTickCount, prevTickCount, (int)y, (int)yPos, 0x280);
+                    elapsedTime = timedGameRelated - currentTickCount;
+                    currentSlalomFlag = FirstSlalomFlagRight;
+                }
+            }
+        }
+    }
+}
+
+//TODO not byte accurate.
+Actor * __fastcall updateActorVelMaybe(Actor *actor,ActorVelStruct *param_2) {
+    short xRelated;
+    short sVar1;
+    int iVar2;
+    short existingHorizontalVel;
+    short existingVerticalVel;
+
+    existingHorizontalVel = actor->HorizontalVelMaybe;
+    existingVerticalVel = actor->verticalVelocityMaybe;
+    ski_assert(actor, 1951);
+
+    if (param_2 == (ActorVelStruct *)0x0) {
+        assertFailed(sourceFilename,1952);
+    }
+    if (actor->frameNo != param_2->frameNo) {
+        assertFailed(sourceFilename,1953);
+    }
+    xRelated = param_2->xRelated;
+    if (xRelated == 0) {
+        if (existingHorizontalVel < 0) {
+            xRelated = -1;
+        }
+        else {
+            xRelated = (short)(0 < existingHorizontalVel);
+        }
+    }
+    existingHorizontalVel = xRelated * existingHorizontalVel;
+    if (existingVerticalVel > 0) {
+        iVar2 = (int)existingVerticalVel;
+    }
+    else {
+        iVar2 = 0;
+    }
+    sVar1 = (short)((param_2->unk_6 * iVar2) / 2);
+    if (existingHorizontalVel > sVar1) {
+        iVar2 = existingHorizontalVel - 2;
+        if ((int)sVar1 <= iVar2) {
+//            LAB_004034f1:
+            sVar1 = (short)iVar2;
+        }
+    }
+    else {
+        iVar2 = (int)existingHorizontalVel + (int)param_2->unk_4;
+        if (iVar2 <= sVar1) { //goto LAB_004034f1;
+            sVar1 = (short)iVar2;
+        }
+    }
+    existingHorizontalVel = param_2->unk_2;
+    if (existingHorizontalVel < existingVerticalVel) {
+        iVar2 = existingVerticalVel + -2;
+        if (existingHorizontalVel <= iVar2) {//goto LAB_0040351c;
+            existingHorizontalVel = (short)iVar2;
+        }
+    }
+    else {
+        iVar2 = (int)param_2->unk_0 + (int)existingVerticalVel;
+        if (iVar2 <= existingHorizontalVel) {//goto LAB_0040351c;
+            existingHorizontalVel = (short)iVar2;
+        }
+    }
+//    existingHorizontalVel = (short)iVar2;
+//    LAB_0040351c:
+    actor->verticalVelocityMaybe = existingHorizontalVel;
+    actor->HorizontalVelMaybe = xRelated * sVar1;
+    return actor;
+}
+
+// TODO not byte accurate
+Actor * __fastcall updateActorTypeA_walkingTree(Actor *actor) {
+    USHORT uVar2;
+    Actor *pAVar3;
+    int ActorframeNo;
+
+    ActorframeNo = actor->frameNo;
+    ski_assert(actor->typeMaybe == 10, 2217);
+    ski_assert(ActorframeNo >= 0x3c, 2218);
+    ski_assert(ActorframeNo < 0x40, 2219);
+
+    switch(ActorframeNo) {
+        case 0x3c:
+            if (actor->HorizontalVelMaybe != 0) {
+                assertFailed(sourceFilename,2223);
+            }
+            uVar2 = random(100);
+            if (uVar2 == 0) {
+                uVar2 = random(2);
+                actor->HorizontalVelMaybe = uVar2 * 2 + -1;
+                pAVar3 = updateActorPositionWithVelocityMaybe(actor);
+                return setActorFrameNo(pAVar3,0x3d);
+            }
+            break;
+        case 0x3d:
+            ski_assert(actor->HorizontalVelMaybe != 0, 2232);
+            uVar2 = random(10);
+            if (uVar2 != 0) {
+                pAVar3 = updateActorPositionWithVelocityMaybe(actor);
+                pAVar3 = setActorFrameNo(pAVar3, (actor->HorizontalVelMaybe >= 0) ? 0x3f : 0x3e);
+                return pAVar3;
+            } else {
+                actor->HorizontalVelMaybe = 0;
+                pAVar3 = updateActorPositionWithVelocityMaybe(actor);
+                pAVar3 = setActorFrameNo(pAVar3,0x3c);
+                return pAVar3;
+            }
+        case 0x3e:
+            ski_assert(actor->HorizontalVelMaybe < 0, 2243);
+            ActorframeNo = 0x3d;
+            break;
+        case 0x3f:
+            ski_assert(actor->HorizontalVelMaybe > 0, 2248);
+            ActorframeNo = 0x3d;
+            break;
+        default:
+            break;
+    }
+
+    pAVar3 = updateActorPositionWithVelocityMaybe(actor);
+    pAVar3 = setActorFrameNo(pAVar3,ActorframeNo);
+    return pAVar3;
+}
+
+// TODO not byte accurate
+Actor * __fastcall updateActorType3_snowboarder(Actor *actor) {
+    UINT ActorframeNo;
+
+    ActorframeNo = actor->frameNo;
+    ski_assert(actor->typeMaybe == 3, 2274);
+
+    actor = updateActorPositionWithVelocityMaybe(actor);
+    ski_assert(ActorframeNo - 0x1f < 8, 2277);
+
+    actor = updateActorVelMaybe(actor,&snowboarderActorMovementTbl[ActorframeNo - 0x1f]);
+    if (ActorframeNo == 0x1f) {
+        if (random(10) == 0) {
+            ActorframeNo = 0x20;
+        }
+    }
+    else if (ActorframeNo == 0x20) {
+        if (random(10) == 0) {
+            return setActorFrameNo(actor,0x1f);
+        }
+    }
+    else if (ActorframeNo == 0x21) {
+        if (actor->isInAir == 0) {
+            return setActorFrameNo(actor,0x20);
+        }
+    }
+    else {
+        ski_assert(((int)ActorframeNo >= 0x22) && ((int)ActorframeNo < 0x27), 2298);
+
+        ActorframeNo++;
+        if (ActorframeNo == 0x27) {
+            return setActorFrameNo(actor,0x20);
+        }
+    }
+    return setActorFrameNo(actor,ActorframeNo);
 }

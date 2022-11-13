@@ -366,8 +366,7 @@ PUBLIC C statusBorderRect
 statusBorderRect byte 00h
 db 15 DUP (00h)
 PUBLIC C statusWindowNameStrPtr
-statusWindowNameStrPtr byte 00h
-db 3 DUP (00h)
+statusWindowNameStrPtr byte 4 DUP (00h)
 PUBLIC C DAT_0040c78c
 DAT_0040c78c byte 4 DUP (00h)
 PUBLIC C sndPlaySoundAFuncPtr
@@ -457,9 +456,8 @@ PUBLIC C INT_0040c960
 INT_0040c960 byte 4 DUP (00h)
 PUBLIC C INT_0040c964
 INT_0040c964 byte 4 DUP (00h)
-PUBLIC C DAT_0040c968
-DAT_0040c968 byte 00h
-db 3 DUP (00h)
+PUBLIC C INT_0040c968
+INT_0040c968 byte 4 DUP (00h)
 __sbh_sizeHeaderList byte 4 DUP (00h)
 __sbh_indGroupDefer byte 4 DUP (00h)
 __sbh_pHeaderScan byte 4 DUP (00h)

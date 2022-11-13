@@ -77,3 +77,8 @@ _randomActorType2
 _resetPlayerFrameNo
 @updateEntPackIniKeyValue@12
 @permObjectSetSpriteIdx@8
+@updateFsGameMode@12
+@updateGsGameMode@12
+@updateActorVelMaybe@8
+@updateActorTypeA_walkingTree@4
+@updateActorType3_snowboarder@4
