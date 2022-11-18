@@ -4136,6 +4136,7 @@ LAB_004039f7:
 @updateActorType3_snowboarder@4 endp
 ~
 
+COMMENT ~
 @handleActorCollision@8 proc
           sub   esp, 00000000Ch
           push  esi
@@ -4665,6 +4666,7 @@ LAB_00404054:
           db 090h
           db 090h
 @handleActorCollision@8 endp
+~
 
 COMMENT ~
 @getLinkedActorIfExists@4 proc
@@ -4700,6 +4702,7 @@ LAB_00404091:
 @getLinkedActorIfExists@4 endp
 ~
 
+COMMENT ~
 @updateAllPermObjectsInList@4 proc
           mov   eax, dword ptr [skierScreenYOffset]     ; <c5fc>
           push  ebx
@@ -4762,6 +4765,7 @@ LAB_00404121:
           db 090h
           db 090h
 @updateAllPermObjectsInList@4 endp
+~
 
 @addActorForPermObject@4 proc
           sub   esp, 000000010h

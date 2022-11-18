@@ -56,6 +56,8 @@ extern _resetPlayerFrameNo: proc
 extern @updateEntPackIniKeyValue@12: proc
 extern @permObjectSetSpriteIdx@8: proc
 extern @updateActorVelMaybe@8: proc
+extern @handleActorCollision@8: proc
+extern @updateAllPermObjectsInList@4: proc
 
 ; exports
 ; public _WinMain@16

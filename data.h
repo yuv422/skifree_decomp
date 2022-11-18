@@ -56,6 +56,7 @@ extern DWORD statusWindowLastUpdateTime;
 extern DWORD timedGameRelated;
 extern RECT windowClientRect;
 extern RECT statusBorderRect;
+extern RECT windowClientRectWith120Margin;
 extern HDC mainWindowDC;
 extern HDC statusWindowDC;
 extern Sound sound_1;

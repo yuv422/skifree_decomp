@@ -32,6 +32,12 @@ typedef struct PermObject {
     int unk_0x20;
 } PermObject;
 
+typedef struct PermObjectList {
+    struct PermObject *startingObject;
+    struct PermObject *nextObject;
+    struct PermObject *currentObj;
+} PermObjectList;
+
 typedef struct Actor {
     struct Actor *next;
     struct Actor *linkedActor;
@@ -88,5 +94,10 @@ typedef struct {
 #define BORDER_RIGHT  1
 #define BORDER_TOP    2
 #define BORDER_BOTTOM 3
+
+#define ACTOR_TYPE_0_PLAYER      0
+#define ACTOR_TYPE_1_BEGINNER    1
+#define ACTOR_TYPE_2_DOG         2
+#define ACTOR_TYPE_3_SNOWBOARDER 3
 
 #endif //SKIFREE_DECOMP_TYPES_H

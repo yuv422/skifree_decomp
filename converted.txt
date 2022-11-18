@@ -82,3 +82,5 @@ _resetPlayerFrameNo
 @updateActorVelMaybe@8
 @updateActorTypeA_walkingTree@4
 @updateActorType3_snowboarder@4
+@handleActorCollision@8
+@updateAllPermObjectsInList@4
