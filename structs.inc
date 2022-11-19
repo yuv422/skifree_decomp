@@ -20,8 +20,8 @@ PermObject struct
     maybeX word ?
     maybeY word ?
     unk_0x18 word ?
-    unk_0x1a word ?
-    unk_0x1c word ?
+    xVelocity word ?
+    yVelocity word ?
     unk_0x1e word ?
     unk_0x20 dword ?
 PermObject ends

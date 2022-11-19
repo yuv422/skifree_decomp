@@ -4767,6 +4767,7 @@ LAB_00404121:
 @updateAllPermObjectsInList@4 endp
 ~
 
+COMMENT ~
 @addActorForPermObject@4 proc
           sub   esp, 000000010h
           push  ebx
@@ -4828,7 +4829,9 @@ LAB_004041ba:
           db 090h
           db 090h
 @addActorForPermObject@4 endp
+~
 
+COMMENT ~
 @updatePermObject@4 proc
           push  esi
           mov   esi, ecx
@@ -4906,7 +4909,9 @@ LAB_00404282:
           db 090h
           db 090h
 @updatePermObject@4 endp
+~
 
+COMMENT ~
 @updatePermObjectActorType4@4 proc
           push  esi
           mov   esi, ecx
@@ -4976,6 +4981,7 @@ LAB_00404341:
           db 090h
           db 090h
 @updatePermObjectActorType4@4 endp
+~
 
 @FUN_00404350@4 proc
           sub   esp, 00000000Ch

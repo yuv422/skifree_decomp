@@ -84,3 +84,6 @@ _resetPlayerFrameNo
 @updateActorType3_snowboarder@4
 @handleActorCollision@8
 @updateAllPermObjectsInList@4
+@addActorForPermObject@4
+@updatePermObject@4
+@updatePermObjectActorType4@4

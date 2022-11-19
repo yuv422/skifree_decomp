@@ -62,6 +62,8 @@ void __fastcall updateGsGameMode(Actor *actor, short xPos, short yPos);
 Actor * __fastcall updateActorTypeA_walkingTree(Actor *actor);
 Actor * __fastcall updateActorType3_snowboarder(Actor *actor);
 Actor * __fastcall handleActorCollision(Actor *actor1,Actor *actor2);
+Actor * __fastcall addActorForPermObject(PermObject *permObject);
+void __fastcall updatePermObjectActorType4(PermObject *permObject);
 
 //
 // ASM Functions
@@ -81,7 +83,8 @@ extern void handleMouseClick(void);
 extern void setupPermObjects();
 extern Actor * __fastcall updateActorVelMaybe(Actor *actor, ActorVelStruct *param_2);
 extern void __fastcall updatePermObject(PermObject *permObject);
-extern Actor * __fastcall addActorForPermObject(PermObject *permObject);
+extern void __fastcall updatePermObjectActorType4(PermObject *permObject);
+extern void __fastcall FUN_00404350(PermObject *permObject);
 
 
 
@@ -127,15 +130,15 @@ void __fastcall assertFailed(char *srcFilename, int lineNumber) {
     togglePausedState();
 }
 
-int __fastcall doRectsOverlap(RECT *rect1, RECT *rect2) {
+BOOL __fastcall doRectsOverlap(RECT *rect1, RECT *rect2) {
     ski_assert(rect1 != NULL, 352);
     ski_assert(rect2 != NULL, 353);
 
     if ((((rect2->left < rect1->right) && (rect1->left < rect2->right)) &&
          (rect2->top < rect1->bottom)) && (rect1->top < rect2->bottom)) {
-        return 1;
+        return TRUE;
     }
-    return 0;
+    return FALSE;
 }
 
 BOOL __fastcall areRectanglesEqual(RECT *rect1,RECT *rect2) {
@@ -2267,9 +2270,9 @@ Actor * __fastcall handleActorCollision(Actor *actor1,Actor *actor2) {
 
                 actor1->permObject->actorFrameNo = 0x32;
                 actor1->HorizontalVelMaybe = 0;
-                actor1->permObject->unk_0x1a = 0;
+                actor1->permObject->xVelocity = 0;
                 actor1->verticalVelocityMaybe = 0;
-                actor1->permObject->unk_0x1c = 0;
+                actor1->permObject->yVelocity = 0;
                 actor1->permObject->unk_0x20 = currentTickCount;
                 return setActorFrameNo(actor1,0x32);
             }
@@ -2471,5 +2474,95 @@ void __fastcall updateAllPermObjectsInList(PermObjectList *param_1) {
             permObject++;
         } while (permObject < param_1->nextObject);
     }
-    return;
+}
+
+Actor * __fastcall addActorForPermObject(PermObject *permObject) {
+    USHORT newX;
+    USHORT newY;
+    short inAir;
+    Actor *actor;
+    RECT spriteRect;
+
+    ski_assert(permObject, 2604);
+    if (!permObject->actor) {
+        newX = permObject->maybeX;
+        newY = permObject->maybeY;
+        inAir = permObject->unk_0x18;
+        updateRectForSpriteAtLocation(&spriteRect,permObject->spritePtr, newX, newY,inAir);
+        if (doRectsOverlap(&spriteRect, &windowClientRectWith120Margin)) {
+            if (permObject->spriteIdx == 0) {
+                actor = addActorOfType(permObject->actorTypeMaybe,permObject->actorFrameNo);
+            }
+            else {
+                actor = addActorOfTypeWithSpriteIdx(permObject->actorTypeMaybe,permObject->spriteIdx);
+            }
+            if (actor) {
+                actor = updateActorPositionMaybe(actor, newX, newY, inAir);
+                permObject->actor = actor;
+                actor->permObject = permObject;
+            }
+        }
+    }
+    return permObject->actor;
+}
+
+// TODO not byte accurate
+void __fastcall updatePermObject(PermObject *permObject) {
+    Actor *pAVar1;
+    int actorType;
+
+    if (permObject == (PermObject *)0x0) {
+        assertFailed(sourceFilename,2791);
+    }
+    permObject->maybeX = permObject->maybeX + permObject->xVelocity;
+    actorType = permObject->actorTypeMaybe;
+    permObject->maybeY = permObject->maybeY + permObject->yVelocity;
+    permObject->unk_0x18 = permObject->unk_0x18 + permObject->unk_0x1e;
+    if (actorType != 4) {
+        // TODO this is byte accurate but probably not how it was originally written in C
+        if ((actorType <= 4) || (8 < actorType)) {
+            assertFailed(sourceFilename,2809);
+        } else {
+            FUN_00404350(permObject);
+        }
+    }
+    else {
+        updatePermObjectActorType4(permObject);
+    }
+
+    pAVar1 = permObject->actor;
+    if (pAVar1) {
+        ski_assert(pAVar1, 2814); // TODO problems with deadcode removal here.
+        ski_assert(pAVar1->permObject, 2815);
+        ski_assert(pAVar1->permObject == permObject, 2816);
+
+        pAVar1 = updateActorPositionMaybe
+                (pAVar1,permObject->maybeX,permObject->maybeY,permObject->unk_0x18);
+        setActorFrameNo(pAVar1,permObject->actorFrameNo);
+    }
+}
+
+void __fastcall updatePermObjectActorType4(PermObject *permObject) {
+    ski_assert(permObject, 2633);
+    ski_assert(permObject->actorTypeMaybe == ACTOR_TYPE_4_CHAIRLIFT, 2634);
+
+    if (permObject->maybeY <= -1024) {
+        permObject->actorFrameNo = 0x29;
+        permObject->yVelocity = 2;
+        permObject->maybeX = -144;
+        return;
+    }
+    if (23552 <= permObject->maybeY) {
+        permObject->actorFrameNo = 0x27;
+        permObject->yVelocity = -2;
+        permObject->maybeX = -112;
+        return;
+    }
+    /* snowboarder jump out of chairlift */
+    if (permObject->actor && (permObject->actorFrameNo == 0x27)) {
+        if (random(1000) == 0) {
+            updateActorPositionMaybe(addActorOfType(ACTOR_TYPE_3_SNOWBOARDER,0x21), permObject->maybeX, permObject->maybeY, permObject->unk_0x18);
+            permObject->actorFrameNo = 0x28;
+        }
+    }
 }

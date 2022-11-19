@@ -26,8 +26,8 @@ typedef struct PermObject {
     short maybeX;
     short maybeY;
     short unk_0x18;
-    short unk_0x1a;
-    short unk_0x1c;
+    short xVelocity;
+    short yVelocity;
     short unk_0x1e;
     int unk_0x20;
 } PermObject;
@@ -99,5 +99,6 @@ typedef struct {
 #define ACTOR_TYPE_1_BEGINNER    1
 #define ACTOR_TYPE_2_DOG         2
 #define ACTOR_TYPE_3_SNOWBOARDER 3
+#define ACTOR_TYPE_4_CHAIRLIFT   4
 
 #endif //SKIFREE_DECOMP_TYPES_H
