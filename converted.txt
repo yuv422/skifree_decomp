@@ -87,3 +87,4 @@ _resetPlayerFrameNo
 @addActorForPermObject@4
 @updatePermObject@4
 @updatePermObjectActorType4@4
+@FUN_00404350@4

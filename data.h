@@ -102,7 +102,7 @@ extern short scratchBitmapWidth;
 extern short scratchBitmapHeight;
 extern int elapsedTime;
 extern int totalAreaOfActorSprites;
-extern int windowHeight;
+extern short windowHeight;
 extern short windowWidth;
 extern int windowWithMarginTotalArea;
 extern PermObject *currentSlalomFlag;

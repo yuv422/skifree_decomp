@@ -4983,6 +4983,7 @@ LAB_00404341:
 @updatePermObjectActorType4@4 endp
 ~
 
+COMMENT ~
 @FUN_00404350@4 proc
           sub   esp, 00000000Ch
           push  ebx
@@ -5305,6 +5306,7 @@ DAT_004046d8  dword offset LAB_00404439
           db 090h
           db 090h
 @FUN_00404350@4 endp
+~
 
 @FUN_004046e0@4 proc
           push  ecx
