@@ -94,7 +94,7 @@ extern HGDIOBJ largeBitmapSheet_1bpp;
 extern HGDIOBJ scratchBitmap;
 extern BOOL isFsGameMode;
 extern int stylePoints;
-extern int playerX;
+extern short playerX;
 extern short playerY;
 extern short permObjectCount;
 extern ActorVelStruct beginnerActorMovementTbl;
@@ -111,6 +111,8 @@ extern PermObject *FirstSlalomFlagRight;
 extern int INT_0040c964;
 extern int INT_0040c968;
 extern int INT_0040c960;
+extern short DAT_0040c5d8;
+extern short DAT_0040c714;
 
 
 extern BOOL (WINAPI *sndPlaySoundAFuncPtr)(LPCSTR, UINT);

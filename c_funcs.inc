@@ -59,6 +59,7 @@ extern @updateActorVelMaybe@8: proc
 extern @handleActorCollision@8: proc
 extern @updateAllPermObjectsInList@4: proc
 extern @addActorForPermObject@4: proc
+extern @FUN_004046e0@4: proc
 
 ; exports
 ; public _WinMain@16

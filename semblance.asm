@@ -5308,6 +5308,7 @@ DAT_004046d8  dword offset LAB_00404439
 @FUN_00404350@4 endp
 ~
 
+COMMENT ~
 @FUN_004046e0@4 proc
           push  ecx
           mov   eax, dword ptr [skierScreenYOffset]     ; <c5fc>
@@ -5389,6 +5390,7 @@ LAB_004047be:
           db 090h
           db 090h
 @FUN_004046e0@4 endp
+~
 
 COMMENT ~
 _timerCallbackFunc proc
@@ -5577,6 +5579,7 @@ LAB_0040496b:
 @showErrorMessage@4 endp
 ~
 
+COMMENT ~
 _resetGame proc
           push  esi
           call  dword ptr [__imp__GetTickCount@0]       ; <GetTickCount>
@@ -5609,6 +5612,7 @@ _resetGame proc
 LAB_004049ff:
           db 090h
 _resetGame endp
+~
 
 COMMENT ~
 _setupActorList proc

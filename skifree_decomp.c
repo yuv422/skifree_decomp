@@ -65,6 +65,7 @@ Actor * __fastcall handleActorCollision(Actor *actor1,Actor *actor2);
 Actor * __fastcall addActorForPermObject(PermObject *permObject);
 void __fastcall updatePermObjectActorType4(PermObject *permObject);
 void __fastcall FUN_00404350(PermObject *permObject);
+void __fastcall FUN_004046e0(PermObjectList *permObjList);
 
 //
 // ASM Functions
@@ -196,8 +197,10 @@ void CALLBACK timerCallbackFunc(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime
     if (inputEnabled != 0) {
         timerUpdateFunc();
     }
+    // TODO check. The original seems to return 1 here.
 }
 
+// TODO check this for byte accuracy.
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
     int iVar1;
     BOOL retVal;
@@ -235,6 +238,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
     return msg.wParam;
 }
 
+// TODO not byte accurate.
 int allocateMemory() {
     int iVar1;
 
@@ -362,10 +366,7 @@ Actor * __fastcall getLinkedActorIfExists(Actor *actor) {
 }
 
 int __fastcall showErrorMessage(LPCSTR text) {
-    char *lpCaption;
-
-    lpCaption = getCachedString(IDS_TITLE);
-    return MessageBoxA(NULL, text, lpCaption, 0x30);
+    return MessageBoxA(NULL, text, getCachedString(IDS_TITLE), 0x30);
 }
 
 Actor * __fastcall addActorOfTypeWithSpriteIdx(int actorType, USHORT spriteIdx) {
@@ -2740,4 +2741,61 @@ void __fastcall FUN_00404350(PermObject *permObject) {
     }
 //    LAB_004046b8:
     permObject->actorFrameNo = actorFrameNo;
+}
+
+void __fastcall FUN_004046e0(PermObjectList *permObjList) {
+    short top;
+    short bottom;
+    PermObject *permObject;
+    PermObject *pPVar4;
+
+    top = ((short)windowClientRectWith120Margin.top - skierScreenYOffset) + -0x3c;
+    bottom = ((short)windowClientRectWith120Margin.bottom - skierScreenYOffset) + 0x3c;
+    permObject = permObjList->currentObj;
+    ski_assert(permObjList, 2849);
+    ski_assert(permObject >= permObjList->startingObject, 2850);
+    ski_assert(permObject <= permObjList->nextObject, 2851);
+
+    pPVar4 = permObjList->nextObject;
+    for(; permObject < pPVar4; permObject++) {
+        if ((int)permObject->maybeY - (int)playerY >= (int)top) break;
+    }
+
+    for (; permObject > permObjList->startingObject; permObject--) {
+        if ((int)permObject->maybeY - (int)playerY < (int)top) break;
+    }
+
+    permObjList->currentObj = permObject;
+
+    for (; permObject < permObjList->nextObject; ) {
+        if ((int)permObject->maybeY - (int)playerY >= bottom) {
+            break;
+        }
+        addActorForPermObject(permObject++);
+    }
+}
+
+// TODO not byte accurate.
+BOOL resetGame(void) {
+    currentTickCount = GetTickCount();
+    srand(currentTickCount);
+    setupActorList();
+    playerActorPtrMaybe_1 = (Actor *)0x0;
+    playerActor = (Actor *)0x0;
+    totalAreaOfActorSprites = 0;
+    resetPermObjectCount();
+    isTurboMode = 0;
+    playerY = 0;
+    playerX = 0;
+    DAT_0040c5d8 = 0;
+    DAT_0040c714 = 0;
+    stylePoints = 0;
+    INT_0040c964 = 0;
+    isSsGameMode = 0;
+    INT_0040c960 = 0;
+    isGsGameMode = 0;
+    elapsedTime = 0;
+    updateTimerDurationMillis = 40;
+    redrawRequired = 1;
+    return 1;
 }

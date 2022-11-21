@@ -88,3 +88,5 @@ _resetPlayerFrameNo
 @updatePermObject@4
 @updatePermObjectActorType4@4
 @FUN_00404350@4
+@FUN_004046e0@4
+_resetGame
