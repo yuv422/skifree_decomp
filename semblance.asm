@@ -7409,6 +7409,7 @@ LAB_00405ed7:
 @handleWindowMoveMessage@4 endp
 ~
 
+COMMENT ~
 _deleteWindowObjects proc
           mov   eax, dword ptr [smallBitmapSheet]       ; <c620>
           push  esi
@@ -7491,6 +7492,7 @@ LAB_00405f9c:     pop   edi
 LAB_00405f9f:
           db 090h
 _deleteWindowObjects endp
+~
 
 @updateWindowSize@4 proc
           push  ebx
@@ -8152,6 +8154,7 @@ LAB_004065d8:
           db 090h
 @handleMouseMoveMessage@8 endp
 
+COMMENT ~
 @getSkierGroundSpriteFromMousePosition@8 proc
           test  dx, dx
           jle   LAB_00406655
@@ -8219,7 +8222,9 @@ LAB_00406664:
           db 090h
           db 090h
 @getSkierGroundSpriteFromMousePosition@8 endp
+~
 
+COMMENT ~
 @getSkierInAirSpriteFromMousePosition@8 proc
           test  cx, cx
           jge   LAB_0040669f
@@ -8270,6 +8275,7 @@ LAB_004066c5:
           db 090h
           db 090h
 @getSkierInAirSpriteFromMousePosition@8 endp
+~
 
 _handleMouseClick proc
           mov   ecx, dword ptr [playerActor]    ; <c72c>

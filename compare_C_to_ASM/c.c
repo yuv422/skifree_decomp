@@ -71,29 +71,19 @@ extern void resetPermObjectCount();
 // FUNCTION GOES HERE
 //
 
-BOOL resetGame(void) {
-    currentTickCount = GetTickCount();
-    srand(currentTickCount);
-    setupActorList();
-    playerActorPtrMaybe_1 = (Actor *)0x0;
-    playerActor = (Actor *)0x0;
-    totalAreaOfActorSprites = 0;
-    resetPermObjectCount();
-    isTurboMode = 0;
-    playerY = 0;
-    playerX = 0;
-    DAT_0040c5d8 = 0;
-    DAT_0040c714 = 0;
-    stylePoints = 0;
-    INT_0040c964 = 0;
-    isSsGameMode = 0;
-    INT_0040c960 = 0;
-    isGsGameMode = 0;
-    elapsedTime = 0;
-    updateTimerDurationMillis = 40;
-    redrawRequired = 1;
-    return 1;
+int __fastcall getSkierInAirSpriteFromMousePosition(short param_1,short param_2) {
+    if (param_1 < 0) {
+        if (param_2 < 0) {
+            return (param_2 < param_1) ? 16 : 14;
+        }
+        return (-param_2 < param_1) ? 13 : 14;
+    }
+    if (param_2 < 0) {
+        return (-param_2 <= param_1) ? 15 : 16;
+    }
+    return (param_2 <= param_1) + 13;
 }
+
 
 
 

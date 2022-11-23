@@ -90,3 +90,6 @@ _resetPlayerFrameNo
 @FUN_00404350@4
 @FUN_004046e0@4
 _resetGame
+_deleteWindowObjects
+@getSkierGroundSpriteFromMousePosition@8
+@getSkierInAirSpriteFromMousePosition@8

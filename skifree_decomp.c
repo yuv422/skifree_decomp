@@ -66,6 +66,7 @@ Actor * __fastcall addActorForPermObject(PermObject *permObject);
 void __fastcall updatePermObjectActorType4(PermObject *permObject);
 void __fastcall FUN_00404350(PermObject *permObject);
 void __fastcall FUN_004046e0(PermObjectList *permObjList);
+void deleteWindowObjects();
 
 //
 // ASM Functions
@@ -75,7 +76,6 @@ extern void updateGameState();
 extern void __fastcall drawWindow(HDC hdc, RECT *rect);
 extern void __fastcall formatAndPrintStatusStrings(HDC windowDC);
 extern void __fastcall updateRectForSpriteAtLocation(RECT *rect, Sprite *sprite, short newX, short newY, short param_5);
-extern void deleteWindowObjects();
 extern Actor * __fastcall updateActorPositionMaybe(Actor *actor, short newX, short newY, short inAir);
 extern BOOL __fastcall createBitmapSheets(HDC param_1);
 extern void __fastcall updateWindowSize(HWND hWnd);
@@ -2798,4 +2798,86 @@ BOOL resetGame(void) {
     updateTimerDurationMillis = 40;
     redrawRequired = 1;
     return 1;
+}
+
+void deleteWindowObjects(void) {
+    if (smallBitmapSheet) {
+        DeleteObject(SelectObject(smallBitmapDC,smallBitmapSheet));
+    }
+    if (largeBitmapSheet) {
+        DeleteObject(SelectObject(largeBitmapDC,largeBitmapSheet));
+    }
+    if (smallBitmapSheet_1bpp) {
+        DeleteObject(SelectObject(smallBitmapDC_1bpp,smallBitmapSheet_1bpp));
+    }
+    if (largeBitmapSheet_1bpp) {
+        DeleteObject(SelectObject(largeBitmapDC_1bpp,largeBitmapSheet_1bpp));
+    }
+    if (scratchBitmap) {
+        DeleteObject(SelectObject(bitmapSourceDC,scratchBitmap));
+    }
+    if (smallBitmapDC) {
+        DeleteDC(smallBitmapDC);
+    }
+    if (largeBitmapDC) {
+        DeleteDC(largeBitmapDC);
+    }
+    if (smallBitmapDC_1bpp) {
+        DeleteDC(smallBitmapDC_1bpp);
+    }
+    if (largeBitmapDC_1bpp) {
+        DeleteDC(largeBitmapDC_1bpp);
+    }
+    if (bitmapSourceDC) {
+        DeleteDC(bitmapSourceDC);
+    }
+}
+
+int __fastcall getSkierGroundSpriteFromMousePosition(short param_1,short param_2) {
+    short uVar1;
+
+    if (param_2 > 0) {
+        if (param_1 == 0) {
+            return 0;
+        }
+        uVar1 = (((int)param_2 << 2) / (int)param_1);
+        if (uVar1 <= -0xc) {
+            return 0;
+        }
+        if (uVar1 <= -6) {
+            return 1;
+        }
+        if (uVar1 <= -3) {
+            return 2;
+        }
+        if (uVar1 <= -1) {
+            return 3;
+        }
+        if (uVar1 >= 0xc) {
+            return 0;
+        }
+        if (uVar1 >= 6) {
+            return 4;
+        }
+        if (uVar1 >= 3) {
+            return 5;
+        }
+        if (uVar1 >= 1) {
+            return 6;
+        }
+    }
+    return param_1 < 0 ? 3 : 6;
+}
+
+int __fastcall getSkierInAirSpriteFromMousePosition(short param_1,short param_2) {
+    if (param_1 < 0) {
+        if (param_2 < 0) {
+            return (param_2 < param_1) ? 16 : 14;
+        }
+        return (-param_2 < param_1) ? 13 : 14;
+    }
+    if (param_2 < 0) {
+        return (-param_2 <= param_1) ? 15 : 16;
+    }
+    return (param_2 <= param_1) + 13;
 }
