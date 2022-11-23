@@ -8101,6 +8101,7 @@ LAB_0040654c:
 _handleGameReset endp
 ~
 
+COMMENT ~
 @handleMouseMoveMessage@8 proc
           mov   eax, dword ptr [DAT_0040c760]   ; <c760>
           push  esi
@@ -8153,6 +8154,7 @@ LAB_004065d8:
           db 090h
           db 090h
 @handleMouseMoveMessage@8 endp
+~
 
 COMMENT ~
 @getSkierGroundSpriteFromMousePosition@8 proc
@@ -8277,6 +8279,7 @@ LAB_004066c5:
 @getSkierInAirSpriteFromMousePosition@8 endp
 ~
 
+COMMENT ~
 _handleMouseClick proc
           mov   ecx, dword ptr [playerActor]    ; <c72c>
           test  ecx, ecx
@@ -8326,6 +8329,7 @@ DAT_00406774  dword offset LAB_00406736
 DAT_00406778  dword offset LAB_0040671c
 DAT_0040677c  dword offset LAB_00406723
 _handleMouseClick endp
+~
 
 COMMENT ~
 @handleCharMessage@4 proc

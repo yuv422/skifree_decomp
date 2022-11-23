@@ -113,6 +113,9 @@ extern int INT_0040c968;
 extern int INT_0040c960;
 extern short DAT_0040c5d8;
 extern short DAT_0040c714;
+extern int DAT_0040c760;
+extern short prevMouseX;
+extern short prevMouseY;
 
 
 extern BOOL (WINAPI *sndPlaySoundAFuncPtr)(LPCSTR, UINT);

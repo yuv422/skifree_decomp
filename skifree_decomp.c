@@ -67,6 +67,10 @@ void __fastcall updatePermObjectActorType4(PermObject *permObject);
 void __fastcall FUN_00404350(PermObject *permObject);
 void __fastcall FUN_004046e0(PermObjectList *permObjList);
 void deleteWindowObjects();
+void handleMouseClick();
+int __fastcall getSkierGroundSpriteFromMousePosition(short param_1,short param_2);
+int __fastcall getSkierInAirSpriteFromMousePosition(short param_1,short param_2);
+void __fastcall handleMouseMoveMessage(short xPos,short yPos);
 
 //
 // ASM Functions
@@ -79,9 +83,7 @@ extern void __fastcall updateRectForSpriteAtLocation(RECT *rect, Sprite *sprite,
 extern Actor * __fastcall updateActorPositionMaybe(Actor *actor, short newX, short newY, short inAir);
 extern BOOL __fastcall createBitmapSheets(HDC param_1);
 extern void __fastcall updateWindowSize(HWND hWnd);
-extern void __fastcall handleMouseMoveMessage(short xPos,short yPos);
 extern void __fastcall handleKeydownMessage(UINT charCode);
-extern void handleMouseClick(void);
 extern void setupPermObjects();
 extern Actor * __fastcall updateActorVelMaybe(Actor *actor, ActorVelStruct *param_2);
 extern void __fastcall updatePermObject(PermObject *permObject);
@@ -2880,4 +2882,67 @@ int __fastcall getSkierInAirSpriteFromMousePosition(short param_1,short param_2)
         return (-param_2 <= param_1) ? 15 : 16;
     }
     return (param_2 <= param_1) + 13;
+}
+
+void handleMouseClick() {
+    UINT ActorframeNo;
+
+    if (!playerActor) {
+        handleGameReset();
+        return;
+    }
+    ActorframeNo = playerActor->frameNo;
+    if (ActorframeNo != 11) {
+        if (playerActor->isInAir == 0) {
+            playerActor->inAirCounter = 4;
+            ActorframeNo = 0xd;
+        }
+        else if (ActorframeNo != 17) {
+            switch(ActorframeNo) {
+                case 0xd:
+                    ActorframeNo = 0x12;
+                    break;
+                case 0x12:
+                    ActorframeNo = 0x13;
+                    break;
+                case 0x13:
+                    ActorframeNo = 0xd;
+                    break;
+                case 0xe:
+                    ActorframeNo = 0x14;
+                    break;
+                case 0xf:
+                    ActorframeNo = 0x15;
+                    break;
+            }
+        }
+    }
+    if ((ActorframeNo != playerActor->frameNo) &&
+        (setActorFrameNo(playerActor,ActorframeNo), redrawRequired != 0)) {
+        drawWindow(mainWindowDC,&windowClientRect);
+        redrawRequired = FALSE;
+    }
+}
+
+void __fastcall handleMouseMoveMessage(short xPos,short yPos) {
+    int ActorframeNo;
+    short mouseSkierXDelta;
+    short mouseSkierYDelta;
+
+    if (((DAT_0040c760 != 0) &&
+         (((xPos != prevMouseX || (yPos != prevMouseY)) && (playerActor != NULL)))) &&
+        ((playerActor->frameNo != 0xb && (playerActor->frameNo != 0x11)))) {
+        mouseSkierXDelta = xPos - (short)skierScreenXOffset;
+        mouseSkierYDelta = yPos - (short)skierScreenYOffset;
+        if (playerActor->isInAir == 0) {
+            ActorframeNo = getSkierGroundSpriteFromMousePosition(mouseSkierXDelta,mouseSkierYDelta);
+        }
+        else {
+            ActorframeNo = getSkierInAirSpriteFromMousePosition(mouseSkierXDelta, mouseSkierYDelta);
+        }
+        setActorFrameNo(playerActor,ActorframeNo);
+    }
+    prevMouseX = xPos;
+    prevMouseY = yPos;
+    DAT_0040c760 = 1;
 }

@@ -93,3 +93,5 @@ _resetGame
 _deleteWindowObjects
 @getSkierGroundSpriteFromMousePosition@8
 @getSkierInAirSpriteFromMousePosition@8
+_handleMouseClick
+@handleMouseMoveMessage@8

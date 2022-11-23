@@ -63,6 +63,11 @@ extern void cleanupSound();
 extern int __fastcall showErrorMessage(LPCSTR text);
 extern void setupActorList();
 extern void resetPermObjectCount();
+extern void handleGameReset();
+extern int __fastcall getSkierGroundSpriteFromMousePosition(short param_1,short param_2);
+extern int __fastcall getSkierInAirSpriteFromMousePosition(short param_1,short param_2);
+extern void __fastcall updateActorsAfterWindowResize(short centreX, short param_2);
+
 
 #include "../data.h"
 
@@ -71,17 +76,25 @@ extern void resetPermObjectCount();
 // FUNCTION GOES HERE
 //
 
-int __fastcall getSkierInAirSpriteFromMousePosition(short param_1,short param_2) {
-    if (param_1 < 0) {
-        if (param_2 < 0) {
-            return (param_2 < param_1) ? 16 : 14;
-        }
-        return (-param_2 < param_1) ? 13 : 14;
-    }
-    if (param_2 < 0) {
-        return (-param_2 <= param_1) ? 15 : 16;
-    }
-    return (param_2 <= param_1) + 13;
+void __fastcall updateWindowSize(HWND hWnd) {
+//    longlong lVar1;
+
+    DAT_0040c760 = 0;
+    GetClientRect(hWnd,&windowClientRect);
+//    lVar1 = (longlong)(windowClientRect.bottom + windowClientRect.top) * 0x55555556; // val / 3
+    updateActorsAfterWindowResize
+            ((short)((windowClientRect.left + windowClientRect.right) / 2),
+             (short)((windowClientRect.bottom + windowClientRect.top) / 3));
+    windowWidth = (short)windowClientRect.right - (short)windowClientRect.left;
+    windowClientRectWith120Margin.left = windowClientRect.left + -120;
+    windowClientRectWith120Margin.top = windowClientRect.top + -120;
+    windowClientRectWith120Margin.right = windowClientRect.right + 120;
+    windowClientRectWith120Margin.bottom = windowClientRect.bottom + 120;
+    windowHeight = (short)windowClientRect.bottom - (short)windowClientRect.top;
+    windowWithMarginTotalArea =
+            ((windowClientRect.bottom + 120) - (windowClientRect.top + -120)) *
+            ((windowClientRect.right + 120) - (windowClientRect.left + -120));
+    return;
 }
 
 
