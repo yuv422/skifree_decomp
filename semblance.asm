@@ -499,6 +499,7 @@ LAB_004014a2:
 @updateActorSpriteRect@4 endp
 ~
 
+COMMENT ~
 @updateRectForSpriteAtLocation@20 proc
           push  ebx
           push  ebp
@@ -553,6 +554,7 @@ LAB_004014e6:     mov   ax, word ptr [skierScreenYOffset]       ; <c5fc>
 LAB_0040153f:
           db 090h
 @updateRectForSpriteAtLocation@20 endp
+~
 
 @drawActor@8 proc
           sub   esp, 000000040h
@@ -1120,6 +1122,7 @@ LAB_00401b7d:     pop   edi
 @enlargeRect@8 endp
 ~
 
+COMMENT ~
 @formatAndPrintStatusStrings@4 proc
           sub   esp, 000000018h
           mov   eax, dword ptr [playerActor]    ; <c72c>
@@ -1260,6 +1263,7 @@ LAB_00401ce2:
           db 090h
           db 090h
 @formatAndPrintStatusStrings@4 endp
+~
 
 COMMENT ~
 @getCachedString@4 proc

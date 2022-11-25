@@ -72,22 +72,22 @@ int __fastcall getSkierGroundSpriteFromMousePosition(short param_1,short param_2
 int __fastcall getSkierInAirSpriteFromMousePosition(short param_1,short param_2);
 void __fastcall handleMouseMoveMessage(short xPos, short yPos);
 void __fastcall updateActorsAfterWindowResize(short centreX, short centreY);
+void __fastcall updateRectForSpriteAtLocation(RECT *rect, Sprite *sprite, short newX, short newY, short param_5);
+void __fastcall formatAndPrintStatusStrings(HDC windowDC);
+int resetGame();
+void __fastcall updatePermObject(PermObject *permObject);
+Actor * __fastcall updateActorPositionMaybe(Actor *actor, short newX, short newY, short inAir);
+void __fastcall updateWindowSize(HWND hWnd);
+Actor * __fastcall updateActorVelMaybe(Actor *actor, ActorVelStruct *param_2);
 
 //
 // ASM Functions
 //
-extern int resetGame();
 extern void updateGameState();
 extern void __fastcall drawWindow(HDC hdc, RECT *rect);
-extern void __fastcall formatAndPrintStatusStrings(HDC windowDC);
-extern void __fastcall updateRectForSpriteAtLocation(RECT *rect, Sprite *sprite, short newX, short newY, short param_5);
-extern Actor * __fastcall updateActorPositionMaybe(Actor *actor, short newX, short newY, short inAir);
 extern BOOL __fastcall createBitmapSheets(HDC param_1);
-extern void __fastcall updateWindowSize(HWND hWnd);
 extern void __fastcall handleKeydownMessage(UINT charCode);
 extern void setupPermObjects();
-extern Actor * __fastcall updateActorVelMaybe(Actor *actor, ActorVelStruct *param_2);
-extern void __fastcall updatePermObject(PermObject *permObject);
 
 
 
@@ -173,7 +173,7 @@ char * __fastcall getCachedString(UINT stringIdx) {
     return stringCache[stringIdx];
 }
 
-short __fastcall formatElapsedTime(int totalMillis, LPSTR outputString) {
+int __fastcall formatElapsedTime(int totalMillis, LPSTR outputString) {
     int iVar1;
     char *pcVar2;
     UINT uVar3;
@@ -187,7 +187,7 @@ short __fastcall formatElapsedTime(int totalMillis, LPSTR outputString) {
     uVar3 = iVar1 % 60 & 0xffff;
     uVar4 = iVar1 / 60 & 0xffff;
     pcVar2 = getCachedString(IDS_TIME_FORMAT);
-    return (short)wsprintfA(outputString,pcVar2,uVar4,uVar3,uVar5,uVar6);
+    return wsprintfA(outputString,pcVar2,uVar4,uVar3,uVar5,uVar6);
 }
 
 void __fastcall drawText(HDC hdc, LPCSTR textStr, short x, short *y, int textLen) {
@@ -2981,4 +2981,60 @@ void __fastcall updateActorsAfterWindowResize(short centreX, short centreY) {
 
     skierScreenYOffset = centreY;
     skierScreenXOffset = centreX;
+}
+
+// TODO not byte accurate
+void __fastcall updateRectForSpriteAtLocation(RECT *rect, Sprite *sprite, short newX, short newY, short param_5) {
+    short spriteHeight;
+    short spriteWidth;
+
+    spriteWidth = sprite->width;
+    spriteHeight = sprite->height;
+    ski_assert(rect, 907);
+    ski_assert(sprite, 908);
+
+    rect->top = ((short)(newY + (short)((short)(skierScreenYOffset - playerY) - param_5)) - spriteHeight);
+    rect->left = (newX + (short)((skierScreenXOffset - spriteWidth / 2) - playerX));
+    rect->bottom = spriteHeight + rect->top;
+    rect->right = spriteWidth + rect->left;
+}
+
+void __fastcall formatAndPrintStatusStrings(HDC windowDC) {
+    short sVar1;
+    short speed;
+    short x = statusWindowLabelWidth + 2;
+    short y = 2;
+    CHAR strBuf [20];
+
+    speed = 0;
+    sVar1 = 0;
+
+    if (playerActor != NULL) {
+        if (timerFrameDurationInMillis != 0) {
+            speed = (short)((int)(playerActor->verticalVelocityMaybe * 1000) / (int)(timerFrameDurationInMillis * 16));
+        }
+        else {
+            speed = 0;
+        }
+        sVar1 = playerActor->yPosMaybe;
+        if (isSsGameMode) {
+            sVar1 = 8640 - sVar1;
+        } else {
+            if (isFsGameMode) {
+                sVar1 = 16640 - sVar1;
+
+            }
+            else {
+                if (isGsGameMode) {
+                    sVar1 = 16640 - sVar1;
+                }
+            }
+        }
+    }
+    drawText(windowDC,strBuf,x,&y,formatElapsedTime(elapsedTime,strBuf) & 0xffff);
+    drawText(windowDC,strBuf,x,&y,wsprintfA(strBuf,getCachedString(IDS_DIST_FORMAT), (short)(sVar1 / 16)));
+    drawText(windowDC,strBuf,x,&y,wsprintfA(strBuf,getCachedString(IDS_SPEED_FORMAT), speed));
+    drawText(windowDC,strBuf,x,&y,wsprintfA(strBuf,getCachedString(IDS_STYLE_FORMAT), stylePoints));
+    statusWindowLastUpdateTime = currentTickCount;
+    return;
 }

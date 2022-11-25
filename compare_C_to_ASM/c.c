@@ -7,7 +7,7 @@
 extern void __fastcall assertFailed(char *srcFilename, int lineNumber);
 extern void __fastcall enlargeRect(RECT *rect1, RECT *rect2);
 extern char * __fastcall getCachedString(UINT stringIdx);
-extern short __fastcall formatElapsedTime(int totalMillis,LPSTR outputString);
+extern int __fastcall formatElapsedTime(int totalMillis, LPSTR outputString);
 extern void __fastcall drawText(HDC hdc,LPCSTR textStr,short x,short *y,int textLen);
 extern void updateGameState();
 extern void __fastcall drawWindow(HDC hdc, RECT *rect);
@@ -52,7 +52,7 @@ extern void __fastcall actorSetFlag8IfFlag1IsUnset(Actor *actor);
 extern void __fastcall updatePermObject(PermObject *permObject);
 extern Actor * __fastcall addActorForPermObject(PermObject *permObject);
 extern BOOL __fastcall doRectsOverlap(RECT *rect1, RECT *rect2);
-extern void __fastcall updateRectForSpriteAtLocation(RECT *rect, Sprite *sprite, short newX, short newY, short param_5);
+//extern void __fastcall updateRectForSpriteAtLocation(RECT *rect, Sprite *sprite, short newX, short newY, short param_5);
 extern void __fastcall updatePermObjectActorType4(PermObject *permObject);
 extern void __fastcall FUN_00404350(PermObject *permObject);
 extern int allocateMemory();
@@ -76,20 +76,44 @@ extern void __fastcall updateActorsAfterWindowResize(short centreX, short param_
 // FUNCTION GOES HERE
 //
 
-void __fastcall updateActorsAfterWindowResize(short centreX, short centreY) {
-    Actor *actor;
+void __fastcall formatAndPrintStatusStrings(HDC windowDC) {
+    short sVar1;
+    short speed;
+    short x = statusWindowLabelWidth + 2;
+    short y = 2;
+    CHAR strBuf [20];
 
-    for(actor = actorListPtr; actor != NULL; actor = actor->next) {
-        if (((actor->flags & FLAG_4) != 0) && ((actor->flags & FLAG_2) == 0)) {
-            if ((actor->flags & FLAG_1) != 0) {
-                duplicateAndLinkActor(actor);
+    speed = 0;
+    sVar1 = 0;
+
+    if (playerActor != NULL) {
+        if (timerFrameDurationInMillis != 0) {
+            speed = (short)((int)(playerActor->verticalVelocityMaybe * 1000) / (int)(timerFrameDurationInMillis * 16));
+        }
+        else {
+            speed = 0;
+        }
+        sVar1 = playerActor->yPosMaybe;
+        if (isSsGameMode) {
+            sVar1 = 8640 - sVar1;
+        } else {
+            if (isFsGameMode) {
+                sVar1 = 16640 - sVar1;
+
             }
-            actor->flags &= 0xfffffffb;
+            else {
+                if (isGsGameMode) {
+                    sVar1 = 16640 - sVar1;
+                }
+            }
         }
     }
-
-    skierScreenYOffset = centreY;
-    skierScreenXOffset = centreX;
+    drawText(windowDC,strBuf,x,&y,formatElapsedTime(elapsedTime,strBuf) & 0xffff);
+    drawText(windowDC,strBuf,x,&y,wsprintfA(strBuf,getCachedString(IDS_DIST_FORMAT), (short)(sVar1 / 16)));
+    drawText(windowDC,strBuf,x,&y,wsprintfA(strBuf,getCachedString(IDS_SPEED_FORMAT), speed));
+    drawText(windowDC,strBuf,x,&y,wsprintfA(strBuf,getCachedString(IDS_STYLE_FORMAT), stylePoints));
+    statusWindowLastUpdateTime = currentTickCount;
+    return;
 }
 
 

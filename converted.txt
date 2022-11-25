@@ -97,3 +97,5 @@ _handleMouseClick
 @handleMouseMoveMessage@8
 @updateWindowSize@4
 @updateActorsAfterWindowResize@8
+@updateRectForSpriteAtLocation@20
+@formatAndPrintStatusStrings@4
