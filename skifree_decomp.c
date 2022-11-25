@@ -3038,3 +3038,25 @@ void __fastcall formatAndPrintStatusStrings(HDC windowDC) {
     statusWindowLastUpdateTime = currentTickCount;
     return;
 }
+
+PermObject * __fastcall addPermObject(PermObjectList *objList, PermObject *permObject) {
+    PermObject *pPVar1;
+
+    pPVar1 = &PTR_0040c758[permObjectCount++]; // + uVar2;
+    ski_assert(objList, 2587);
+    ski_assert(permObject, 2588);
+    ski_assert(permObjectCount <= 0x100, 2589);
+
+    if (objList->startingObject == (PermObject *)0x0) {
+        objList->currentObj = pPVar1;
+        objList->nextObject = pPVar1;
+        objList->startingObject = pPVar1;
+    }
+    ski_assert(objList->nextObject == pPVar1, 2592);
+    objList->nextObject = objList->nextObject + 1;
+    memcpy(pPVar1, permObject, sizeof(PermObject));
+    pPVar1->actor = NULL;
+    pPVar1->spritePtr = &sprites[(USHORT)pPVar1->spriteIdx];
+
+    return pPVar1;
+}

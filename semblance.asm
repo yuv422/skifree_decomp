@@ -6086,6 +6086,7 @@ LAB_0040511e:
 @setPointerToNull@4 endp
 ~
 
+COMMENT ~
 @addPermObject@8 proc
           push  ebx
           push  esi
@@ -6150,6 +6151,7 @@ LAB_004051db:
           db 090h
           db 090h
 @addPermObject@8 endp
+~
 
 COMMENT ~
 _setupGameTitleActors proc

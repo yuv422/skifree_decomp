@@ -99,3 +99,4 @@ _handleMouseClick
 @updateActorsAfterWindowResize@8
 @updateRectForSpriteAtLocation@20
 @formatAndPrintStatusStrings@4
+@addPermObject@8

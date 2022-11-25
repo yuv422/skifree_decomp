@@ -76,44 +76,26 @@ extern void __fastcall updateActorsAfterWindowResize(short centreX, short param_
 // FUNCTION GOES HERE
 //
 
-void __fastcall formatAndPrintStatusStrings(HDC windowDC) {
-    short sVar1;
-    short speed;
-    short x = statusWindowLabelWidth + 2;
-    short y = 2;
-    CHAR strBuf [20];
+PermObject * __fastcall addPermObject(PermObjectList *objList, PermObject *permObject) {
+    PermObject *pPVar1;
 
-    speed = 0;
-    sVar1 = 0;
+    pPVar1 = &PTR_0040c758[permObjectCount++]; // + uVar2;
+    ski_assert(objList, 2587);
+    ski_assert(permObject, 2588);
+    ski_assert(permObjectCount <= 0x100, 2589);
 
-    if (playerActor != NULL) {
-        if (timerFrameDurationInMillis != 0) {
-            speed = (short)((int)(playerActor->verticalVelocityMaybe * 1000) / (int)(timerFrameDurationInMillis * 16));
-        }
-        else {
-            speed = 0;
-        }
-        sVar1 = playerActor->yPosMaybe;
-        if (isSsGameMode) {
-            sVar1 = 8640 - sVar1;
-        } else {
-            if (isFsGameMode) {
-                sVar1 = 16640 - sVar1;
-
-            }
-            else {
-                if (isGsGameMode) {
-                    sVar1 = 16640 - sVar1;
-                }
-            }
-        }
+    if (objList->startingObject == (PermObject *)0x0) {
+        objList->currentObj = pPVar1;
+        objList->nextObject = pPVar1;
+        objList->startingObject = pPVar1;
     }
-    drawText(windowDC,strBuf,x,&y,formatElapsedTime(elapsedTime,strBuf) & 0xffff);
-    drawText(windowDC,strBuf,x,&y,wsprintfA(strBuf,getCachedString(IDS_DIST_FORMAT), (short)(sVar1 / 16)));
-    drawText(windowDC,strBuf,x,&y,wsprintfA(strBuf,getCachedString(IDS_SPEED_FORMAT), speed));
-    drawText(windowDC,strBuf,x,&y,wsprintfA(strBuf,getCachedString(IDS_STYLE_FORMAT), stylePoints));
-    statusWindowLastUpdateTime = currentTickCount;
-    return;
+    ski_assert(objList->nextObject == pPVar1, 2592);
+    objList->nextObject = objList->nextObject + 1;
+    memcpy(pPVar1, permObject, sizeof(PermObject));
+    pPVar1->actor = NULL;
+    pPVar1->spritePtr = &sprites[(USHORT)pPVar1->spriteIdx];
+
+    return pPVar1;
 }
 
 
