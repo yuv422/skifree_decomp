@@ -76,25 +76,20 @@ extern void __fastcall updateActorsAfterWindowResize(short centreX, short param_
 // FUNCTION GOES HERE
 //
 
-void __fastcall updateWindowSize(HWND hWnd) {
-//    longlong lVar1;
+void __fastcall updateActorsAfterWindowResize(short centreX, short centreY) {
+    Actor *actor;
 
-    DAT_0040c760 = 0;
-    GetClientRect(hWnd,&windowClientRect);
-//    lVar1 = (longlong)(windowClientRect.bottom + windowClientRect.top) * 0x55555556; // val / 3
-    updateActorsAfterWindowResize
-            ((short)((windowClientRect.left + windowClientRect.right) / 2),
-             (short)((windowClientRect.bottom + windowClientRect.top) / 3));
-    windowWidth = (short)windowClientRect.right - (short)windowClientRect.left;
-    windowClientRectWith120Margin.left = windowClientRect.left + -120;
-    windowClientRectWith120Margin.top = windowClientRect.top + -120;
-    windowClientRectWith120Margin.right = windowClientRect.right + 120;
-    windowClientRectWith120Margin.bottom = windowClientRect.bottom + 120;
-    windowHeight = (short)windowClientRect.bottom - (short)windowClientRect.top;
-    windowWithMarginTotalArea =
-            ((windowClientRect.bottom + 120) - (windowClientRect.top + -120)) *
-            ((windowClientRect.right + 120) - (windowClientRect.left + -120));
-    return;
+    for(actor = actorListPtr; actor != NULL; actor = actor->next) {
+        if (((actor->flags & FLAG_4) != 0) && ((actor->flags & FLAG_2) == 0)) {
+            if ((actor->flags & FLAG_1) != 0) {
+                duplicateAndLinkActor(actor);
+            }
+            actor->flags &= 0xfffffffb;
+        }
+    }
+
+    skierScreenYOffset = centreY;
+    skierScreenXOffset = centreX;
 }
 
 

@@ -1,58 +1,34 @@
-extern @updateActorsAfterWindowResize@8: proc
-
-@updateWindowSize@4 proc
+@updateActorsAfterWindowResize@8 proc
           push  ebx
-          push  ebp
           push  esi
+          mov   esi, dword ptr [actorListPtr]   ; <c618>
           push  edi
-          push  offset windowClientRect.left    ; <c6b0>
-          push  ecx
-          mov   dword ptr [DAT_0040c760], 000000000h    ; <c760>
-          call  dword ptr [__imp__GetClientRect@8]      ; <GetClientRect>
-          mov   eax, dword ptr [windowClientRect.top]   ; <c6b4>
-          mov   ecx, dword ptr [windowClientRect.bottom]        ; <c6bc>
-          add   ecx, eax
-          mov   eax, 055555556h
-          imul  ecx
-          mov   eax, dword ptr [windowClientRect.left]  ; <c6b0>
-          mov   ecx, dword ptr [windowClientRect.right] ; <c6b8>
-          mov   esi, edx
-          add   eax, ecx
-          shr   edx, 01Fh
-          add   esi, edx
-          cdq
-          sub   eax, edx
-          mov   edx, esi
-          mov   ecx, eax
-          sar   ecx, 1h
-          call  @updateActorsAfterWindowResize@8
-          mov   ebp, dword ptr [windowClientRect.top]   ; <c6b4>
-          mov   esi, dword ptr [windowClientRect.bottom]        ; <c6bc>
-          mov   ecx, dword ptr [windowClientRect.right] ; <c6b8>
-          mov   edi, dword ptr [windowClientRect.left]  ; <c6b0>
-          lea   eax, dword ptr [ebp-078h]
-          mov   dword ptr [windowClientRectWith120Margin.top], eax      ; <c684>
-          lea   eax, dword ptr [esi+078h]
-          sub   esi, ebp
-          lea   edx, dword ptr [ecx+078h]
-          mov   word ptr [windowHeight], si     ; <c6d8>
-          mov   esi, dword ptr [windowClientRectWith120Margin.top]      ; <c684>
-          lea   ebx, dword ptr [edi-078h]
-          mov   dword ptr [windowClientRectWith120Margin.right], edx    ; <c688>
-          mov   dword ptr [windowClientRectWith120Margin.bottom], eax   ; <c68c>
-          sub   eax, esi
-          sub   edx, ebx
-          sub   ecx, edi
-          imul  eax, edx
+          test  esi, esi
+          mov   di, dx
+          mov   bx, cx
+          jz    LAB_00406097
+LAB_00406073:     mov   eax, dword ptr [esi+04Ch]
+          test  al, 004h
+          jz    LAB_00406091
+          test  al, 002h
+          jnz   LAB_00406091
+          test  al, 001h
+          jz    LAB_0040608b
+          mov   ecx, esi
+          call  @duplicateAndLinkActor@4
+          jmp   LAB_0040608d
+LAB_0040608b:     mov   eax, esi
+LAB_0040608d:     and   dword ptr [eax+04Ch], 0FFFFFFFBh
+LAB_00406091:     mov   esi, dword ptr [esi]
+          test  esi, esi
+          jnz   LAB_00406073
+LAB_00406097:     mov   word ptr [skierScreenYOffset], di       ; <c5fc>
           pop   edi
+          mov   word ptr [skierScreenXOffset], bx       ; <c704>
           pop   esi
-          mov   dword ptr [windowClientRectWith120Margin.left], ebx     ; <c680>
-          pop   ebp
-          mov   word ptr [windowWidth], cx      ; <c5f0>
-          mov   dword ptr [windowWithMarginTotalArea], eax      ; <c748>
           pop   ebx
           ret
-LAB_00406053:
+LAB_004060a9:
           db 090h
           db 090h
           db 090h
@@ -60,10 +36,4 @@ LAB_00406053:
           db 090h
           db 090h
           db 090h
-          db 090h
-          db 090h
-          db 090h
-          db 090h
-          db 090h
-          db 090h
-@updateWindowSize@4 endp
+@updateActorsAfterWindowResize@8 endp

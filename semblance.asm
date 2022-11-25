@@ -7494,6 +7494,7 @@ LAB_00405f9f:
 _deleteWindowObjects endp
 ~
 
+COMMENT ~
 @updateWindowSize@4 proc
           push  ebx
           push  ebp
@@ -7561,7 +7562,9 @@ LAB_00406053:
           db 090h
           db 090h
 @updateWindowSize@4 endp
+~
 
+COMMENT ~
 @updateActorsAfterWindowResize@8 proc
           push  ebx
           push  esi
@@ -7601,6 +7604,7 @@ LAB_004060a9:
           db 090h
           db 090h
 @updateActorsAfterWindowResize@8 endp
+~
 
 COMMENT ~
 @mainWindowPaint@4 proc

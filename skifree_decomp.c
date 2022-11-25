@@ -70,7 +70,8 @@ void deleteWindowObjects();
 void handleMouseClick();
 int __fastcall getSkierGroundSpriteFromMousePosition(short param_1,short param_2);
 int __fastcall getSkierInAirSpriteFromMousePosition(short param_1,short param_2);
-void __fastcall handleMouseMoveMessage(short xPos,short yPos);
+void __fastcall handleMouseMoveMessage(short xPos, short yPos);
+void __fastcall updateActorsAfterWindowResize(short centreX, short centreY);
 
 //
 // ASM Functions
@@ -87,7 +88,6 @@ extern void __fastcall handleKeydownMessage(UINT charCode);
 extern void setupPermObjects();
 extern Actor * __fastcall updateActorVelMaybe(Actor *actor, ActorVelStruct *param_2);
 extern void __fastcall updatePermObject(PermObject *permObject);
-extern void __fastcall updatePermObjectActorType4(PermObject *permObject);
 
 
 
@@ -2945,4 +2945,40 @@ void __fastcall handleMouseMoveMessage(short xPos,short yPos) {
     prevMouseX = xPos;
     prevMouseY = yPos;
     DAT_0040c760 = 1;
+}
+
+// TODO not byte accurate
+void __fastcall updateWindowSize(HWND hWnd) {
+    DAT_0040c760 = 0;
+    GetClientRect(hWnd,&windowClientRect);
+    updateActorsAfterWindowResize(
+            (short)((windowClientRect.left + windowClientRect.right) / 2),
+            (short)((windowClientRect.top + windowClientRect.bottom) / 3)
+    );
+    windowClientRectWith120Margin.left = windowClientRect.left - 120;
+    windowClientRectWith120Margin.right = windowClientRect.right + 120;
+    windowClientRectWith120Margin.bottom = windowClientRect.bottom + 120;
+    windowClientRectWith120Margin.top = windowClientRect.top - 120;
+    windowWidth = (short)(windowClientRect.right - windowClientRect.left);
+    windowHeight = (short)(windowClientRect.bottom - windowClientRect.top);
+    windowWithMarginTotalArea =
+            (windowClientRectWith120Margin.bottom - windowClientRectWith120Margin.top) *
+            (windowClientRectWith120Margin.bottom - windowClientRectWith120Margin.left);
+}
+
+// TODO not byte accurate
+void __fastcall updateActorsAfterWindowResize(short centreX, short centreY) {
+    Actor *actor;
+
+    for(actor = actorListPtr; actor != NULL; actor = actor->next) {
+        if (((actor->flags & FLAG_4) != 0) && ((actor->flags & FLAG_2) == 0)) {
+            if ((actor->flags & FLAG_1) != 0) {
+                duplicateAndLinkActor(actor);
+            }
+            actor->flags &= 0xfffffffb;
+        }
+    }
+
+    skierScreenYOffset = centreY;
+    skierScreenXOffset = centreX;
 }
