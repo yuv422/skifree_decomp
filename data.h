@@ -45,8 +45,8 @@ extern BOOL isPaused;
 extern BOOL isMinimised;
 extern UINT mainWndActivationFlags;
 extern BOOL inputEnabled;
-extern short skierScreenXOffset;
-extern short skierScreenYOffset;
+extern int skierScreenXOffset;
+extern int skierScreenYOffset;
 extern BOOL redrawRequired;
 extern DWORD timerFrameDurationInMillis;
 extern DWORD currentTickCount;
@@ -94,7 +94,7 @@ extern HGDIOBJ largeBitmapSheet_1bpp;
 extern HGDIOBJ scratchBitmap;
 extern BOOL isFsGameMode;
 extern int stylePoints;
-extern short playerX;
+extern int playerX;
 extern short playerY;
 extern USHORT permObjectCount;
 extern ActorVelStruct beginnerActorMovementTbl;
@@ -116,6 +116,11 @@ extern short DAT_0040c714;
 extern int DAT_0040c760;
 extern short prevMouseX;
 extern short prevMouseY;
+extern PermObjectList PermObjectList_0040c630;
+extern PermObjectList PermObjectList_0040c5e0;
+extern PermObjectList PermObjectList_0040c658;
+extern PermObjectList PermObjectList_0040c738; // ski lift poles
+extern PermObjectList PermObjectList_0040c720;
 
 
 extern BOOL (WINAPI *sndPlaySoundAFuncPtr)(LPCSTR, UINT);

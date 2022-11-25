@@ -100,3 +100,4 @@ _handleMouseClick
 @updateRectForSpriteAtLocation@20
 @formatAndPrintStatusStrings@4
 @addPermObject@8
+_setupPermObjects

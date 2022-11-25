@@ -5750,6 +5750,7 @@ LAB_00404b4f:     ret
 _startGameTimer endp
 ~
 
+COMMENT ~
 _setupPermObjects proc
           sub   esp, 000000024h
           push  ebx
@@ -6067,6 +6068,7 @@ LAB_004050f8:
           db 090h
           db 090h
 _setupPermObjects endp
+~
 
 COMMENT ~
 @setPointerToNull@4 proc
