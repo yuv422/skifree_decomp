@@ -217,17 +217,13 @@ db 53h, 00h, 54h, 00h, 55h, 00h, 54h, 00h, 31h, 00h, 57h, 00h, 58h, 00h, 59h, 00
 PUBLIC C UINT_ARRAY_0040a22c
 UINT_ARRAY_0040a22c byte 06h, 3 DUP (00h), 16h, 3 DUP (00h), 1bh, 3 DUP (00h), 1fh, 3 DUP (00h), 27h, 3 DUP (00h), 2ah, 3 DUP (00h), 2ah, 3 DUP (00h), 2ah, 3 DUP (00h)
 db 2ah, 3 DUP (00h), 38h, 3 DUP (00h), 3ch, 3 DUP (00h)
-PUBLIC C DAT_0040a258
-DAT_0040a258 byte 01h
-db 3 DUP (00h)
-PUBLIC C DAT_0040a25c
-DAT_0040a25c byte 04h
-db 3 DUP (00h), 02h, 7 DUP (00h), 03h, 3 DUP (00h), 01h, 3 DUP (00h), 07h, 3 DUP (00h), 02h, 7 DUP (00h), 05h, 3 DUP (00h), 04h, 3 DUP (00h), 06h
-db 3 DUP (00h), 05h, 3 DUP (00h), 08h, 3 DUP (00h), 03h, 3 DUP (00h), 02h, 3 DUP (00h), 05h, 3 DUP (00h), 06h, 3 DUP (00h), 09h, 3 DUP (00h), 02h
-db 3 DUP (00h), 05h, 3 DUP (00h), 0ah, 3 DUP (00h), 03h, 3 DUP (00h), 06h, 3 DUP (00h), 03h, 3 DUP (00h), 06h, 3 DUP (00h), 0eh, 3 DUP (00h), 0fh
-db 3 DUP (00h), 10h, 3 DUP (00h), 0dh, 3 DUP (00h), 0dh, 3 DUP (00h), 10h, 3 DUP (00h), 0fh, 3 DUP (00h), 0eh, 3 DUP (00h), 0eh, 3 DUP (00h), 0fh
-db 3 DUP (00h), 14h, 3 DUP (00h), 15h, 3 DUP (00h), 14h, 3 DUP (00h), 15h, 3 DUP (00h), 10h, 3 DUP (00h), 0dh, 3 DUP (00h), 0dh, 3 DUP (00h), 10h
-db 3 DUP (00h)
+PUBLIC C playerTurnFrameNoTbl
+playerTurnFrameNoTbl byte 01h, 3 DUP (00h), 04h, 3 DUP (00h)
+db 02h, 7 DUP (00h), 03h, 3 DUP (00h), 01h, 3 DUP (00h), 07h, 3 DUP (00h), 02h, 7 DUP (00h), 05h, 3 DUP (00h), 04h, 3 DUP (00h), 06h, 3 DUP (00h)
+db 05h, 3 DUP (00h), 08h, 3 DUP (00h), 03h, 3 DUP (00h), 02h, 3 DUP (00h), 05h, 3 DUP (00h), 06h, 3 DUP (00h), 09h, 3 DUP (00h), 02h, 3 DUP (00h)
+db 05h, 3 DUP (00h), 0ah, 3 DUP (00h), 03h, 3 DUP (00h), 06h, 3 DUP (00h), 03h, 3 DUP (00h), 06h, 3 DUP (00h), 0eh, 3 DUP (00h), 0fh, 3 DUP (00h)
+db 10h, 3 DUP (00h), 0dh, 3 DUP (00h), 0dh, 3 DUP (00h), 10h, 3 DUP (00h), 0fh, 3 DUP (00h), 0eh, 3 DUP (00h), 0eh, 3 DUP (00h), 0fh, 3 DUP (00h)
+db 14h, 3 DUP (00h), 15h, 3 DUP (00h), 14h, 3 DUP (00h), 15h, 3 DUP (00h), 10h, 3 DUP (00h), 0dh, 3 DUP (00h), 0dh, 3 DUP (00h), 10h, 3 DUP (00h)
 PUBLIC C ActorVelStruct_ARRAY_0040a308
 ActorVelStruct_ARRAY_0040a308 byte 01h, 00h, 10h, 13 DUP (00h), 01h, 00h, 0ch, 00h, 01h, 00h, 01h, 00h, 2 DUP (0ffh), 2 DUP (00h), 01h, 3 DUP (00h)
 db 01h, 00h, 06h, 00h, 01h, 00h, 04h, 00h, 2 DUP (0ffh), 2 DUP (00h), 02h, 3 DUP (00h), 01h, 3 DUP (00h), 01h, 00h

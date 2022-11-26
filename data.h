@@ -24,6 +24,7 @@ extern UINT UINT_ARRAY_0040a22c[];
 extern ActorVelStruct ActorVelStruct_ARRAY_0040a308[];
 extern ActorVelStruct snowboarderActorMovementTbl[];
 extern UINT UINT_ARRAY_0040a434[];
+extern PlayerTurnFrameNoLookupTbl playerTurnFrameNoTbl[];
 
 extern char sourceFilename[];
 extern HWND hSkiMainWnd;

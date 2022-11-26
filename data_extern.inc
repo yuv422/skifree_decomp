@@ -98,8 +98,7 @@ EXTERN C s_skiMain: far
 EXTERN C s_skiStatus: far
 EXTERN C actorFrameToSpriteTbl: far
 EXTERN C UINT_ARRAY_0040a22c: far
-EXTERN C DAT_0040a258: far
-EXTERN C DAT_0040a25c: far
+EXTERN C playerTurnFrameNoTbl:PlayerTurnFrameNoLookupTbl
 EXTERN C ActorVelStruct_ARRAY_0040a308: far
 EXTERN C UINT_ARRAY_0040a434: far
 EXTERN C beginnerActorMovementTbl: far

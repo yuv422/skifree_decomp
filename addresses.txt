@@ -266,8 +266,8 @@
 0040a198:s_skiStatus
 0040a1ac:actorFrameToSpriteTbl
 0040a22c:UINT_ARRAY_0040a22c
-0040a258:DAT_0040a258
-0040a25c:DAT_0040a25c
+0040a258:playerTurnFrameNoTbl.leftFrameNo
+0040a25c:playerTurnFrameNoTbl.rightFrameNo
 0040a308:ActorVelStruct_ARRAY_0040a308
 0040a434:UINT_ARRAY_0040a434
 0040a490:beginnerActorMovementTbl

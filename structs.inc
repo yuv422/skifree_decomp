@@ -63,6 +63,11 @@ ActorVelStruct struct
     frameNo dword ?
 ActorVelStruct ends
 
+PlayerTurnFrameNoLookupTbl struct
+    leftFrameNo dword ?
+    rightFrameNo dword ?
+PlayerTurnFrameNoLookupTbl ends
+
 extern _malloc: proc
 extern _free: proc
 extern _strlen: proc

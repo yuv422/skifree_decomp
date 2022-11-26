@@ -7742,7 +7742,7 @@ LAB_004061f3:     cmp   esi, 000000016h
           mov   ecx, offset sourceFilename      ; <c090>
           call  @assertFailed@8
           mov   eax, dword ptr [playerActor]    ; <c72c>
-LAB_0040620c:     mov   esi, dword ptr [esi*8+DAT_0040a258]     ; <a258>
+LAB_0040620c:     mov   esi, dword ptr [esi*8+playerTurnFrameNoTbl.leftFrameNo] ; <a258>
           cmp   esi, 000000007h
           jnz   LAB_0040636f
           movsx ecx, word ptr [eax+046h]
@@ -7758,7 +7758,7 @@ LAB_00406236:     cmp   esi, 000000016h
           mov   ecx, offset sourceFilename      ; <c090>
           call  @assertFailed@8
           mov   eax, dword ptr [playerActor]    ; <c72c>
-LAB_0040624f:     mov   esi, dword ptr [esi*8+DAT_0040a25c]     ; <a25c>
+LAB_0040624f:     mov   esi, dword ptr [esi*8+playerTurnFrameNoTbl.rightFrameNo]        ; <a25c>
           cmp   esi, 000000008h
           jnz   LAB_0040636f
           movsx ecx, word ptr [eax+046h]

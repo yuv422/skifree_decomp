@@ -70,6 +70,7 @@ extern void __fastcall updateActorsAfterWindowResize(short centreX, short param_
 extern void __fastcall setPointerToNull(PermObjectList *param_1);
 extern PermObject * __fastcall addPermObject(PermObjectList *objList, PermObject *permObject);
 extern USHORT __fastcall getSpriteIdxForActorType(int actorType);
+extern void togglePausedState();
 
 
 
@@ -81,203 +82,183 @@ extern USHORT __fastcall getSpriteIdxForActorType(int actorType);
 //
 
 
-/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
 
-void setupPermObjects() {
-    BOOL bVar1;
-    USHORT uVar2;
-    PermObject *pPVar3;
-    short sVar4;
-    PermObject permObject;
-    int d;
+void __fastcall handleKeydownMessage(UINT charCode)
 
-    permObject.unk_0x1e = 0;
-    permObject.yVelocity = 0;
-    permObject.xVelocity = 0;
-    permObject.unk_0x18 = 0;
-    setPointerToNull(&PermObjectList_0040c630);
-    permObject.actorTypeMaybe = 0x11;
-    permObject.maybeX = ((short)playerX - skierScreenXOffset) + windowClientRect.left + 60;
-    permObject.spriteIdx = 0x3d;
-    if (permObject.maybeX < -320) {
-        permObject.maybeX = -320;
-    }
-    permObject.maybeY = ((short)playerY - skierScreenYOffset) + windowClientRect.bottom - 60;
-    if (640 < permObject.maybeY) {
-        permObject.maybeY = 520;
-    }
-    addPermObject(&PermObjectList_0040c630,&permObject);
-    permObject.spriteIdx = 0x39;
-    permObject.maybeX = -576;
-    permObject.maybeY = 640;
-    addPermObject(&PermObjectList_0040c630,&permObject);
-    permObject.spriteIdx = 0x3a;
-    permObject.maybeX = -320;
-    addPermObject(&PermObjectList_0040c630,&permObject);
-    permObject.actorTypeMaybe = 0xc;
-    bVar1 = TRUE;
-    firstSlalomFlagLeft = (PermObject *)0x0;
-    /* slalom flags */
-    sVar4 = 960;
-    do {
-        permObject.spriteIdx = bVar1 ? 0x17 : 0x18; //0x18 - (USHORT)bVar1;
-        permObject.maybeX =  bVar1 ? -496 : -400; //(-(USHORT)bVar1 & 0xffa0) + -400;
-        bVar1 = !bVar1;
-        permObject.maybeY = sVar4;
-        pPVar3 = addPermObject(&PermObjectList_0040c630,&permObject);
-        if (firstSlalomFlagLeft == (PermObject *)0x0) {
-            firstSlalomFlagLeft = pPVar3;
-        }
-        sVar4 = sVar4 + 320;
-    } while (sVar4 < 8640);
-    permObject.actorTypeMaybe = 0x11;
-    permObject.spriteIdx = 0x3b;
-    permObject.maybeX = -576;
-    permObject.maybeY = 8640;
-    addPermObject(&PermObjectList_0040c630,&permObject);
-    permObject.spriteIdx = 0x3c;
-    permObject.maybeX = -320;
-    addPermObject(&PermObjectList_0040c630,&permObject);
-    setPointerToNull(&PermObjectList_0040c5e0);
-    permObject.actorTypeMaybe = 0x11;
-    permObject.spriteIdx = 0x3e;
-    permObject.maybeX =
-            ((short)windowClientRect.right - skierScreenXOffset) + -0x3c + (short)playerX;
-    if (permObject.maybeX > 320) {
-        permObject.maybeX = 320;
-    }
-    permObject.maybeY =
-            ((short)windowClientRect.bottom - skierScreenYOffset) + playerY + -0x3c;
-    if (0x280 < permObject.maybeY) {
-        permObject.maybeY = 520;
-    }
-    addPermObject(&PermObjectList_0040c5e0,&permObject);
-    permObject.spriteIdx = 0x39;
-    permObject.maybeX = 320;
-    permObject.maybeY = 640;
-    addPermObject(&PermObjectList_0040c5e0,&permObject);
-    permObject.spriteIdx = 0x3a;
-    permObject.maybeX = 512;
-    addPermObject(&PermObjectList_0040c5e0,&permObject);
-    bVar1 = TRUE;
-    FirstSlalomFlagRight = (PermObject *)0x0;
-    /* slalom flags, right hand side */
-    sVar4 = 0x410;
-    do {
-        permObject.actorTypeMaybe = 0xc;
-        permObject.spriteIdx = bVar1 ? 0x17 : 0x18;
-        permObject.maybeX = bVar1 ? 400 : 432;
-        bVar1 = !bVar1;
-        permObject.maybeY = sVar4;
-        pPVar3 = addPermObject(&PermObjectList_0040c5e0,&permObject);
-        if (FirstSlalomFlagRight == (PermObject *)0x0) {
-            FirstSlalomFlagRight = pPVar3;
-        }
-        permObject.actorTypeMaybe = 0xd;
-        permObject.spriteIdx = getSpriteIdxForActorType(0xd);
-        uVar2 = random(0x20);
-        permObject.maybeX = uVar2 + 400;
-        /* this should use the return value */
-        random(400);
-        sVar4 = sVar4 + 400;
-    } while (sVar4 < 0x4100);
-    permObject.actorTypeMaybe = 0x11;
-    /* finish sign left */
-    permObject.spriteIdx = 0x3b;
-    permObject.maybeX = 320;
-    permObject.maybeY = 16640;
-    addPermObject(&PermObjectList_0040c5e0,&permObject);
-    /* finish sign right */
-    permObject.spriteIdx = 0x3c;
-    permObject.maybeX = 512;
-    addPermObject(&PermObjectList_0040c5e0,&permObject);
-    setPointerToNull(&PermObjectList_0040c658);
+{
+    short sVar1;
+    int iVar2;
+    UINT uVar3;
+    UINT ActorframeNo;
 
-    permObject.actorTypeMaybe = 0x11;
-    permObject.spriteIdx = 0x3f;
-    permObject.maybeX = 0;
-    permObject.maybeY = (windowClientRect.bottom - skierScreenYOffset);
-    permObject.maybeY += playerY;
-    permObject.maybeY -= 0x3c;
-    if (0x280 < permObject.maybeY) {
-        permObject.maybeY = 520;
+    switch(charCode) {
+        case VK_RETURN:
+            if (playerActor != (Actor *)0x0) {
+                return;
+            }
+        case VK_F2:
+            handleGameReset();
+            return;
+        case VK_ESCAPE:
+            ShowWindow(hSkiMainWnd,6);
+            return;
+        case VK_F3:
+            togglePausedState();
+            return;
     }
-    addPermObject(&PermObjectList_0040c658,&permObject);
-    permObject.spriteIdx = 0x39;
-    permObject.maybeX = -160;
-    permObject.maybeY = 640;
-    addPermObject(&PermObjectList_0040c658,&permObject);
-    permObject.spriteIdx = 0x3a;
-    permObject.maybeX = 160;
-    addPermObject(&PermObjectList_0040c658,&permObject);
-    permObject.spriteIdx = 0x3b;
-    permObject.maybeX = -160;
-    permObject.maybeY = 16640;
-    addPermObject(&PermObjectList_0040c658,&permObject);
-    permObject.spriteIdx = 0x3c;
-    permObject.maybeX = 160;
-    addPermObject(&PermObjectList_0040c658,&permObject);
-    INT_0040c968 = 0;
-    isFsGameMode = 0;
-    setPointerToNull(&PermObjectList_0040c738);
-    /* ski lift poles??? */
-    sVar4 = -1024;
-    do {
-        permObject.actorTypeMaybe = 0xd;
-        permObject.spriteIdx = 0x40;
-        permObject.maybeX = -128;
-        permObject.maybeY = sVar4;
-        permObject.unk_0x18 = 0;
-        permObject.unk_0x1e = 0;
-        permObject.yVelocity = 0;
-        permObject.xVelocity = 0;
-        addPermObject(&PermObjectList_0040c738,&permObject);
-        sVar4 = sVar4 + 2048;
-    } while (sVar4 <= 23552);
-    setPointerToNull(&PermObjectList_0040c720);
-    sVar4 = -1024;
-    do {
-        permObject.actorTypeMaybe = 4;
-        permObject.spriteIdx = 0;
-        permObject.unk_0x1e = 0;
-        permObject.xVelocity = 0;
-        permObject.unk_0x18 = 0x20;
-        permObject.maybeY = sVar4;
-        if (-1024 < sVar4) {
-            permObject.actorFrameNo = 0x27;
-            permObject.maybeX = -112;
-            permObject.yVelocity = -2;
-            addPermObject(&PermObjectList_0040c720,&permObject);
-        }
-        if (sVar4 < 23552) {
-            permObject.actorFrameNo = 0x29;
-            permObject.maybeX = -144;
-            permObject.yVelocity = 2;
-            addPermObject(&PermObjectList_0040c720,&permObject);
-        }
-        sVar4 = sVar4 + 2048;
-    } while (sVar4 <= 23552);
-    permObject.actorTypeMaybe = 7;
-    permObject.actorFrameNo = 0x2a;
-    permObject.spriteIdx = 0;
-    permObject.maybeX = -16060;
-    permObject.unk_0x18 = 0;
-    permObject.maybeY = 0;
-    permObject.unk_0x1e = 0;
-    permObject.yVelocity = 0;
-    permObject.xVelocity = 0;
-    addPermObject(&PermObjectList_0040c720,&permObject);
-    permObject.actorTypeMaybe = 8;
-    permObject.maybeX = 16060;
-    addPermObject(&PermObjectList_0040c720,&permObject);
-    permObject.actorTypeMaybe = 5;
-    permObject.maybeX = 0;
-    permObject.maybeY = -2060;
-    addPermObject(&PermObjectList_0040c720,&permObject);
-    permObject.actorTypeMaybe = 6;
-    permObject.maybeY = 32060;
-    addPermObject(&PermObjectList_0040c720,&permObject);
+    if (playerActor == (Actor *)0x0) {
+        return;
+    }
+    ActorframeNo = playerActor->frameNo;
+    sVar1 = playerActor->isInAir;
+    if ((ActorframeNo == 0xb) || (ActorframeNo == 0x11)) goto switchD_004061ec_caseD_29;
+    switch(charCode) {
+        case 0x21:
+        case 0x69:
+            /* numpad 9
+               Up right */
+            if (sVar1 == 0) {
+                ActorframeNo = 6;
+            }
+            break;
+        case 0x22:
+        case 99:
+            /* numpad 3
+               down right */
+            if (sVar1 == 0) {
+                ActorframeNo = 4;
+            }
+            break;
+        case 0x23:
+        case 0x61:
+            /* numpad 1
+               down left */
+            if (sVar1 == 0) {
+                ActorframeNo = 1;
+            }
+            break;
+        case 0x24:
+        case 0x67:
+            /* numpad 7
+               up left */
+            if (sVar1 == 0) {
+                ActorframeNo = 3;
+            }
+            break;
+        case 0x25:
+        case 100:
+            /* numpad 4
+               left */
+            if (0x15 < ActorframeNo) {
+                assertFailed(sourceFilename,0xf63);
+            }
+            ActorframeNo = playerTurnFrameNoTbl[ActorframeNo].leftFrameNo;
+            if (ActorframeNo == 7) {
+                iVar2 = playerActor->HorizontalVelMaybe + -8;
+                if (iVar2 < -7) {
+                    iVar2 = -8;
+                }
+                playerActor->HorizontalVelMaybe = (short)iVar2;
+            }
+            break;
+        case 0x26:
+        case 0x68:
+            /* numpad 8 Up */
+            switch(ActorframeNo) {
+                case 3:
+                case 7:
+                case 0xc:
+                    if (playerActor->verticalVelocityMaybe == 0) {
+                        ActorframeNo = 9;
+                        playerActor->verticalVelocityMaybe = -4;
+                    }
+                    break;
+                case 6:
+                case 8:
+                    if (playerActor->verticalVelocityMaybe == 0) {
+                        ActorframeNo = 10;
+                        playerActor->verticalVelocityMaybe = -4;
+                    }
+                    break;
+                case 0xd:
+                switchD_0040628c_caseD_13:
+                    ActorframeNo = 0x12;
+                    break;
+                case 0xe:
+                    ActorframeNo = 0x14;
+                    break;
+                case 0xf:
+                    ActorframeNo = 0x15;
+                    break;
+                case 0x12:
+                switchD_0040628c_caseD_d:
+                    ActorframeNo = 0x13;
+                    break;
+                case 0x13:
+                switchD_0040628c_caseD_12:
+                    ActorframeNo = 0xd;
+            }
+            break;
+        case 0x27:
+        case 0x66:
+            /* numpad 6, Right */
+            if (0x15 < ActorframeNo) {
+                assertFailed(sourceFilename,3947);
+            }
+            ActorframeNo = playerTurnFrameNoTbl[ActorframeNo].rightFrameNo;
+            if (ActorframeNo == 8) {
+                uVar3 = (int)playerActor->HorizontalVelMaybe + 8;
+                if (7 < (int)uVar3) {
+                    uVar3 = ActorframeNo;
+                }
+                playerActor->HorizontalVelMaybe = (short)uVar3;
+            }
+            break;
+        case 0x28:
+        case 0x62:
+            /* down key pressed */
+            if (sVar1 == 0) {
+                ActorframeNo = 0;
+                break;
+            }
+            switch(ActorframeNo) {
+                case 0xd:
+                    goto switchD_0040628c_caseD_d;
+                case 0x12:
+                    goto switchD_0040628c_caseD_12;
+                case 0x13:
+                    goto switchD_0040628c_caseD_13;
+                case 0x14:
+                    ActorframeNo = 0xe;
+                    break;
+                case 0x15:
+                    ActorframeNo = 0xf;
+            }
+            break;
+        case 0x2d:
+        case 0x60:
+            /* numpad 0, Insert
+               Jump. */
+            if (sVar1 == 0) {
+                playerActor->inAirCounter = 2;
+                ActorframeNo = 0xd;
+                if (4 < playerActor->verticalVelocityMaybe) {
+                    playerActor->verticalVelocityMaybe = playerActor->verticalVelocityMaybe + -4;
+                }
+            }
+    }
+    switchD_004061ec_caseD_29:
+    if ((ActorframeNo != playerActor->frameNo) &&
+        (setActorFrameNo(playerActor,ActorframeNo), redrawRequired != 0)) {
+        drawWindow(mainWindowDC,&windowClientRect);
+        redrawRequired = 0;
+    }
+    return;
 }
+
+
+
+
 
 
 

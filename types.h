@@ -74,6 +74,11 @@ typedef struct {
     LPVOID soundData;
 } Sound;
 
+typedef struct {
+    int leftFrameNo;
+    int rightFrameNo;
+} PlayerTurnFrameNoLookupTbl;
+
 #define NUM_ACTORS 100
 #define NUM_SPRITES 90
 #define NUM_STRINGS 20
