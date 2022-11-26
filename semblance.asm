@@ -7699,6 +7699,7 @@ LAB_00406164:     mov   edx, edi
 @paintActors@8 endp
 ~
 
+COMMENT ~
 @handleKeydownMessage@4 proc
           lea   eax, dword ptr [ecx-00Dh]
           push  esi
@@ -8079,6 +8080,7 @@ DAT_004064f4  dword offset LAB_0040636f
 DAT_004064f8  dword offset LAB_00406293
 DAT_004064fc  dword offset LAB_004062ce
 @handleKeydownMessage@4 endp
+~
 
 COMMENT ~
 _handleGameReset proc

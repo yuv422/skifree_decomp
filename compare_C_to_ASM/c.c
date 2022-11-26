@@ -81,173 +81,186 @@ extern void togglePausedState();
 // FUNCTION GOES HERE
 //
 
-
-
-void __fastcall handleKeydownMessage(UINT charCode)
-
-{
+void __fastcall handleKeydownMessage(UINT charCode) {
     short sVar1;
-    int iVar2;
-    UINT uVar3;
     UINT ActorframeNo;
 
     switch(charCode) {
-        case VK_RETURN:
-            if (playerActor != (Actor *)0x0) {
-                return;
-            }
-        case VK_F2:
-            handleGameReset();
-            return;
         case VK_ESCAPE:
             ShowWindow(hSkiMainWnd,6);
             return;
         case VK_F3:
-            togglePausedState();
+            togglePausedState(); // TODO this is a jmp rather than a call in the original
             return;
+        case VK_RETURN:
+            if (playerActor != (Actor *)0x0) {
+                return;
+            }
+            handleGameReset(); // TODO this is a jmp rather than a call in the original
+            return;
+        case VK_F2:
+            handleGameReset(); // TODO this is a jmp rather than a call in the original
+            return;
+        default: break;
     }
+
     if (playerActor == (Actor *)0x0) {
         return;
     }
     ActorframeNo = playerActor->frameNo;
     sVar1 = playerActor->isInAir;
-    if ((ActorframeNo == 0xb) || (ActorframeNo == 0x11)) goto switchD_004061ec_caseD_29;
-    switch(charCode) {
-        case 0x21:
-        case 0x69:
-            /* numpad 9
-               Up right */
-            if (sVar1 == 0) {
-                ActorframeNo = 6;
-            }
-            break;
-        case 0x22:
-        case 99:
-            /* numpad 3
-               down right */
-            if (sVar1 == 0) {
-                ActorframeNo = 4;
-            }
-            break;
-        case 0x23:
-        case 0x61:
-            /* numpad 1
-               down left */
-            if (sVar1 == 0) {
-                ActorframeNo = 1;
-            }
-            break;
-        case 0x24:
-        case 0x67:
-            /* numpad 7
-               up left */
-            if (sVar1 == 0) {
-                ActorframeNo = 3;
-            }
-            break;
-        case 0x25:
-        case 100:
-            /* numpad 4
-               left */
-            if (0x15 < ActorframeNo) {
-                assertFailed(sourceFilename,0xf63);
-            }
-            ActorframeNo = playerTurnFrameNoTbl[ActorframeNo].leftFrameNo;
-            if (ActorframeNo == 7) {
-                iVar2 = playerActor->HorizontalVelMaybe + -8;
-                if (iVar2 < -7) {
-                    iVar2 = -8;
+    if ((ActorframeNo != 0xb) && (ActorframeNo != 0x11)) {
+        switch (charCode) {
+            case 0x25:
+            case 100:
+                /* numpad 4
+                   left */
+                ski_assert(ActorframeNo < 0x16, 0xf63);
+
+                ActorframeNo = playerTurnFrameNoTbl[ActorframeNo].leftFrameNo;
+                if (ActorframeNo == 7) {
+//                    iVar2 = (int)playerActor->HorizontalVelMaybe - 8;
+//                    if (iVar2 <= -8) {
+//                        iVar2 = -8;
+//                    }
+//                    playerActor->HorizontalVelMaybe = (short) iVar2;
+                    playerActor->HorizontalVelMaybe = max(playerActor->HorizontalVelMaybe - 8, -8);
                 }
-                playerActor->HorizontalVelMaybe = (short)iVar2;
-            }
-            break;
-        case 0x26:
-        case 0x68:
-            /* numpad 8 Up */
-            switch(ActorframeNo) {
-                case 3:
-                case 7:
-                case 0xc:
-                    if (playerActor->verticalVelocityMaybe == 0) {
-                        ActorframeNo = 9;
-                        playerActor->verticalVelocityMaybe = -4;
-                    }
-                    break;
-                case 6:
-                case 8:
-                    if (playerActor->verticalVelocityMaybe == 0) {
-                        ActorframeNo = 10;
-                        playerActor->verticalVelocityMaybe = -4;
-                    }
-                    break;
-                case 0xd:
-                switchD_0040628c_caseD_13:
-                    ActorframeNo = 0x12;
-                    break;
-                case 0xe:
-                    ActorframeNo = 0x14;
-                    break;
-                case 0xf:
-                    ActorframeNo = 0x15;
-                    break;
-                case 0x12:
-                switchD_0040628c_caseD_d:
-                    ActorframeNo = 0x13;
-                    break;
-                case 0x13:
-                switchD_0040628c_caseD_12:
-                    ActorframeNo = 0xd;
-            }
-            break;
-        case 0x27:
-        case 0x66:
-            /* numpad 6, Right */
-            if (0x15 < ActorframeNo) {
-                assertFailed(sourceFilename,3947);
-            }
-            ActorframeNo = playerTurnFrameNoTbl[ActorframeNo].rightFrameNo;
-            if (ActorframeNo == 8) {
-                uVar3 = (int)playerActor->HorizontalVelMaybe + 8;
-                if (7 < (int)uVar3) {
-                    uVar3 = ActorframeNo;
-                }
-                playerActor->HorizontalVelMaybe = (short)uVar3;
-            }
-            break;
-        case 0x28:
-        case 0x62:
-            /* down key pressed */
-            if (sVar1 == 0) {
-                ActorframeNo = 0;
                 break;
-            }
-            switch(ActorframeNo) {
-                case 0xd:
-                    goto switchD_0040628c_caseD_d;
-                case 0x12:
-                    goto switchD_0040628c_caseD_12;
-                case 0x13:
-                    goto switchD_0040628c_caseD_13;
-                case 0x14:
-                    ActorframeNo = 0xe;
-                    break;
-                case 0x15:
-                    ActorframeNo = 0xf;
-            }
-            break;
-        case 0x2d:
-        case 0x60:
-            /* numpad 0, Insert
-               Jump. */
-            if (sVar1 == 0) {
-                playerActor->inAirCounter = 2;
-                ActorframeNo = 0xd;
-                if (4 < playerActor->verticalVelocityMaybe) {
-                    playerActor->verticalVelocityMaybe = playerActor->verticalVelocityMaybe + -4;
+            case 0x27:
+            case 0x66:
+                /* numpad 6, Right */
+                ski_assert(ActorframeNo < 0x16, 3947);
+
+                ActorframeNo = playerTurnFrameNoTbl[ActorframeNo].rightFrameNo;
+                if (ActorframeNo == 8) {
+//                    iVar2 = (int) playerActor->HorizontalVelMaybe + 8;
+//                    if (iVar2 >= 8) {
+//                        iVar2 = 8;
+//                    }
+//                    playerActor->HorizontalVelMaybe = (short) iVar2;
+
+                    playerActor->HorizontalVelMaybe = min(playerActor->HorizontalVelMaybe + 8, 8);
                 }
-            }
+                break;
+
+            case 0x28:
+            case 0x62:
+                /* down key pressed */
+                if (sVar1 == 0) {
+                    ActorframeNo = 0;
+                    break;
+                }
+                switch (ActorframeNo) {
+                    case 0xd:
+                        ActorframeNo = 0x13;
+                        break;
+                    case 0x14:
+                        ActorframeNo = 0xe;
+                        break;
+                    case 0x15:
+                        ActorframeNo = 0xf;
+                        break;
+                    case 0x12:
+                        ActorframeNo = 0xd;
+                        break;
+                    case 0x13:
+                        ActorframeNo = 0x12;
+                        break;
+                }
+                break;
+
+            case 0x26:
+            case 0x68:
+                /* numpad 8 Up */
+                switch (ActorframeNo) {
+                    case 0xd:
+//                switchD_0040628c_caseD_13:
+                        ActorframeNo = 0x12;
+                        break;
+                    case 0x13:
+//                switchD_0040628c_caseD_12:
+                        ActorframeNo = 0xd;
+                        break;
+                    case 0xe:
+                        ActorframeNo = 0x14;
+                        break;
+                    case 0xf:
+                        ActorframeNo = 0x15;
+                        break;
+                    case 3:
+                    case 7:
+                    case 0xc:
+                        if (playerActor->verticalVelocityMaybe == 0) {
+                            ActorframeNo = 9;
+                            playerActor->verticalVelocityMaybe = -4;
+                        }
+                        break;
+                    case 6:
+                    case 8:
+                        if (playerActor->verticalVelocityMaybe == 0) {
+                            ActorframeNo = 10;
+                            playerActor->verticalVelocityMaybe = -4;
+                        }
+                        break;
+                    case 0x12:
+//                switchD_0040628c_caseD_d:
+                        ActorframeNo = 0x13;
+                        break;
+
+                }
+                break;
+
+            case 0x24:
+            case 0x67:
+                /* numpad 7
+                   up left */
+                if (sVar1 == 0) {
+                    ActorframeNo = 3;
+                }
+                break;
+
+            case 0x21:
+            case 0x69:
+                /* numpad 9
+                   Up right */
+                if (sVar1 == 0) {
+                    ActorframeNo = 6;
+                }
+                break;
+
+            case 0x23:
+            case 0x61:
+                /* numpad 1
+                   down left */
+                if (sVar1 == 0) {
+                    ActorframeNo = 1;
+                }
+                break;
+
+            case 0x22:
+            case 99:
+                /* numpad 3
+                   down right */
+                if (sVar1 == 0) {
+                    ActorframeNo = 4;
+                }
+                break;
+
+            case 0x2d:
+            case 0x60:
+                /* numpad 0, Insert
+                   Jump. */
+                if (sVar1 == 0) {
+                    playerActor->inAirCounter = 2;
+                    ActorframeNo = 0xd;
+                    if (4 < playerActor->verticalVelocityMaybe) {
+                        playerActor->verticalVelocityMaybe = playerActor->verticalVelocityMaybe + -4;
+                    }
+                }
+        }
     }
-    switchD_004061ec_caseD_29:
+
     if ((ActorframeNo != playerActor->frameNo) &&
         (setActorFrameNo(playerActor,ActorframeNo), redrawRequired != 0)) {
         drawWindow(mainWindowDC,&windowClientRect);
@@ -255,6 +268,8 @@ void __fastcall handleKeydownMessage(UINT charCode)
     }
     return;
 }
+
+
 
 
 

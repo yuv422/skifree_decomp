@@ -101,3 +101,4 @@ _handleMouseClick
 @formatAndPrintStatusStrings@4
 @addPermObject@8
 _setupPermObjects
+@handleKeydownMessage@4
