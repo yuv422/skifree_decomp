@@ -71,8 +71,14 @@ extern void __fastcall setPointerToNull(PermObjectList *param_1);
 extern PermObject * __fastcall addPermObject(PermObjectList *objList, PermObject *permObject);
 extern USHORT __fastcall getSpriteIdxForActorType(int actorType);
 extern void togglePausedState();
-
-
+extern Actor * __fastcall addRandomActor(int borderType);
+extern void __fastcall FUN_004046e0(PermObjectList *permObjList);
+extern Actor * __fastcall updateActor(Actor *actor);
+extern RECT * __fastcall updateActorSpriteRect(Actor *actor);
+extern void __fastcall updateAllPermObjectsInList(PermObjectList *param_1);
+extern void removeFlag8ActorsFromList();
+extern Actor * __fastcall handleActorCollision(Actor *actor1,Actor *actor2);
+extern Actor * __fastcall updateActorWithOffscreenStartingPosition(Actor *actor, int borderType);
 
 #include "../data.h"
 
@@ -81,193 +87,100 @@ extern void togglePausedState();
 // FUNCTION GOES HERE
 //
 
-void __fastcall handleKeydownMessage(UINT charCode) {
-    short sVar1;
-    UINT ActorframeNo;
+void updateGameState() {
+    int iVar1;
+    Actor *actor;
+    RECT *ptVar6;
+    RECT *rect2;
+    Actor *pAVar7;
 
-    switch(charCode) {
-        case VK_ESCAPE:
-            ShowWindow(hSkiMainWnd,6);
-            return;
-        case VK_F3:
-            togglePausedState(); // TODO this is a jmp rather than a call in the original
-            return;
-        case VK_RETURN:
-            if (playerActor != (Actor *)0x0) {
-                return;
+    DAT_0040c714 = DAT_0040c714 - (short)playerX;
+    DAT_0040c5d8 = DAT_0040c5d8 - playerY;
+
+    for (pAVar7 = actorListPtr; pAVar7 != NULL; pAVar7 = pAVar7->next) {
+        if ((pAVar7->flags & (FLAG_2 | FLAG_8)) == 0) {
+            pAVar7->flags &= 0xffffffdf;
+            if ((pAVar7->permObject == NULL) && (pAVar7->typeMaybe < 0xb)) {
+                updateActor(pAVar7);
             }
-            handleGameReset(); // TODO this is a jmp rather than a call in the original
-            return;
-        case VK_F2:
-            handleGameReset(); // TODO this is a jmp rather than a call in the original
-            return;
-        default: break;
-    }
-
-    if (playerActor == (Actor *)0x0) {
-        return;
-    }
-    ActorframeNo = playerActor->frameNo;
-    sVar1 = playerActor->isInAir;
-    if ((ActorframeNo != 0xb) && (ActorframeNo != 0x11)) {
-        switch (charCode) {
-            case 0x25:
-            case 100:
-                /* numpad 4
-                   left */
-                ski_assert(ActorframeNo < 0x16, 0xf63);
-
-                ActorframeNo = playerTurnFrameNoTbl[ActorframeNo].leftFrameNo;
-                if (ActorframeNo == 7) {
-//                    iVar2 = (int)playerActor->HorizontalVelMaybe - 8;
-//                    if (iVar2 <= -8) {
-//                        iVar2 = -8;
-//                    }
-//                    playerActor->HorizontalVelMaybe = (short) iVar2;
-                    playerActor->HorizontalVelMaybe = max(playerActor->HorizontalVelMaybe - 8, -8);
+            if (((pAVar7->flags & FLAG_1) == 0) && (pAVar7 != playerActor)) {
+                if ((pAVar7->flags & FLAG_4) != 0) {
+                    ptVar6 = &pAVar7->someRect;
                 }
-                break;
-            case 0x27:
-            case 0x66:
-                /* numpad 6, Right */
-                ski_assert(ActorframeNo < 0x16, 3947);
-
-                ActorframeNo = playerTurnFrameNoTbl[ActorframeNo].rightFrameNo;
-                if (ActorframeNo == 8) {
-//                    iVar2 = (int) playerActor->HorizontalVelMaybe + 8;
-//                    if (iVar2 >= 8) {
-//                        iVar2 = 8;
-//                    }
-//                    playerActor->HorizontalVelMaybe = (short) iVar2;
-
-                    playerActor->HorizontalVelMaybe = min(playerActor->HorizontalVelMaybe + 8, 8);
+                else {
+                    ptVar6 = updateActorSpriteRect(pAVar7);
                 }
-                break;
-
-            case 0x28:
-            case 0x62:
-                /* down key pressed */
-                if (sVar1 == 0) {
-                    ActorframeNo = 0;
-                    break;
+                if (doRectsOverlap(ptVar6,&windowClientRectWith120Margin) == FALSE) {
+                    totalAreaOfActorSprites = totalAreaOfActorSprites - pAVar7->spritePtr->totalPixels;
+                    actorSetFlag8IfFlag1IsUnset(pAVar7);
                 }
-                switch (ActorframeNo) {
-                    case 0xd:
-                        ActorframeNo = 0x13;
-                        break;
-                    case 0x14:
-                        ActorframeNo = 0xe;
-                        break;
-                    case 0x15:
-                        ActorframeNo = 0xf;
-                        break;
-                    case 0x12:
-                        ActorframeNo = 0xd;
-                        break;
-                    case 0x13:
-                        ActorframeNo = 0x12;
-                        break;
-                }
-                break;
-
-            case 0x26:
-            case 0x68:
-                /* numpad 8 Up */
-                switch (ActorframeNo) {
-                    case 0xd:
-//                switchD_0040628c_caseD_13:
-                        ActorframeNo = 0x12;
-                        break;
-                    case 0x13:
-//                switchD_0040628c_caseD_12:
-                        ActorframeNo = 0xd;
-                        break;
-                    case 0xe:
-                        ActorframeNo = 0x14;
-                        break;
-                    case 0xf:
-                        ActorframeNo = 0x15;
-                        break;
-                    case 3:
-                    case 7:
-                    case 0xc:
-                        if (playerActor->verticalVelocityMaybe == 0) {
-                            ActorframeNo = 9;
-                            playerActor->verticalVelocityMaybe = -4;
-                        }
-                        break;
-                    case 6:
-                    case 8:
-                        if (playerActor->verticalVelocityMaybe == 0) {
-                            ActorframeNo = 10;
-                            playerActor->verticalVelocityMaybe = -4;
-                        }
-                        break;
-                    case 0x12:
-//                switchD_0040628c_caseD_d:
-                        ActorframeNo = 0x13;
-                        break;
-
-                }
-                break;
-
-            case 0x24:
-            case 0x67:
-                /* numpad 7
-                   up left */
-                if (sVar1 == 0) {
-                    ActorframeNo = 3;
-                }
-                break;
-
-            case 0x21:
-            case 0x69:
-                /* numpad 9
-                   Up right */
-                if (sVar1 == 0) {
-                    ActorframeNo = 6;
-                }
-                break;
-
-            case 0x23:
-            case 0x61:
-                /* numpad 1
-                   down left */
-                if (sVar1 == 0) {
-                    ActorframeNo = 1;
-                }
-                break;
-
-            case 0x22:
-            case 99:
-                /* numpad 3
-                   down right */
-                if (sVar1 == 0) {
-                    ActorframeNo = 4;
-                }
-                break;
-
-            case 0x2d:
-            case 0x60:
-                /* numpad 0, Insert
-                   Jump. */
-                if (sVar1 == 0) {
-                    playerActor->inAirCounter = 2;
-                    ActorframeNo = 0xd;
-                    if (4 < playerActor->verticalVelocityMaybe) {
-                        playerActor->verticalVelocityMaybe = playerActor->verticalVelocityMaybe + -4;
-                    }
-                }
+            }
         }
     }
 
-    if ((ActorframeNo != playerActor->frameNo) &&
-        (setActorFrameNo(playerActor,ActorframeNo), redrawRequired != 0)) {
-        drawWindow(mainWindowDC,&windowClientRect);
-        redrawRequired = 0;
+    FUN_004046e0(&PermObjectList_0040c630);
+    FUN_004046e0(&PermObjectList_0040c5e0);
+    FUN_004046e0(&PermObjectList_0040c658);
+    FUN_004046e0(&PermObjectList_0040c738);
+    updateAllPermObjectsInList(&PermObjectList_0040c720);
+    removeFlag8ActorsFromList();
+    for (pAVar7 = actorListPtr; pAVar7 != (Actor *)0x0; pAVar7 = pAVar7->next) {
+        if ((pAVar7->flags & FLAG_2) == 0) {
+            if ((pAVar7->flags & FLAG_4) != 0) {
+                ptVar6 = &pAVar7->someRect;
+            }
+            else {
+                ptVar6 = updateActorSpriteRect(pAVar7);
+            }
+            // testing FLAG_20
+            iVar1 = pAVar7->flags << 26;
+            iVar1 = iVar1 >> 31;   //(pAVar7->flags & FLAG_20) ? TRUE : FALSE;
+            for (actor = actorListPtr; (actor != NULL && (pAVar7 != actor)); actor = actor->next)
+            {
+                if (((actor->flags & FLAG_2) == 0) && (iVar1 != 0 || ((actor->flags & FLAG_20) != 0))) {
+                    if ((actor->flags & FLAG_4) != 0) {
+                        rect2 = &actor->someRect;
+                    }
+                    else {
+                        rect2 = updateActorSpriteRect(actor);
+                    }
+
+                    if (doRectsOverlap(ptVar6,rect2)) {
+                        handleActorCollision(pAVar7,actor);
+                        if ((pAVar7->flags & FLAG_8) == 0 && (actor->flags & FLAG_8) == 0) {
+                            handleActorCollision(actor,pAVar7);
+                        }
+                    }
+                }
+            }
+        }
     }
+    DAT_0040c714 = DAT_0040c714 + (short)playerX;
+    for (DAT_0040c5d8 = DAT_0040c5d8 + playerY; 0x3c < DAT_0040c5d8;
+         DAT_0040c5d8 = DAT_0040c5d8 + -0x3c) {
+        addRandomActor(BORDER_BOTTOM);
+    }
+    for (; DAT_0040c5d8 < -0x3c; DAT_0040c5d8 = DAT_0040c5d8 + 0x3c) {
+        addRandomActor(BORDER_TOP);
+    }
+    for (; 0x3c < DAT_0040c714; DAT_0040c714 = DAT_0040c714 + -0x3c) {
+        addRandomActor(BORDER_RIGHT);
+    }
+    for (; DAT_0040c714 < -0x3c; DAT_0040c714 = DAT_0040c714 + 0x3c) {
+        addRandomActor(BORDER_LEFT);
+    }
+
+    if (random(0x29a) != 0) {
+        return;
+    }
+    pAVar7 = addActorOfType(3,0x1f);
+
+    /* top of screen */
+    updateActorWithOffscreenStartingPosition(pAVar7,2);
     return;
 }
+
+
 
 
 

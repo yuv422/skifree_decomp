@@ -102,3 +102,4 @@ _handleMouseClick
 @addPermObject@8
 _setupPermObjects
 @handleKeydownMessage@4
+_updateGameState

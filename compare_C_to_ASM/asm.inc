@@ -1,380 +1,178 @@
-@handleKeydownMessage@4 proc
-          lea   eax, dword ptr [ecx-00Dh]
+_updateGameState proc
+          mov   ax, word ptr [playerX]  ; <c640>
+          mov   cx, word ptr [playerY]  ; <c5f2>
+          sub   word ptr [DAT_0040c714], ax     ; <c714>
+          sub   word ptr [DAT_0040c5d8], cx     ; <c5d8>
+          push  ebx
           push  esi
-          cmp   eax, 000000065h
-          ja    LAB_004061b1
-          xor   edx, edx
-          mov   dl, byte ptr [eax+LAB_004063bc] ; <63bc>
-          jmp   dword ptr [edx*4+LAB_004063a8]  ; <63a8>
-LAB_00406188:     mov   eax, dword ptr [hSkiMainWnd]    ; <c6c8>
-          push  000000006h
-          push  eax
-          call  dword ptr [__imp__ShowWindow@8] ; <ShowWindow>
-          pop   esi
-          ret
-LAB_00406198:     pop   esi
-          jmp   _togglePausedState
-LAB_0040619e:     mov   eax, dword ptr [playerActor]    ; <c72c>
-          test  eax, eax
-          jnz   LAB_004063a3
-LAB_004061ab:     pop   esi
-          jmp   _handleGameReset
-LAB_004061b1:     mov   eax, dword ptr [playerActor]    ; <c72c>
-          test  eax, eax
-          jz    LAB_004063a3
-          mov   esi, dword ptr [eax+01Ch]
-          mov   dx, word ptr [eax+044h]
-          cmp   esi, 00000000Bh
+          mov   esi, dword ptr [actorListPtr]   ; <c618>
           push  edi
-          jz    LAB_0040636f
-          cmp   esi, 000000011h
-          jz    LAB_0040636f
-          lea   edi, dword ptr [ecx-021h]
-          cmp   edi, 000000048h
-          ja    LAB_0040636f
-          xor   ecx, ecx
-          mov   cl, byte ptr [edi+LAB_0040644c] ; <644c>
-          jmp   dword ptr [ecx*4+LAB_00406424]  ; <6424>
-LAB_004061f3:     cmp   esi, 000000016h
-          jb    LAB_0040620c
-          mov   edx, 000000F63h
-          mov   ecx, offset sourceFilename      ; <c090>
-          call  @assertFailed@8
-          mov   eax, dword ptr [playerActor]    ; <c72c>
-LAB_0040620c:     mov   esi, dword ptr [esi*8+playerTurnFrameNoTbl.leftFrameNo] ; <a258>
-          cmp   esi, 000000007h
-          jnz   LAB_0040636f
-          movsx ecx, word ptr [eax+046h]
-          add   ecx, 0FFFFFFF8h
-          cmp   ecx, 0FFFFFFF8h
-          jg    LAB_0040622d
-          mov   ecx, 0FFFFFFF8h
-LAB_0040622d:     mov   word ptr [eax+046h], cx
-          jmp   LAB_0040636a
-LAB_00406236:     cmp   esi, 000000016h
-          jb    LAB_0040624f
-          mov   edx, 000000F6Bh
-          mov   ecx, offset sourceFilename      ; <c090>
-          call  @assertFailed@8
-          mov   eax, dword ptr [playerActor]    ; <c72c>
-LAB_0040624f:     mov   esi, dword ptr [esi*8+playerTurnFrameNoTbl.rightFrameNo]        ; <a25c>
-          cmp   esi, 000000008h
-          jnz   LAB_0040636f
-          movsx ecx, word ptr [eax+046h]
-          add   ecx, esi
-          cmp   ecx, esi
-          jl    LAB_0040626b
-          mov   ecx, esi
-LAB_0040626b:     mov   word ptr [eax+046h], cx
-          jmp   LAB_0040636a
-LAB_00406274:     test  dx, dx
-          jnz   LAB_00406280
-          xor   esi, esi
-          jmp   LAB_0040636f
-LAB_00406280:     lea   ecx, dword ptr [esi-00Dh]
-          cmp   ecx, 000000008h
-          ja    LAB_0040636f
-          jmp   dword ptr [ecx*4+LAB_00406498]  ; <6498>
-LAB_00406293:     mov   esi, 000000013h
-          jmp   LAB_0040636f
-LAB_0040629d:     mov   esi, 00000000Eh
-          jmp   LAB_0040636f
-LAB_004062a7:     mov   esi, 00000000Fh
-          jmp   LAB_0040636f
-LAB_004062b1:     lea   ecx, dword ptr [esi-003h]
-          cmp   ecx, 000000010h
-          ja    LAB_0040636f
-          jmp   dword ptr [ecx*4+LAB_004064bc]  ; <64bc>
-LAB_004062c4:     mov   esi, 000000012h
-          jmp   LAB_0040636f
-LAB_004062ce:     mov   esi, 00000000Dh
-          jmp   LAB_0040636f
-LAB_004062d8:     mov   esi, 000000014h
-          jmp   LAB_0040636f
-LAB_004062e2:     mov   esi, 000000015h
-          jmp   LAB_0040636f
-LAB_004062ec:     cmp   word ptr [eax+048h], 000000000h
-          jnz   LAB_0040636f
-          mov   esi, 000000009h
-          mov   word ptr [eax+048h], 0FFFCh
-          jmp   LAB_0040636a
-LAB_00406300:     cmp   word ptr [eax+048h], 000000000h
-          jnz   LAB_0040636f
-          mov   esi, 00000000Ah
-          mov   word ptr [eax+048h], 0FFFCh
-          jmp   LAB_0040636a
-LAB_00406314:     test  dx, dx
-          jnz   LAB_0040636f
-          mov   esi, 000000003h
-          jmp   LAB_0040636f
-LAB_00406320:     test  dx, dx
-          jnz   LAB_0040636f
-          mov   esi, 000000006h
-          jmp   LAB_0040636f
-LAB_0040632c:     test  dx, dx
-          jnz   LAB_0040636f
-          mov   esi, 000000001h
-          jmp   LAB_0040636f
-LAB_00406338:     test  dx, dx
-          jnz   LAB_0040636f
-          mov   esi, 000000004h
-          jmp   LAB_0040636f
-LAB_00406344:     test  dx, dx
-          jnz   LAB_0040636f
-          mov   word ptr [eax+04Ah], 00002h
-          mov   eax, dword ptr [playerActor]    ; <c72c>
-          mov   esi, 00000000Dh
-          mov   cx, word ptr [eax+048h]
-          cmp   cx, 000000004h
-          jle   LAB_0040636f
-          add   ecx, 0FFFFFFFCh
-          mov   word ptr [eax+048h], cx
-LAB_0040636a:     mov   eax, dword ptr [playerActor]    ; <c72c>
-LAB_0040636f:     mov   ecx, dword ptr [eax+01Ch]
-          pop   edi
-          cmp   esi, ecx
-          jz    LAB_004063a3
-          mov   edx, esi
-          mov   ecx, eax
-          call  @setActorFrameNo@8
-          mov   eax, dword ptr [redrawRequired] ; <c610>
+          test  esi, esi
+          jz    LAB_00401ef4
+          mov   edi, 0FFFFFFDFh
+          mov   ebx, 00000000Bh
+LAB_00401e82:     test  byte ptr [esi+04Ch], 00Ah
+          jnz   LAB_00401eee
+          mov   ecx, dword ptr [esi+04Ch]
+          mov   eax, dword ptr [esi+00Ch]
+          and   ecx, edi
           test  eax, eax
-          jz    LAB_004063a3
-          mov   ecx, dword ptr [mainWindowDC]   ; <c63c>
-          mov   edx, offset windowClientRect.left       ; <c6b0>
-          call  @drawWindow@8
-          mov   dword ptr [redrawRequired], 000000000h  ; <c610>
-LAB_004063a3:     pop   esi
-          ret
-LAB_004063a5:
-          db 08Dh
-          db 049h
-          db 000h
-LAB_004063a8:
-DAT_004063a8  dword offset LAB_0040619e
-DAT_004063ac  dword offset LAB_00406188
-DAT_004063b0  dword offset LAB_004061ab
-DAT_004063b4  dword offset LAB_00406198
-DAT_004063b8  dword offset LAB_004061b1
-LAB_004063bc:
-          db 000h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 001h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 004h
-          db 002h
-          db 003h
-          db 08Bh
-          db 0FFh
-LAB_00406424:
-DAT_00406424  dword offset LAB_00406320
-DAT_00406428  dword offset LAB_00406338
-DAT_0040642c  dword offset LAB_0040632c
-DAT_00406430  dword offset LAB_00406314
-DAT_00406434  dword offset LAB_004061f3
-DAT_00406438  dword offset LAB_004062b1
-DAT_0040643c  dword offset LAB_00406236
-DAT_00406440  dword offset LAB_00406274
-DAT_00406444  dword offset LAB_00406344
-DAT_00406448  dword offset LAB_0040636f
-LAB_0040644c:
-          db 000h
-          db 001h
-          db 002h
-          db 003h
-          db 004h
-          db 005h
-          db 006h
-          db 007h
-          db 009h
-          db 009h
-          db 009h
-          db 009h
-          db 008h
-          db 009h
-          db 009h
-          db 009h
-          db 009h
-          db 009h
-          db 009h
-          db 009h
-          db 009h
-          db 009h
-          db 009h
-          db 009h
-          db 009h
-          db 009h
-          db 009h
-          db 009h
-          db 009h
-          db 009h
-          db 009h
-          db 009h
-          db 009h
-          db 009h
-          db 009h
-          db 009h
-          db 009h
-          db 009h
-          db 009h
-          db 009h
-          db 009h
-          db 009h
-          db 009h
-          db 009h
-          db 009h
-          db 009h
-          db 009h
-          db 009h
-          db 009h
-          db 009h
-          db 009h
-          db 009h
-          db 009h
-          db 009h
-          db 009h
-          db 009h
-          db 009h
-          db 009h
-          db 009h
-          db 009h
-          db 009h
-          db 009h
-          db 009h
-          db 008h
-          db 002h
-          db 007h
-          db 001h
-          db 004h
-          db 009h
-          db 006h
-          db 003h
-          db 005h
-          db 000h
-          db 08Dh
-          db 049h
-          db 000h
-LAB_00406498:
-DAT_00406498  dword offset LAB_00406293
-DAT_0040649c  dword offset LAB_0040636f
-DAT_004064a0  dword offset LAB_0040636f
-DAT_004064a4  dword offset LAB_0040636f
-DAT_004064a8  dword offset LAB_0040636f
-DAT_004064ac  dword offset LAB_004062ce
-DAT_004064b0  dword offset LAB_004062c4
-DAT_004064b4  dword offset LAB_0040629d
-DAT_004064b8  dword offset LAB_004062a7
-LAB_004064bc:
-DAT_004064bc  dword offset LAB_004062ec
-DAT_004064c0  dword offset LAB_0040636f
-DAT_004064c4  dword offset LAB_0040636f
-DAT_004064c8  dword offset LAB_00406300
-DAT_004064cc  dword offset LAB_004062ec
-DAT_004064d0  dword offset LAB_00406300
-DAT_004064d4  dword offset LAB_0040636f
-DAT_004064d8  dword offset LAB_0040636f
-DAT_004064dc  dword offset LAB_0040636f
-DAT_004064e0  dword offset LAB_004062ec
-DAT_004064e4  dword offset LAB_004062c4
-DAT_004064e8  dword offset LAB_004062d8
-DAT_004064ec  dword offset LAB_004062e2
-DAT_004064f0  dword offset LAB_0040636f
-DAT_004064f4  dword offset LAB_0040636f
-DAT_004064f8  dword offset LAB_00406293
-DAT_004064fc  dword offset LAB_004062ce
-@handleKeydownMessage@4 endp
+          mov   dword ptr [esi+04Ch], ecx
+          jnz   LAB_00401ea3
+          cmp   dword ptr [esi+018h], ebx
+          jge   LAB_00401ea3
+          mov   ecx, esi
+          call  @updateActor@4
+LAB_00401ea3:     mov   eax, dword ptr [esi+04Ch]
+          test  al, 001h
+          jnz   LAB_00401eee
+          cmp   esi, dword ptr [playerActor]    ; <c72c>
+          jz    LAB_00401eee
+          test  al, 004h
+          jz    LAB_00401ebb
+          lea   eax, dword ptr [esi+020h]
+          jmp   LAB_00401ec2
+LAB_00401ebb:     mov   ecx, esi
+          call  @updateActorSpriteRect@4
+LAB_00401ec2:     mov   edx, offset windowClientRectWith120Margin.left  ; <c680>
+          mov   ecx, eax
+          call  @doRectsOverlap@8
+          test  eax, eax
+          jnz   LAB_00401eee
+          mov   edx, dword ptr [esi+014h]
+          mov   ecx, dword ptr [totalAreaOfActorSprites]        ; <c6fc>
+          movsx eax, word ptr [edx+00Eh]
+          sub   ecx, eax
+          mov   dword ptr [totalAreaOfActorSprites], ecx        ; <c6fc>
+          mov   ecx, esi
+          call  @actorSetFlag8IfFlag1IsUnset@4
+LAB_00401eee:     mov   esi, dword ptr [esi]
+          test  esi, esi
+          jnz   LAB_00401e82
+LAB_00401ef4:     mov   ecx, offset PermObjectList_0040c630.startingObject      ; <c630>
+          call  @FUN_004046e0@4
+          mov   ecx, offset PermObjectList_0040c5e0.startingObject      ; <c5e0>
+          call  @FUN_004046e0@4
+          mov   ecx, offset PermObjectList_0040c658.startingObject      ; <c658>
+          call  @FUN_004046e0@4
+          mov   ecx, offset PermObjectList_0040c738.startingObject      ; <c738>
+          call  @FUN_004046e0@4
+          mov   ecx, offset PermObjectList_0040c720.startingObject      ; <c720>
+          call  @updateAllPermObjectsInList@4
+          call  _removeFlag8ActorsFromList
+          mov   edi, dword ptr [actorListPtr]   ; <c618>
+          test  edi, edi
+          jz    LAB_00401fc5
+          push  ebp
+LAB_00401f3a:     mov   eax, dword ptr [edi+04Ch]
+          test  al, 002h
+          jnz   LAB_00401fba
+          test  al, 004h
+          jz    LAB_00401f4a
+          lea   ebx, dword ptr [edi+020h]
+          jmp   LAB_00401f53
+LAB_00401f4a:     mov   ecx, edi
+          call  @updateActorSpriteRect@4
+          mov   ebx, eax
+LAB_00401f53:     mov   ebp, dword ptr [edi+04Ch]
+          mov   esi, dword ptr [actorListPtr]   ; <c618>
+          shl   ebp, 01Ah
+          sar   ebp, 01Fh
+          test  esi, esi
+          jz    LAB_00401fba
+LAB_00401f66:     cmp   edi, esi
+          jz    LAB_00401fba
+          mov   eax, dword ptr [esi+04Ch]
+          test  al, 002h
+          jnz   LAB_00401fb4
+          test  ebp, ebp
+          jnz   LAB_00401f79
+          test  al, 020h
+          jz    LAB_00401fb4
+LAB_00401f79:     test  al, 004h
+          jz    LAB_00401f82
+          lea   eax, dword ptr [esi+020h]
+          jmp   LAB_00401f89
+LAB_00401f82:     mov   ecx, esi
+          call  @updateActorSpriteRect@4
+LAB_00401f89:     mov   edx, eax
+          mov   ecx, ebx
+          call  @doRectsOverlap@8
+          test  eax, eax
+          jz    LAB_00401fb4
+          mov   edx, esi
+          mov   ecx, edi
+          call  @handleActorCollision@8
+          test  byte ptr [edi+04Ch], 008h
+          jnz   LAB_00401fb4
+          test  byte ptr [esi+04Ch], 008h
+          jnz   LAB_00401fb4
+          mov   edx, edi
+          mov   ecx, esi
+          call  @handleActorCollision@8
+LAB_00401fb4:     mov   esi, dword ptr [esi]
+          test  esi, esi
+          jnz   LAB_00401f66
+LAB_00401fba:     mov   edi, dword ptr [edi]
+          test  edi, edi
+          jnz   LAB_00401f3a
+          pop   ebp
+LAB_00401fc5:     mov   ax, word ptr [DAT_0040c5d8]     ; <c5d8>
+          mov   cx, word ptr [playerX]  ; <c640>
+          add   ax, word ptr [playerY]  ; <c5f2>
+          add   word ptr [DAT_0040c714], cx     ; <c714>
+          pop   edi
+          pop   esi
+          cmp   ax, 0003Ch
+          mov   word ptr [DAT_0040c5d8], ax     ; <c5d8>
+          pop   ebx
+          jle   LAB_0040200f
+LAB_00401fef:     mov   ecx, 000000003h
+          call  @addRandomActor@4
+          mov   ax, word ptr [DAT_0040c5d8]     ; <c5d8>
+          add   ax, 0FFC4h
+          cmp   ax, 0003Ch
+          mov   word ptr [DAT_0040c5d8], ax     ; <c5d8>
+          jg    LAB_00401fef
+LAB_0040200f:     cmp   ax, 0FFC4h
+          jge   LAB_00402035
+LAB_00402015:     mov   ecx, 000000002h
+          call  @addRandomActor@4
+          mov   ax, word ptr [DAT_0040c5d8]     ; <c5d8>
+          add   ax, 0003Ch
+          cmp   ax, 0FFC4h
+          mov   word ptr [DAT_0040c5d8], ax     ; <c5d8>
+          jl    LAB_00402015
+LAB_00402035:     mov   ax, word ptr [DAT_0040c714]     ; <c714>
+          cmp   ax, 0003Ch
+          jle   LAB_00402061
+LAB_00402041:     mov   ecx, 000000001h
+          call  @addRandomActor@4
+          mov   ax, word ptr [DAT_0040c714]     ; <c714>
+          add   ax, 0FFC4h
+          cmp   ax, 0003Ch
+          mov   word ptr [DAT_0040c714], ax     ; <c714>
+          jg    LAB_00402041
+LAB_00402061:     cmp   ax, 0FFC4h
+          jge   LAB_00402084
+LAB_00402067:     xor   ecx, ecx
+          call  @addRandomActor@4
+          mov   ax, word ptr [DAT_0040c714]     ; <c714>
+          add   ax, 0003Ch
+          cmp   ax, 0FFC4h
+          mov   word ptr [DAT_0040c714], ax     ; <c714>
+          jl    LAB_00402067
+LAB_00402084:     mov   ecx, 00000029Ah
+          call  @random@4
+          test  ax, ax
+          jnz   LAB_004020ae
+          mov   edx, 00000001Fh
+          mov   ecx, 000000003h
+          call  @addActorOfType@8
+          mov   ecx, eax
+          mov   edx, 000000002h
+          jmp   @updateActorWithOffscreenStartingPosition@8
+LAB_004020ae:     ret
+LAB_004020af:
+          db 090h
+_updateGameState endp

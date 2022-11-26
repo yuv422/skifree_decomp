@@ -82,11 +82,11 @@ Actor * __fastcall updateActorVelMaybe(Actor *actor, ActorVelStruct *param_2);
 PermObject * __fastcall addPermObject(PermObjectList *objList, PermObject *permObject);
 void setupPermObjects();
 void __fastcall handleKeydownMessage(UINT charCode);
+void updateGameState();
 
 //
 // ASM Functions
 //
-extern void updateGameState();
 extern void __fastcall drawWindow(HDC hdc, RECT *rect);
 extern BOOL __fastcall createBitmapSheets(HDC param_1);
 
@@ -3442,5 +3442,96 @@ void __fastcall handleKeydownMessage(UINT charCode) {
         drawWindow(mainWindowDC,&windowClientRect);
         redrawRequired = 0;
     }
-    return;
+}
+
+void updateGameState() {
+    int iVar1;
+    Actor *actor;
+    RECT *ptVar6;
+    RECT *rect2;
+    Actor *pAVar7;
+
+    DAT_0040c714 = DAT_0040c714 - (short)playerX;
+    DAT_0040c5d8 = DAT_0040c5d8 - playerY;
+
+    for (pAVar7 = actorListPtr; pAVar7 != NULL; pAVar7 = pAVar7->next) {
+        if ((pAVar7->flags & (FLAG_2 | FLAG_8)) == 0) {
+            pAVar7->flags &= 0xffffffdf;
+            if ((pAVar7->permObject == NULL) && (pAVar7->typeMaybe < 0xb)) {
+                updateActor(pAVar7);
+            }
+            if (((pAVar7->flags & FLAG_1) == 0) && (pAVar7 != playerActor)) {
+                if ((pAVar7->flags & FLAG_4) != 0) {
+                    ptVar6 = &pAVar7->someRect;
+                }
+                else {
+                    ptVar6 = updateActorSpriteRect(pAVar7);
+                }
+                if (doRectsOverlap(ptVar6,&windowClientRectWith120Margin) == FALSE) {
+                    totalAreaOfActorSprites = totalAreaOfActorSprites - pAVar7->spritePtr->totalPixels;
+                    actorSetFlag8IfFlag1IsUnset(pAVar7);
+                }
+            }
+        }
+    }
+
+    FUN_004046e0(&PermObjectList_0040c630);
+    FUN_004046e0(&PermObjectList_0040c5e0);
+    FUN_004046e0(&PermObjectList_0040c658);
+    FUN_004046e0(&PermObjectList_0040c738);
+    updateAllPermObjectsInList(&PermObjectList_0040c720);
+    removeFlag8ActorsFromList();
+    for (pAVar7 = actorListPtr; pAVar7 != (Actor *)0x0; pAVar7 = pAVar7->next) {
+        if ((pAVar7->flags & FLAG_2) == 0) {
+            if ((pAVar7->flags & FLAG_4) != 0) {
+                ptVar6 = &pAVar7->someRect;
+            }
+            else {
+                ptVar6 = updateActorSpriteRect(pAVar7);
+            }
+            // testing FLAG_20
+            iVar1 = pAVar7->flags << 26;
+            iVar1 = iVar1 >> 31;   //(pAVar7->flags & FLAG_20) ? TRUE : FALSE;
+            for (actor = actorListPtr; (actor != NULL && (pAVar7 != actor)); actor = actor->next)
+            {
+                if (((actor->flags & FLAG_2) == 0) && (iVar1 != 0 || ((actor->flags & FLAG_20) != 0))) {
+                    if ((actor->flags & FLAG_4) != 0) {
+                        rect2 = &actor->someRect;
+                    }
+                    else {
+                        rect2 = updateActorSpriteRect(actor);
+                    }
+
+                    if (doRectsOverlap(ptVar6,rect2)) {
+                        handleActorCollision(pAVar7,actor);
+                        if ((pAVar7->flags & FLAG_8) == 0 && (actor->flags & FLAG_8) == 0) {
+                            handleActorCollision(actor,pAVar7);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    DAT_0040c714 = DAT_0040c714 + (short)playerX;
+    for (DAT_0040c5d8 = DAT_0040c5d8 + playerY; 0x3c < DAT_0040c5d8;
+         DAT_0040c5d8 = DAT_0040c5d8 + -0x3c) {
+        addRandomActor(BORDER_BOTTOM);
+    }
+    for (; DAT_0040c5d8 < -0x3c; DAT_0040c5d8 = DAT_0040c5d8 + 0x3c) {
+        addRandomActor(BORDER_TOP);
+    }
+    for (; 0x3c < DAT_0040c714; DAT_0040c714 = DAT_0040c714 + -0x3c) {
+        addRandomActor(BORDER_RIGHT);
+    }
+    for (; DAT_0040c714 < -0x3c; DAT_0040c714 = DAT_0040c714 + 0x3c) {
+        addRandomActor(BORDER_LEFT);
+    }
+
+    if (random(0x29a) != 0) {
+        return;
+    }
+    pAVar7 = addActorOfType(3,0x1f);
+
+    /* top of screen */
+    updateActorWithOffscreenStartingPosition(pAVar7,2);
 }

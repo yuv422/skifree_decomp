@@ -1413,6 +1413,7 @@ LAB_00401e4a:
 @drawText@20 endp
 ~
 
+COMMENT ~
 _updateGameState proc
           mov   ax, word ptr [playerX]  ; <c640>
           mov   cx, word ptr [playerY]  ; <c5f2>
@@ -1591,6 +1592,7 @@ LAB_004020ae:     ret
 LAB_004020af:
           db 090h
 _updateGameState endp
+~
 
 COMMENT ~
 @random@4 proc
