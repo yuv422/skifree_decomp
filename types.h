@@ -8,8 +8,8 @@
 #include <windows.h>
 
 typedef struct {
-    HDC hdc1;
-    HDC hdc2;
+    HDC sheetDC;
+    HDC sheetDC_1bpp;
     short sheetYOffset;
     short width;
     short height;

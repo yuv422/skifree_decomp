@@ -103,3 +103,4 @@ _handleMouseClick
 _setupPermObjects
 @handleKeydownMessage@4
 _updateGameState
+@createBitmapSheets@4

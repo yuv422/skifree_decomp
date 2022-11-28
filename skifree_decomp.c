@@ -83,12 +83,12 @@ PermObject * __fastcall addPermObject(PermObjectList *objList, PermObject *permO
 void setupPermObjects();
 void __fastcall handleKeydownMessage(UINT charCode);
 void updateGameState();
+BOOL __fastcall createBitmapSheets(HDC param_1);
 
 //
 // ASM Functions
 //
 extern void __fastcall drawWindow(HDC hdc, RECT *rect);
-extern BOOL __fastcall createBitmapSheets(HDC param_1);
 
 
 
@@ -3534,4 +3534,161 @@ void updateGameState() {
 
     /* top of screen */
     updateActorWithOffscreenStartingPosition(pAVar7,2);
+}
+
+// TODO not byte accurate register usage is swapped.
+BOOL __fastcall createBitmapSheets(HDC param_1) {
+    HBITMAP pHVar1;
+    HGDIOBJ pvVar2;
+
+    int resourceId;
+    Sprite *sprite;
+    short maxWidth;
+    int smallBitmapSheetHeight;
+    int largeBitmapSheetHeight;
+    int largeSpriteYOffset;
+    int smallSpriteYOffset;
+    int sheetYOffset;
+    short maxHeight;
+    BITMAP bitmap;
+    int spriteWidth;
+    int spriteHeigth;
+
+    sprites->sheetDC = NULL;
+    sprites->sheetDC_1bpp = NULL;
+    sprites->sheetYOffset = 0;
+    sprites->width = 0;
+    sprites->height = 0;
+    sprites->totalPixels = 0;
+    maxWidth = 0;
+    maxHeight = 0;
+    largeBitmapSheetHeight = 0;
+    smallBitmapSheetHeight = 0;
+    smallSpriteYOffset = 0;
+    largeSpriteYOffset = 0;
+
+    for (resourceId = 1; (USHORT)resourceId < 90; resourceId++) {
+        pHVar1 = loadBitmapResource(resourceId);
+        if (pHVar1 == NULL) {
+            return FALSE;
+        }
+        GetObjectA(pHVar1,sizeof(BITMAP),&bitmap);
+        if (bitmap.bmWidth > maxWidth) {
+            maxWidth = (short)bitmap.bmWidth;
+        }
+        if (bitmap.bmHeight > maxHeight) {
+            maxHeight = (short)bitmap.bmHeight;
+        }
+        if (bitmap.bmWidth > 32) {
+            largeBitmapSheetHeight += bitmap.bmHeight;
+        } else {
+            smallBitmapSheetHeight += bitmap.bmHeight;
+        }
+        DeleteObject(pHVar1);
+    }
+
+    smallBitmapDC = CreateCompatibleDC(param_1);
+    if (!smallBitmapDC) {
+        return FALSE;
+    }
+    pHVar1 = CreateCompatibleBitmap(param_1,32,(int)(short)smallBitmapSheetHeight);
+    if (pHVar1 == (HBITMAP)0x0) {
+        return FALSE;
+    }
+    smallBitmapSheet = SelectObject(smallBitmapDC,pHVar1);
+    if (smallBitmapSheet == (HGDIOBJ)0x0) {
+        DeleteObject(pHVar1);
+        return FALSE;
+    }
+    smallBitmapDC_1bpp = CreateCompatibleDC(param_1);
+    if (smallBitmapDC_1bpp == (HDC)0x0) {
+        return FALSE;
+    }
+    pHVar1 = CreateBitmap(32,(int)(short)smallBitmapSheetHeight,1,1,(void *)0x0);
+    if (pHVar1 == (HBITMAP)0x0) {
+        return FALSE;
+    }
+    smallBitmapSheet_1bpp = SelectObject(smallBitmapDC_1bpp,pHVar1);
+    if (smallBitmapSheet_1bpp == (HGDIOBJ)0x0) {
+        DeleteObject(pHVar1);
+        return FALSE;
+    }
+    largeBitmapDC = CreateCompatibleDC(param_1);
+    if (largeBitmapDC == (HDC)0x0) {
+        return FALSE;
+    }
+    pHVar1 = CreateCompatibleBitmap
+            (param_1,(int)(short)(USHORT)maxWidth,(int)(short)largeBitmapSheetHeight);
+    if (pHVar1 == (HBITMAP)0x0) {
+        return FALSE;
+    }
+    largeBitmapSheet = SelectObject(largeBitmapDC,pHVar1);
+    if (largeBitmapSheet == (HGDIOBJ)0x0) {
+        DeleteObject(pHVar1);
+        return FALSE;
+    }
+    largeBitmapDC_1bpp = CreateCompatibleDC(param_1);
+    if (largeBitmapDC_1bpp == (HDC)0x0) {
+        return FALSE;
+    }
+    pHVar1 = CreateBitmap((int)(short)(USHORT)maxWidth,(int)(short)largeBitmapSheetHeight,1,1,
+                          (void *)0x0);
+    if (pHVar1 == (HBITMAP)0x0) {
+        return FALSE;
+    }
+
+    largeBitmapSheet_1bpp = SelectObject(largeBitmapDC_1bpp,pHVar1);
+    if (largeBitmapSheet_1bpp == (HGDIOBJ)0x0) {
+        DeleteObject(pHVar1);
+        return FALSE;
+    }
+    bitmapSourceDC = CreateCompatibleDC(param_1);
+    for (resourceId = 1; (USHORT)resourceId < 90; resourceId++) {
+        sprite = &sprites[resourceId & 0xffff];
+        pHVar1 = loadBitmapResource(resourceId);
+        if (pHVar1 == (HBITMAP)0x0) {
+            return FALSE;
+        }
+        GetObjectA(pHVar1,sizeof(BITMAP),&bitmap);
+
+        spriteWidth = bitmap.bmWidth;
+        spriteHeigth = bitmap.bmHeight;
+
+        sprite->width = (short)spriteWidth;
+        sprite->height = (short)spriteHeigth;
+        sprite->totalPixels = (short)(spriteWidth * spriteHeigth);
+        if ((short)spriteWidth > 0x20) {
+            sheetYOffset = largeSpriteYOffset;
+            largeSpriteYOffset += spriteHeigth;
+        } else {
+            sheetYOffset = smallSpriteYOffset;
+            smallSpriteYOffset += spriteHeigth;
+        }
+        sprite->sheetYOffset = (short)sheetYOffset;
+        pvVar2 = SelectObject(bitmapSourceDC,pHVar1);
+        sprite->sheetDC = (short)spriteWidth > 32 ? largeBitmapDC : smallBitmapDC;
+
+        sprite->sheetDC_1bpp = (short)spriteWidth > 32 ? largeBitmapDC_1bpp : smallBitmapDC_1bpp;
+
+        BitBlt(sprite->sheetDC,0,sheetYOffset,bitmap.bmWidth,bitmap.bmHeight,bitmapSourceDC,0,0,
+               0xcc0020);
+        BitBlt(sprite->sheetDC_1bpp,0,sheetYOffset,bitmap.bmWidth,bitmap.bmHeight,
+               bitmapSourceDC,0,0,0x330008);
+        pvVar2 = SelectObject(bitmapSourceDC,pvVar2);
+        DeleteObject(pvVar2);
+    }
+
+    scratchBitmapWidth = ((USHORT)maxWidth & 0xffc0) + 0x40;
+    scratchBitmapHeight = ((USHORT)maxHeight & 0xffc0) + 0x40;
+
+    pHVar1 = CreateCompatibleBitmap(param_1,(int)scratchBitmapWidth,(int)scratchBitmapHeight);
+    if (pHVar1 == (HBITMAP)0x0) {
+        return FALSE;
+    }
+    scratchBitmap = SelectObject(bitmapSourceDC,pHVar1);
+    if (scratchBitmap == (HGDIOBJ)0x0) {
+        DeleteObject(pHVar1);
+        return FALSE;
+    }
+    return TRUE;
 }

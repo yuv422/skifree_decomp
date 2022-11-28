@@ -6988,6 +6988,7 @@ LAB_00405aaf:
 @loadBitmaps@4 endp
 ~
 
+COMMENT ~
 @createBitmapSheets@4 proc
           sub   esp, 000000034h
           mov   eax, dword ptr [sprites]        ; <c5f8>
@@ -7373,6 +7374,7 @@ LAB_00405e94:
           db 090h
           db 090h
 @createBitmapSheets@4 endp
+~
 
 COMMENT ~
 @loadBitmapResource@4 proc
