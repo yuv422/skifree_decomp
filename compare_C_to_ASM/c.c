@@ -80,6 +80,9 @@ extern void removeFlag8ActorsFromList();
 extern Actor * __fastcall handleActorCollision(Actor *actor1,Actor *actor2);
 extern Actor * __fastcall updateActorWithOffscreenStartingPosition(Actor *actor, int borderType);
 extern HBITMAP __fastcall loadBitmapResource(UINT resourceId);
+extern BOOL __fastcall areRectanglesEqual(RECT *rect1,RECT *rect2);
+extern void __fastcall actorClearFlag10(Actor *actor1, Actor *actor2);
+extern void __fastcall drawActor(HDC hdc,Actor *actor);
 
 #include "../data.h"
 
@@ -91,160 +94,129 @@ extern HBITMAP __fastcall loadBitmapResource(UINT resourceId);
 
 /* WARNING: Could not reconcile some variable overlaps */
 
-BOOL __fastcall createBitmapSheets(HDC param_1) {
-    HBITMAP pHVar1;
-    HGDIOBJ pvVar2;
+void __fastcall drawWindow(HDC hdc, RECT *windowRect) {
+//    LONG LVar1;
+    RECT *rect1;
+    RECT *ptVar3;
+    UINT uVar4;
+    Actor *pAVar6;
+    Actor *pAVar7;
 
-    int resourceId;
-    Sprite *sprite;
-    short maxWidth;
-    int smallBitmapSheetHeight;
-    int largeBitmapSheetHeight;
-    int largeSpriteYOffset;
-    int smallSpriteYOffset;
-    int sheetYOffset;
-    short maxHeight;
-    BITMAP bitmap;
-    int spriteWidth;
-    int spriteHeigth;
+    ski_assert(hdc, 1272);
+    ski_assert(windowRect, 1273);
 
-    sprites->sheetDC = NULL;
-    sprites->sheetDC_1bpp = NULL;
-    sprites->sheetYOffset = 0;
-    sprites->width = 0;
-    sprites->height = 0;
-    sprites->totalPixels = 0;
-    maxWidth = 0;
-    maxHeight = 0;
-    largeBitmapSheetHeight = 0;
-    smallBitmapSheetHeight = 0;
-    smallSpriteYOffset = 0;
-    largeSpriteYOffset = 0;
-
-    for (resourceId = 1; (USHORT)resourceId < 90; resourceId++) {
-        pHVar1 = loadBitmapResource(resourceId);
-        if (pHVar1 == NULL) {
-            return FALSE;
+//    pAVar7 = actorListPtr;
+    for (pAVar7 = actorListPtr; pAVar7 != (Actor *)0x0; pAVar7 = pAVar7->next) {
+        /* if FLAG_1 FLAG_2 FLAG_8 are unset */
+        if ((pAVar7->flags & (FLAG_1 | FLAG_2 | FLAG_8)) == 0) {
+            pAVar6 = pAVar7->linkedActor;
+            if ( pAVar6 != NULL && (pAVar6->flags & FLAG_1) != 0 && (pAVar6->flags & FLAG_2) != 0 && pAVar7->spriteIdx2 == pAVar6->spriteIdx2) {
+                if ((pAVar6->flags & FLAG_4) != 0) {
+                    ptVar3 = &pAVar6->someRect;
+                } else {
+                    ptVar3 = updateActorSpriteRect(pAVar6);
+                }
+                if ((pAVar7->flags & FLAG_4) != 0) {
+                    rect1 = &pAVar7->someRect;
+                } else {
+                    rect1 = updateActorSpriteRect(pAVar7);
+                }
+                if (areRectanglesEqual(rect1,ptVar3)) {
+                    pAVar7->flags |= FLAG_1;
+                    pAVar6->flags = pAVar6->flags &= 0xfffffffe;
+                    actorSetFlag8IfFlag1IsUnset(pAVar6);
+                }
+            }
         }
-        GetObjectA(pHVar1,sizeof(BITMAP),&bitmap);
-        if (bitmap.bmWidth > maxWidth) {
-            maxWidth = (short)bitmap.bmWidth;
-        }
-        if (bitmap.bmHeight > maxHeight) {
-            maxHeight = (short)bitmap.bmHeight;
-        }
-        if (bitmap.bmWidth > 32) {
-            largeBitmapSheetHeight += bitmap.bmHeight;
+    }
+//    pAVar6 = actorListPtr;
+//    for (; actorListPtr = pAVar6, pAVar5 != (Actor *)0x0; pAVar5 = pAVar5->next) {
+    for (pAVar7 = actorListPtr; pAVar7 != (Actor *)0x0; pAVar7 = pAVar7->next) {
+//        uVar4 = *(UINT *)&pAVar5->flags;
+        if ((pAVar7->flags & FLAG_8) != 0) {
+            pAVar7->flags &= 0xffffffef;
         } else {
-            smallBitmapSheetHeight += bitmap.bmHeight;
+            if ((pAVar7->flags & FLAG_4) != 0) {
+                ptVar3 = &pAVar7->someRect;
+            } else {
+                ptVar3 = updateActorSpriteRect(pAVar7);
+            }
+            uVar4 = doRectsOverlap(ptVar3,windowRect);
+            /* set FLAG_10 if rects overlap */
+//            pAVar5->flags = (uVar4 ? FLAG_10 : 0) | (pAVar5->flags & 0xffffffef);
+            pAVar7->flags = (pAVar7->flags & 0xffffffef) | ((uVar4 & 1) << 4);
+            if ((uVar4 & 1) != 0) {
+                (pAVar7->rect).left = ptVar3->left;
+                (pAVar7->rect).top = ptVar3->top;
+                (pAVar7->rect).right = ptVar3->right;
+                (pAVar7->rect).bottom = ptVar3->bottom; // LVar1;
+//                LVar1 = ptVar3->bottom;
+                pAVar7->actorPtr = (Actor *)0x0;
+            }
         }
-        DeleteObject(pHVar1);
     }
 
-    smallBitmapDC = CreateCompatibleDC(param_1);
-    if (!smallBitmapDC) {
-        return FALSE;
-    }
-    pHVar1 = CreateCompatibleBitmap(param_1,32,(int)(short)smallBitmapSheetHeight);
-    if (pHVar1 == (HBITMAP)0x0) {
-        return FALSE;
-    }
-    smallBitmapSheet = SelectObject(smallBitmapDC,pHVar1);
-    if (smallBitmapSheet == (HGDIOBJ)0x0) {
-        DeleteObject(pHVar1);
-        return FALSE;
-    }
-    smallBitmapDC_1bpp = CreateCompatibleDC(param_1);
-    if (smallBitmapDC_1bpp == (HDC)0x0) {
-        return FALSE;
-    }
-    pHVar1 = CreateBitmap(32,(int)(short)smallBitmapSheetHeight,1,1,(void *)0x0);
-    if (pHVar1 == (HBITMAP)0x0) {
-        return FALSE;
-    }
-    smallBitmapSheet_1bpp = SelectObject(smallBitmapDC_1bpp,pHVar1);
-    if (smallBitmapSheet_1bpp == (HGDIOBJ)0x0) {
-        DeleteObject(pHVar1);
-        return FALSE;
-    }
-    largeBitmapDC = CreateCompatibleDC(param_1);
-    if (largeBitmapDC == (HDC)0x0) {
-        return FALSE;
-    }
-    pHVar1 = CreateCompatibleBitmap
-            (param_1,(int)(short)(USHORT)maxWidth,(int)(short)largeBitmapSheetHeight);
-    if (pHVar1 == (HBITMAP)0x0) {
-        return FALSE;
-    }
-    largeBitmapSheet = SelectObject(largeBitmapDC,pHVar1);
-    if (largeBitmapSheet == (HGDIOBJ)0x0) {
-        DeleteObject(pHVar1);
-        return FALSE;
-    }
-    largeBitmapDC_1bpp = CreateCompatibleDC(param_1);
-    if (largeBitmapDC_1bpp == (HDC)0x0) {
-        return FALSE;
-    }
-    pHVar1 = CreateBitmap((int)(short)(USHORT)maxWidth,(int)(short)largeBitmapSheetHeight,1,1,
-                          (void *)0x0);
-    if (pHVar1 == (HBITMAP)0x0) {
-        return FALSE;
-    }
 
-    largeBitmapSheet_1bpp = SelectObject(largeBitmapDC_1bpp,pHVar1);
-    if (largeBitmapSheet_1bpp == (HGDIOBJ)0x0) {
-        DeleteObject(pHVar1);
-        return FALSE;
-    }
-    bitmapSourceDC = CreateCompatibleDC(param_1);
-    for (resourceId = 1; (USHORT)resourceId < 90; resourceId++) {
-        sprite = &sprites[resourceId & 0xffff];
-        pHVar1 = loadBitmapResource(resourceId);
-        if (pHVar1 == (HBITMAP)0x0) {
-            return FALSE;
+//    pAVar6 = actorListPtr;
+//    pAVar7 = pAVar6;
+//    if (pAVar6 != (Actor *)0x0) {
+//        do {
+    for (pAVar7 = actorListPtr; pAVar7 != NULL; pAVar7 = pAVar7->next) {
+        if ((pAVar7->flags & FLAG_10) != 0) {
+            pAVar6 = pAVar7->linkedActor;
+//                    pAVar5 = actorListPtr;
+//                if (pAVar6 == (Actor *)0x0) goto LAB_004011cd;
+//                if ((pAVar6->flags & FLAG_10) == 0) goto LAB_004011cd;
+//                BVar2 = doRectsOverlap(&pAVar7->rect,&pAVar6->rect);
+//                pAVar5 = actorListPtr;
+//                if (BVar2 == 0) goto LAB_004011cd;
+
+            if (pAVar6 != (Actor *) 0x0 && (pAVar6->flags & FLAG_10) != 0 &&
+                doRectsOverlap(&pAVar7->rect, &pAVar6->rect)) {
+                actorClearFlag10(pAVar7, pAVar6);
+            }
+
+            for (pAVar6 = actorListPtr; pAVar6 != NULL && pAVar6 != pAVar7; pAVar6 = pAVar6->next) {
+                if ((pAVar6->flags & FLAG_10) != 0 && doRectsOverlap(&pAVar7->rect, &pAVar6->rect)) {
+                    actorClearFlag10(pAVar7, pAVar6);
+                    pAVar6 = actorListPtr;
+                }
+            }
         }
-        GetObjectA(pHVar1,sizeof(BITMAP),&bitmap);
+    }
+//                    do {
+////                    LAB_004011cd:
+//                        while (TRUE) {
+//                            pAVar6 = actorListPtr;
+//                            if ((pAVar5 == (Actor *) 0x0) || (pAVar7 == pAVar5)) goto LAB_004011f2;
+//                            if (((pAVar5->flags & FLAG_10) != 0) &&
+//                                (BVar2 = doRectsOverlap(&pAVar7->rect, &pAVar5->rect), pAVar6 = pAVar5, BVar2 != 0))
+//                                break;
+//                            pAVar5 = pAVar5->next;
+//                        }
+//                        actorClearFlag10(pAVar7, pAVar6);
+//                        pAVar5 = actorListPtr;
+//                    } while (TRUE);
+//                }
+//                LAB_004011f2:
+//                ;
+//            }
+//            pAVar7 = pAVar7->next;
+//        } while (pAVar7 != (Actor *)0x0);
+//    }
 
-        spriteWidth = bitmap.bmWidth;
-        spriteHeigth = bitmap.bmHeight;
-
-        sprite->width = (short)spriteWidth;
-        sprite->height = (short)spriteHeigth;
-        sprite->totalPixels = (short)(spriteWidth * spriteHeigth);
-        if ((short)spriteWidth > 0x20) {
-            sheetYOffset = largeSpriteYOffset;
-            largeSpriteYOffset += spriteHeigth;
-        } else {
-            sheetYOffset = smallSpriteYOffset;
-            smallSpriteYOffset += spriteHeigth;
+    for (pAVar7 = actorListPtr; pAVar7 != (Actor *)0x0; pAVar7 = pAVar7->next) {
+        if ((pAVar7->flags & FLAG_10) != 0) {
+            drawActor(hdc,pAVar7);
         }
-        sprite->sheetYOffset = (short)sheetYOffset;
-        pvVar2 = SelectObject(bitmapSourceDC,pHVar1);
-        sprite->sheetDC = (short)spriteWidth > 32 ? largeBitmapDC : smallBitmapDC;
-
-        sprite->sheetDC_1bpp = (short)spriteWidth > 32 ? largeBitmapDC_1bpp : smallBitmapDC_1bpp;
-
-        BitBlt(sprite->sheetDC,0,sheetYOffset,bitmap.bmWidth,bitmap.bmHeight,bitmapSourceDC,0,0,
-               0xcc0020);
-        BitBlt(sprite->sheetDC_1bpp,0,sheetYOffset,bitmap.bmWidth,bitmap.bmHeight,
-               bitmapSourceDC,0,0,0x330008);
-        pvVar2 = SelectObject(bitmapSourceDC,pvVar2);
-        DeleteObject(pvVar2);
     }
 
-    scratchBitmapWidth = ((USHORT)maxWidth & 0xffc0) + 0x40;
-    scratchBitmapHeight = ((USHORT)maxHeight & 0xffc0) + 0x40;
-
-    pHVar1 = CreateCompatibleBitmap(param_1,(int)scratchBitmapWidth,(int)scratchBitmapHeight);
-    if (pHVar1 == (HBITMAP)0x0) {
-        return FALSE;
+    for (pAVar7 = actorListPtr; pAVar7 != (Actor *)0x0; pAVar7 = pAVar7->next) {
+        if ((pAVar7->flags & FLAG_2) != 0) {
+            actorSetFlag8IfFlag1IsUnset(pAVar7);
+        }
     }
-    scratchBitmap = SelectObject(bitmapSourceDC,pHVar1);
-    if (scratchBitmap == (HGDIOBJ)0x0) {
-        DeleteObject(pHVar1);
-        return FALSE;
-    }
-    return TRUE;
+    removeFlag8ActorsFromList();
 }
 
 

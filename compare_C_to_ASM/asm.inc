@@ -1,385 +1,180 @@
-@createBitmapSheets@4 proc
-          sub   esp, 000000034h
-          mov   eax, dword ptr [sprites]        ; <c5f8>
+extern @drawActor@8:proc
+
+@drawWindow@8 proc
+          sub   esp, 000000008h
           push  ebx
           push  ebp
-          xor   ebx, ebx
-          mov   ebp, ecx
-          mov   dword ptr [eax], ebx
-          mov   ecx, dword ptr [sprites]        ; <c5f8>
+          mov   ebp, edx
           push  esi
+          test  ecx, ecx
           push  edi
-          mov   dword ptr [esp+028h], ebp
-          mov   dword ptr [ecx+004h], ebx
-          mov   edx, dword ptr [sprites]        ; <c5f8>
-          mov   dword ptr [esp+010h], ebx
-          mov   dword ptr [esp+024h], ebx
-          mov   word ptr [edx+008h], bx
-          mov   eax, dword ptr [sprites]        ; <c5f8>
-          mov   dword ptr [esp+018h], ebx
-          mov   dword ptr [esp+014h], ebx
-          mov   word ptr [eax+00Ah], bx
-          mov   ecx, dword ptr [sprites]        ; <c5f8>
-          mov   dword ptr [esp+020h], ebx
-          mov   dword ptr [esp+01Ch], ebx
-          mov   word ptr [ecx+00Ch], bx
-          mov   edx, dword ptr [sprites]        ; <c5f8>
-          mov   edi, 000000001h
-          mov   word ptr [edx+00Eh], bx
-LAB_00405b13:     mov   ecx, edi
-          call  @loadBitmapResource@4
-          mov   esi, eax
-          cmp   esi, ebx
-          jz    LAB_00405e7d
-          lea   eax, dword ptr [esp+02Ch]
-          push  eax
-          push  000000018h
-          push  esi
-          call  dword ptr [__imp__GetObjectA@12]        ; <GetObjectA>
-          movsx edx, word ptr [esp+010h]
-          mov   ecx, dword ptr [esp+030h]
-          cmp   ecx, edx
-          jle   LAB_00405b43
-          mov   dword ptr [esp+010h], ecx
-LAB_00405b43:     movsx edx, word ptr [esp+024h]
-          mov   eax, dword ptr [esp+034h]
-          cmp   eax, edx
-          jle   LAB_00405b54
-          mov   dword ptr [esp+024h], eax
-LAB_00405b54:     cmp   ecx, 000000020h
-          jle   LAB_00405b5f
-          add   dword ptr [esp+018h], eax
-          jmp   LAB_00405b63
-LAB_00405b5f:     add   dword ptr [esp+014h], eax
-LAB_00405b63:     push  esi
-          call  dword ptr [__imp__DeleteObject@4]       ; <DeleteObject>
-          inc   edi
-          cmp   di, 00000005Ah
-          jb    LAB_00405b13
-          push  ebp
-          call  dword ptr [__imp__CreateCompatibleDC@4] ; <CreateCompatibleDC>
-          cmp   eax, ebx
-          mov   dword ptr [smallBitmapDC], eax  ; <c710>
-          jnz   LAB_00405b8b
-          pop   edi
-          pop   esi
-          pop   ebp
-          xor   eax, eax
-          pop   ebx
-          add   esp, 000000034h
-          ret
-LAB_00405b8b:     movsx edi, word ptr [esp+014h]
-          push  edi
-          push  000000020h
-          push  ebp
-          call  dword ptr [__imp__CreateCompatibleBitmap@12]    ; <CreateCompatibleBitmap>
-          mov   esi, eax
-          cmp   esi, ebx
-          jnz   LAB_00405baa
-          pop   edi
-          pop   esi
-          pop   ebp
-          xor   eax, eax
-          pop   ebx
-          add   esp, 000000034h
-          ret
-LAB_00405baa:     mov   eax, dword ptr [smallBitmapDC]  ; <c710>
-          push  esi
-          push  eax
-          call  dword ptr [__imp__SelectObject@8]       ; <SelectObject>
-          cmp   eax, ebx
-          mov   dword ptr [smallBitmapSheet], eax       ; <c620>
-          jnz   LAB_00405bd1
-          push  esi
-          call  dword ptr [__imp__DeleteObject@4]       ; <DeleteObject>
-          xor   eax, eax
-          pop   edi
-          pop   esi
-          pop   ebp
-          pop   ebx
-          add   esp, 000000034h
-          ret
-LAB_00405bd1:     push  ebp
-          call  dword ptr [__imp__CreateCompatibleDC@4] ; <CreateCompatibleDC>
-          cmp   eax, ebx
-          mov   dword ptr [smallBitmapDC_1bpp], eax     ; <c6a4>
-          jnz   LAB_00405beb
-          pop   edi
-          pop   esi
-          pop   ebp
-          xor   eax, eax
-          pop   ebx
-          add   esp, 000000034h
-          ret
-LAB_00405beb:     push  ebx
-          push  000000001h
-          push  000000001h
-          push  edi
-          push  000000020h
-          call  dword ptr [__imp__CreateBitmap@20]      ; <CreateBitmap>
-          mov   esi, eax
-          cmp   esi, ebx
-          jnz   LAB_00405c09
-          pop   edi
-          pop   esi
-          pop   ebp
-          xor   eax, eax
-          pop   ebx
-          add   esp, 000000034h
-          ret
-LAB_00405c09:     mov   ecx, dword ptr [smallBitmapDC_1bpp]     ; <c6a4>
-          push  esi
-          push  ecx
-          call  dword ptr [__imp__SelectObject@8]       ; <SelectObject>
-          cmp   eax, ebx
-          mov   dword ptr [smallBitmapSheet_1bpp], eax  ; <c6d4>
-          jnz   LAB_00405c31
-          push  esi
-          call  dword ptr [__imp__DeleteObject@4]       ; <DeleteObject>
-          xor   eax, eax
-          pop   edi
-          pop   esi
-          pop   ebp
-          pop   ebx
-          add   esp, 000000034h
-          ret
-LAB_00405c31:     push  ebp
-          call  dword ptr [__imp__CreateCompatibleDC@4] ; <CreateCompatibleDC>
-          cmp   eax, ebx
-          mov   dword ptr [largeBitmapDC], eax  ; <c730>
-          jnz   LAB_00405c4b
-          pop   edi
-          pop   esi
-          pop   ebp
-          xor   eax, eax
-          pop   ebx
-          add   esp, 000000034h
-          ret
-LAB_00405c4b:     movsx edi, word ptr [esp+018h]
-          movsx ebx, word ptr [esp+010h]
-          push  edi
-          push  ebx
-          push  ebp
-          call  dword ptr [__imp__CreateCompatibleBitmap@12]    ; <CreateCompatibleBitmap>
-          mov   esi, eax
+          mov   dword ptr [esp+010h], ebp
+          mov   dword ptr [esp+014h], ecx
+          jnz   LAB_00401084
+          mov   edx, 0000004F8h
+          mov   ecx, offset sourceFilename      ; <c090>
+          call  @assertFailed@8
+LAB_00401084:     test  ebp, ebp
+          jnz   LAB_00401097
+          mov   edx, 0000004F9h
+          mov   ecx, offset sourceFilename      ; <c090>
+          call  @assertFailed@8
+LAB_00401097:     mov   esi, dword ptr [actorListPtr]   ; <c618>
           test  esi, esi
-          jnz   LAB_00405c6c
-          pop   edi
-          pop   esi
-          pop   ebp
-          pop   ebx
-          add   esp, 000000034h
-          ret
-LAB_00405c6c:     mov   edx, dword ptr [largeBitmapDC]  ; <c730>
-          push  esi
-          push  edx
-          call  dword ptr [__imp__SelectObject@8]       ; <SelectObject>
+          jz    LAB_00401125
+          mov   ebx, 0FFFFFFFEh
+LAB_004010aa:     test  byte ptr [esi+04Ch], 00Bh
+          jnz   LAB_00401115
+          mov   edi, dword ptr [esi+004h]
+          test  edi, edi
+          jz    LAB_00401115
+          mov   eax, dword ptr [edi+04Ch]
+          test  al, 001h
+          jz    LAB_00401115
+          test  al, 002h
+          jz    LAB_00401115
+          mov   cx, word ptr [esi+010h]
+          cmp   cx, word ptr [edi+010h]
+          jnz   LAB_00401115
+          test  al, 004h
+          jz    LAB_004010d5
+          lea   ebp, dword ptr [edi+020h]
+          jmp   LAB_004010de
+LAB_004010d5:     mov   ecx, edi
+          call  @updateActorSpriteRect@4
+          mov   ebp, eax
+LAB_004010de:     test  byte ptr [esi+04Ch], 004h
+          jz    LAB_004010e9
+          lea   eax, dword ptr [esi+020h]
+          jmp   LAB_004010f0
+LAB_004010e9:     mov   ecx, esi
+          call  @updateActorSpriteRect@4
+LAB_004010f0:     mov   edx, ebp
+          mov   ecx, eax
+          call  @areRectanglesEqual@8
           test  eax, eax
-          mov   dword ptr [largeBitmapSheet], eax       ; <c644>
-          jnz   LAB_00405c94
-          push  esi
-          call  dword ptr [__imp__DeleteObject@4]       ; <DeleteObject>
-          xor   eax, eax
-          pop   edi
-          pop   esi
-          pop   ebp
-          pop   ebx
-          add   esp, 000000034h
-          ret
-LAB_00405c94:     push  ebp
-          call  dword ptr [__imp__CreateCompatibleDC@4] ; <CreateCompatibleDC>
-          test  eax, eax
-          mov   dword ptr [largeBitmapDC_1bpp], eax     ; <c6ec>
-          jnz   LAB_00405cac
-          pop   edi
-          pop   esi
-          pop   ebp
-          pop   ebx
-          add   esp, 000000034h
-          ret
-LAB_00405cac:     push  000000000h
-          push  000000001h
-          push  000000001h
-          push  edi
-          push  ebx
-          call  dword ptr [__imp__CreateBitmap@20]      ; <CreateBitmap>
-          mov   esi, eax
+          jz    LAB_00401115
+          mov   ecx, dword ptr [esi+04Ch]
+          or    ecx, 000000001h
+          mov   dword ptr [esi+04Ch], ecx
+          mov   eax, dword ptr [edi+04Ch]
+          and   eax, ebx
+          mov   ecx, edi
+          mov   dword ptr [edi+04Ch], eax
+          call  @actorSetFlag8IfFlag1IsUnset@4
+LAB_00401115:     mov   esi, dword ptr [esi]
           test  esi, esi
-          jnz   LAB_00405cc8
-          pop   edi
-          pop   esi
-          pop   ebp
-          pop   ebx
-          add   esp, 000000034h
-          ret
-LAB_00405cc8:     mov   eax, dword ptr [largeBitmapDC_1bpp]     ; <c6ec>
-          push  esi
-          push  eax
-          call  dword ptr [__imp__SelectObject@8]       ; <SelectObject>
-          test  eax, eax
-          mov   dword ptr [largeBitmapSheet_1bpp], eax  ; <c75c>
-          jnz   LAB_00405cef
-          push  esi
-          call  dword ptr [__imp__DeleteObject@4]       ; <DeleteObject>
-          xor   eax, eax
-          pop   edi
-          pop   esi
-          pop   ebp
-          pop   ebx
-          add   esp, 000000034h
-          ret
-LAB_00405cef:     push  ebp
-          call  dword ptr [__imp__CreateCompatibleDC@4] ; <CreateCompatibleDC>
-          mov   dword ptr [bitmapSourceDC], eax ; <c5ec>
-          mov   ebx, 000000001h
-LAB_00405d00:     mov   edx, dword ptr [sprites]        ; <c5f8>
-          mov   esi, ebx
-          and   esi, 00000FFFFh
-          mov   ecx, ebx
-          shl   esi, 004h
-          add   esi, edx
-          call  @loadBitmapResource@4
-          test  eax, eax
-          mov   dword ptr [esp+018h], eax
-          jz    LAB_00405e7d
-          lea   ecx, dword ptr [esp+02Ch]
-          push  ecx
-          push  000000018h
-          push  eax
-          call  dword ptr [__imp__GetObjectA@12]        ; <GetObjectA>
-          mov   edi, dword ptr [esp+030h]
-          mov   word ptr [esi+00Ah], di
-          mov   eax, dword ptr [esp+034h]
-          mov   edx, eax
-          mov   word ptr [esi+00Ch], ax
-          imul  edx, edi
-          cmp   di, 000000020h
-          mov   word ptr [esi+00Eh], dx
-          jle   LAB_00405d61
-          mov   ebp, dword ptr [esp+01Ch]
+          jnz   LAB_004010aa
+          mov   ebp, dword ptr [esp+010h]
+          mov   esi, dword ptr [actorListPtr]   ; <c618>
+LAB_00401125:     test  esi, esi
+          mov   bl, 010h
+          jz    LAB_00401190
+LAB_0040112b:     mov   eax, dword ptr [esi+04Ch]
+          test  al, 008h
+          jz    LAB_00401139
+          and   al, 0EFh
+          mov   dword ptr [esi+04Ch], eax
+          jmp   LAB_0040118a
+LAB_00401139:     test  al, 004h
+          jz    LAB_00401142
+          lea   edi, dword ptr [esi+020h]
+          jmp   LAB_0040114b
+LAB_00401142:     mov   ecx, esi
+          call  @updateActorSpriteRect@4
+          mov   edi, eax
+LAB_0040114b:     mov   edx, ebp
+          mov   ecx, edi
+          call  @doRectsOverlap@8
+          mov   edx, dword ptr [esi+04Ch]
+          and   eax, 000000001h
+          shl   eax, 004h
+          and   edx, 0FFFFFFEFh
+          or    eax, edx
+          test  bl, al
+          mov   dword ptr [esi+04Ch], eax
+          jz    LAB_0040118a
+          mov   ecx, dword ptr [edi]
+          lea   eax, dword ptr [esi+030h]
+          mov   dword ptr [esi+030h], ecx
+          mov   edx, dword ptr [edi+004h]
+          mov   dword ptr [eax+004h], edx
+          mov   ecx, dword ptr [edi+008h]
+          mov   dword ptr [eax+008h], ecx
+          mov   edx, dword ptr [edi+00Ch]
+          mov   dword ptr [esi+008h], 000000000h
+          mov   dword ptr [eax+00Ch], edx
+LAB_0040118a:     mov   esi, dword ptr [esi]
+          test  esi, esi
+          jnz   LAB_0040112b
+LAB_00401190:     mov   esi, dword ptr [actorListPtr]   ; <c618>
+          test  esi, esi
+          mov   edi, esi
+          jz    LAB_00401212
+LAB_0040119c:     test  byte ptr [edi+04Ch], bl
+          jz    LAB_004011f2
+          mov   esi, dword ptr [edi+004h]
+          lea   ebp, dword ptr [edi+030h]
+          test  esi, esi
+          jz    LAB_004011c7
+          test  byte ptr [esi+04Ch], bl
+          jz    LAB_004011c7
+          lea   edx, dword ptr [esi+030h]
           mov   ecx, ebp
-          add   ecx, eax
-          mov   dword ptr [esp+01Ch], ecx
-          jmp   LAB_00405d6d
-LAB_00405d61:     mov   ebp, dword ptr [esp+020h]
+          call  @doRectsOverlap@8
+          test  eax, eax
+          jz    LAB_004011c7
+LAB_004011be:     mov   edx, esi
+          mov   ecx, edi
+          call  @actorClearFlag10@8
+LAB_004011c7:     mov   esi, dword ptr [actorListPtr]   ; <c618>
+LAB_004011cd:     test  esi, esi
+          jz    LAB_004011ec
+          cmp   edi, esi
+          jz    LAB_004011ec
+          test  byte ptr [esi+04Ch], bl
+          jz    LAB_004011e8
+          lea   edx, dword ptr [esi+030h]
           mov   ecx, ebp
-          add   ecx, eax
-          mov   dword ptr [esp+020h], ecx
-LAB_00405d6d:     mov   eax, dword ptr [esp+018h]
-          mov   word ptr [esi+008h], bp
-          mov   ecx, dword ptr [bitmapSourceDC] ; <c5ec>
-          push  eax
-          push  ecx
-          call  dword ptr [__imp__SelectObject@8]       ; <SelectObject>
-          cmp   di, 000000020h
-          mov   dword ptr [esp+018h], eax
-          mov   eax, dword ptr [largeBitmapDC]  ; <c730>
-          jg    LAB_00405d97
-          mov   eax, dword ptr [smallBitmapDC]  ; <c710>
-LAB_00405d97:     mov   dword ptr [esi], eax
-          mov   ecx, dword ptr [largeBitmapDC_1bpp]     ; <c6ec>
-          cmp   di, 000000020h
-          jg    LAB_00405dab
-          mov   ecx, dword ptr [smallBitmapDC_1bpp]     ; <c6a4>
-LAB_00405dab:     mov   dword ptr [esi+004h], ecx
-          mov   edx, dword ptr [bitmapSourceDC] ; <c5ec>
-          mov   ecx, dword ptr [esp+034h]
-          push  000CC0020h
-          push  000000000h
-          push  000000000h
-          movsx edi, bp
-          mov   ebp, dword ptr [__imp__BitBlt@36]       ; <BitBlt>
-          push  edx
-          mov   edx, dword ptr [esp+040h]
-          push  ecx
-          push  edx
-          push  edi
-          push  000000000h
-          push  eax
-          call  ebp
-          mov   eax, dword ptr [bitmapSourceDC] ; <c5ec>
-          mov   ecx, dword ptr [esp+034h]
-          mov   edx, dword ptr [esp+030h]
-          push  000330008h
-          push  000000000h
-          push  000000000h
-          push  eax
-          mov   eax, dword ptr [esi+004h]
-          push  ecx
-          push  edx
-          push  edi
-          push  000000000h
-          push  eax
-          call  ebp
-          mov   edx, dword ptr [bitmapSourceDC] ; <c5ec>
-          mov   ecx, dword ptr [esp+018h]
-          push  ecx
-          push  edx
-          call  dword ptr [__imp__SelectObject@8]       ; <SelectObject>
-          push  eax
-          call  dword ptr [__imp__DeleteObject@4]       ; <DeleteObject>
-          inc   ebx
-          cmp   bx, 00000005Ah
-          jb    LAB_00405d00
-          mov   eax, dword ptr [esp+010h]
-          mov   edx, dword ptr [esp+028h]
-          and   al, 0C0h
-          add   eax, 000000040h
-          mov   cx, ax
-          mov   eax, dword ptr [esp+024h]
-          and   al, 0C0h
-          mov   word ptr [scratchBitmapWidth], cx       ; <c690>
-          add   eax, 000000040h
-          mov   word ptr [scratchBitmapHeight], ax      ; <c6e8>
-          movsx eax, ax
-          movsx ecx, cx
-          push  eax
-          push  ecx
-          push  edx
-          call  dword ptr [__imp__CreateCompatibleBitmap@12]    ; <CreateCompatibleBitmap>
-          mov   esi, eax
+          call  @doRectsOverlap@8
+          test  eax, eax
+          jnz   LAB_004011be
+LAB_004011e8:     mov   esi, dword ptr [esi]
+          jmp   LAB_004011cd
+LAB_004011ec:     mov   esi, dword ptr [actorListPtr]   ; <c618>
+LAB_004011f2:     mov   edi, dword ptr [edi]
+          test  edi, edi
+          jnz   LAB_0040119c
           test  esi, esi
-          jnz   LAB_00405e60
+          jz    LAB_00401212
+LAB_004011fc:     test  byte ptr [esi+04Ch], bl
+          jz    LAB_0040120c
+          mov   ecx, dword ptr [esp+014h]
+          mov   edx, esi
+          call  @drawActor@8
+LAB_0040120c:     mov   esi, dword ptr [esi]
+          test  esi, esi
+          jnz   LAB_004011fc
+LAB_00401212:     mov   esi, dword ptr [actorListPtr]   ; <c618>
+          test  esi, esi
+          jz    LAB_0040122f
+LAB_0040121c:     test  byte ptr [esi+04Ch], 002h
+          jz    LAB_00401229
+          mov   ecx, esi
+          call  @actorSetFlag8IfFlag1IsUnset@4
+LAB_00401229:     mov   esi, dword ptr [esi]
+          test  esi, esi
+          jnz   LAB_0040121c
+LAB_0040122f:     call  _removeFlag8ActorsFromList
           pop   edi
           pop   esi
           pop   ebp
           pop   ebx
-          add   esp, 000000034h
+          add   esp, 000000008h
           ret
-LAB_00405e60:     mov   eax, dword ptr [bitmapSourceDC] ; <c5ec>
-          push  esi
-          push  eax
-          call  dword ptr [__imp__SelectObject@8]       ; <SelectObject>
-          test  eax, eax
-          mov   dword ptr [scratchBitmap], eax  ; <c614>
-          jnz   LAB_00405e87
-          push  esi
-          call  dword ptr [__imp__DeleteObject@4]       ; <DeleteObject>
-LAB_00405e7d:     pop   edi
-          pop   esi
-          pop   ebp
-          xor   eax, eax
-          pop   ebx
-          add   esp, 000000034h
-          ret
-LAB_00405e87:     pop   edi
-          pop   esi
-          pop   ebp
-          mov   eax, 000000001h
-          pop   ebx
-          add   esp, 000000034h
-          ret
-LAB_00405e94:
+LAB_0040123c:
           db 090h
           db 090h
           db 090h
           db 090h
-          db 090h
-          db 090h
-          db 090h
-          db 090h
-          db 090h
-          db 090h
-          db 090h
-          db 090h
-@createBitmapSheets@4 endp
+@drawWindow@8 endp

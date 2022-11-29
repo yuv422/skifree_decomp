@@ -31,6 +31,7 @@ LAB_0040105f:     ret
 _timerUpdateFunc endp
 ~
 
+COMMENT ~
 @drawWindow@8 proc
           sub   esp, 000000008h
           push  ebx
@@ -209,6 +210,7 @@ LAB_0040123c:
           db 090h
           db 090h
 @drawWindow@8 endp
+~
 
 COMMENT ~
 @assertFailed@8 proc

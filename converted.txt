@@ -104,3 +104,4 @@ _setupPermObjects
 @handleKeydownMessage@4
 _updateGameState
 @createBitmapSheets@4
+@drawWindow@8
