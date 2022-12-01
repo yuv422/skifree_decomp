@@ -158,25 +158,11 @@ SOURCE=.\semblance.asm
 
 !IF  "$(CFG)" == "skifree_decomp - Win32 Release"
 
-# Begin Custom Build
-InputPath=.\semblance.asm
-InputName=semblance
-
-"$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	ml /Zi /Zf /c /Cx /nologo /coff $(InputPath)
-
-# End Custom Build
+# PROP Exclude_From_Build 1
 
 !ELSEIF  "$(CFG)" == "skifree_decomp - Win32 Debug"
 
-# Begin Custom Build
-InputPath=.\semblance.asm
-InputName=semblance
-
-"$(InputName).obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	ml /Zi /c /nologo /coff $(InputPath)
-
-# End Custom Build
+# PROP Exclude_From_Build 1
 
 !ENDIF 
 

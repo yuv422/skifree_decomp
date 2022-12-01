@@ -105,8 +105,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\StdAfx.obj" \
 	"$(INTDIR)\skifree_decomp.res" \
 	".\data.obj" \
-	".\rdata.obj" \
-	".\semblance.obj"
+	".\rdata.obj"
 
 "$(OUTDIR)\skifree_decomp.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
@@ -196,8 +195,7 @@ LINK32_OBJS= \
 	"$(INTDIR)\StdAfx.obj" \
 	"$(INTDIR)\skifree_decomp.res" \
 	".\data.obj" \
-	".\rdata.obj" \
-	".\semblance.obj"
+	".\rdata.obj"
 
 "$(OUTDIR)\skifree_decomp.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
     $(LINK32) @<<
@@ -277,27 +275,7 @@ SOURCE=.\semblance.asm
 
 !IF  "$(CFG)" == "skifree_decomp - Win32 Release"
 
-InputPath=.\semblance.asm
-InputName=semblance
-
-".\semblance.obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	<<tempfile.bat 
-	@echo off 
-	ml /Zi /Zf /c /Cx /nologo /coff $(InputPath)
-<< 
-	
-
 !ELSEIF  "$(CFG)" == "skifree_decomp - Win32 Debug"
-
-InputPath=.\semblance.asm
-InputName=semblance
-
-".\semblance.obj" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	<<tempfile.bat 
-	@echo off 
-	ml /Zi /c /nologo /coff $(InputPath)
-<< 
-	
 
 !ENDIF 
 

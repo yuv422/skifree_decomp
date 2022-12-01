@@ -83,6 +83,7 @@ extern HBITMAP __fastcall loadBitmapResource(UINT resourceId);
 extern BOOL __fastcall areRectanglesEqual(RECT *rect1,RECT *rect2);
 extern void __fastcall actorClearFlag10(Actor *actor1, Actor *actor2);
 extern void __fastcall drawActor(HDC hdc,Actor *actor);
+extern BOOL __fastcall changeScratchBitmapSize(short newWidth, short newHeight);
 
 #include "../data.h"
 
@@ -92,132 +93,205 @@ extern void __fastcall drawActor(HDC hdc,Actor *actor);
 //
 
 
+
 /* WARNING: Could not reconcile some variable overlaps */
 
-void __fastcall drawWindow(HDC hdc, RECT *windowRect) {
-//    LONG LVar1;
-    RECT *rect1;
-    RECT *ptVar3;
-    UINT uVar4;
-    Actor *pAVar6;
+void __fastcall drawActor(HDC hdc,Actor *actor) {
+    Actor **ppAVar1;
+    short y;
+//    short sVar3;
+//    BOOL BVar4;
+//    UINT uVar5;
+    RECT *rect;
+//    int cx;
+//    int cy;
+    USHORT uVar6;
     Actor *pAVar7;
+//    int y1;
+    short sVar8;
+    short newWidth;
+    USHORT newHeight;
+//    short sVar9;
+//    UINT unaff_ESI;
+    Actor *actor_00;
+    short sVar10;
+//    UINT unaff_EDI;
+    Actor **ppAVar11;
+    HDC hdcSrc;
+    DWORD rop;
+    Actor *local_24;
+    Actor *local_20;
+    int local_1c;
+//    UINT local_18;
+    UINT local_14;
+    short sheetY;
+    int local_c;
+    UINT local_8;
+    Actor **local_4;
+    Sprite *sprite;
+    short spriteWidth;
+    short spriteHeight;
 
-    ski_assert(hdc, 1272);
-    ski_assert(windowRect, 1273);
+    uVar6 = *(USHORT *)&(actor->rect).left;
+//    local_14 = /*unaff_EDI & 0xffff0000 |*/ (UINT)uVar6;
+    y = *(short *)&(actor->rect).top;
+    newWidth = *(short *)&(actor->rect).right - uVar6;
+    newHeight = *(short *)&(actor->rect).bottom - y;
+//    local_18 = unaff_ESI & 0xffff0000 | (UINT)newHeight;
+//    local_18 = (UINT)newHeight;
+    local_c = 0;
+    local_20 = actor;
+    ski_assert(actor, 1133);
+    ski_assert(hdc, 1134);
+    ski_assert((actor->flags & FLAG_10) != 0, 1135);
 
-//    pAVar7 = actorListPtr;
-    for (pAVar7 = actorListPtr; pAVar7 != (Actor *)0x0; pAVar7 = pAVar7->next) {
-        /* if FLAG_1 FLAG_2 FLAG_8 are unset */
-        if ((pAVar7->flags & (FLAG_1 | FLAG_2 | FLAG_8)) == 0) {
-            pAVar6 = pAVar7->linkedActor;
-            if ( pAVar6 != NULL && (pAVar6->flags & FLAG_1) != 0 && (pAVar6->flags & FLAG_2) != 0 && pAVar7->spriteIdx2 == pAVar6->spriteIdx2) {
-                if ((pAVar6->flags & FLAG_4) != 0) {
-                    ptVar3 = &pAVar6->someRect;
-                } else {
-                    ptVar3 = updateActorSpriteRect(pAVar6);
-                }
-                if ((pAVar7->flags & FLAG_4) != 0) {
-                    rect1 = &pAVar7->someRect;
-                } else {
-                    rect1 = updateActorSpriteRect(pAVar7);
-                }
-                if (areRectanglesEqual(rect1,ptVar3)) {
-                    pAVar7->flags |= FLAG_1;
-                    pAVar6->flags = pAVar6->flags &= 0xfffffffe;
-                    actorSetFlag8IfFlag1IsUnset(pAVar6);
-                }
-            }
+    if (actor == (Actor *)0x0) {
+        return;
+    }
+    pAVar7 = actor;
+    while ((pAVar7->flags & FLAG_1) << 1 != (pAVar7->flags & FLAG_2)) {
+        pAVar7 = pAVar7->actorPtr;
+        if (pAVar7 == (Actor *)0x0) {
+            return;
         }
     }
-//    pAVar6 = actorListPtr;
-//    for (; actorListPtr = pAVar6, pAVar5 != (Actor *)0x0; pAVar5 = pAVar5->next) {
-    for (pAVar7 = actorListPtr; pAVar7 != (Actor *)0x0; pAVar7 = pAVar7->next) {
-//        uVar4 = *(UINT *)&pAVar5->flags;
-        if ((pAVar7->flags & FLAG_8) != 0) {
-            pAVar7->flags &= 0xffffffef;
-        } else {
-            if ((pAVar7->flags & FLAG_4) != 0) {
-                ptVar3 = &pAVar7->someRect;
-            } else {
-                ptVar3 = updateActorSpriteRect(pAVar7);
+    local_1c = 0;
+    if (!changeScratchBitmapSize(newWidth,newHeight)) {
+        PatBlt(hdc,(int)(short)uVar6,(int)y,(int)newWidth,(int)(short)newHeight,0xff0062);
+        do {
+            if ((actor->flags & FLAG_1) == 0 && (actor->flags & FLAG_2) == 0) {
+                sprite = actor->spritePtr;
+                if ((actor->flags & FLAG_4) == 0) {
+                    rect = updateActorSpriteRect(actor);
+                }
+                else {
+                    rect = &actor->someRect;
+                }
+                BitBlt(hdc,rect->left,rect->top,(int)sprite->width,(int)sprite->height,sprite->sheetDC,0
+                        ,(int)sprite->sheetYOffset,0x8800c6);
+                actor->flags |= FLAG_1;
             }
-            uVar4 = doRectsOverlap(ptVar3,windowRect);
-            /* set FLAG_10 if rects overlap */
-//            pAVar5->flags = (uVar4 ? FLAG_10 : 0) | (pAVar5->flags & 0xffffffef);
-            pAVar7->flags = (pAVar7->flags & 0xffffffef) | ((uVar4 & 1) << 4);
-            if ((uVar4 & 1) != 0) {
-                (pAVar7->rect).left = ptVar3->left;
-                (pAVar7->rect).top = ptVar3->top;
-                (pAVar7->rect).right = ptVar3->right;
-                (pAVar7->rect).bottom = ptVar3->bottom; // LVar1;
-//                LVar1 = ptVar3->bottom;
-                pAVar7->actorPtr = (Actor *)0x0;
+            else {
+                actor->flags &= 0xfffffffe;
             }
-        }
+            actor = actor->actorPtr;
+        } while( actor != NULL );
+        return;
     }
 
-
-//    pAVar6 = actorListPtr;
-//    pAVar7 = pAVar6;
-//    if (pAVar6 != (Actor *)0x0) {
-//        do {
-    for (pAVar7 = actorListPtr; pAVar7 != NULL; pAVar7 = pAVar7->next) {
-        if ((pAVar7->flags & FLAG_10) != 0) {
-            pAVar6 = pAVar7->linkedActor;
-//                    pAVar5 = actorListPtr;
-//                if (pAVar6 == (Actor *)0x0) goto LAB_004011cd;
-//                if ((pAVar6->flags & FLAG_10) == 0) goto LAB_004011cd;
-//                BVar2 = doRectsOverlap(&pAVar7->rect,&pAVar6->rect);
-//                pAVar5 = actorListPtr;
-//                if (BVar2 == 0) goto LAB_004011cd;
-
-            if (pAVar6 != (Actor *) 0x0 && (pAVar6->flags & FLAG_10) != 0 &&
-                doRectsOverlap(&pAVar7->rect, &pAVar6->rect)) {
-                actorClearFlag10(pAVar7, pAVar6);
-            }
-
-            for (pAVar6 = actorListPtr; pAVar6 != NULL && pAVar6 != pAVar7; pAVar6 = pAVar6->next) {
-                if ((pAVar6->flags & FLAG_10) != 0 && doRectsOverlap(&pAVar7->rect, &pAVar6->rect)) {
-                    actorClearFlag10(pAVar7, pAVar6);
-                    pAVar6 = actorListPtr;
+    do {
+        actor_00 = (Actor *)0x0;
+        local_24 = (Actor *)0x0;
+        pAVar7 = actor;
+        ppAVar11 = &local_20;
+        if (actor == (Actor *)0x0) break;
+        do {
+//            sprite = *(Sprite **)&actor->flags;
+            ppAVar1 = &actor->actorPtr;
+            if ((actor->flags & FLAG_2) == 0) {
+                if ((actor->flags & FLAG_40) == 0) {
+                    sVar8 = 0;
+                }
+                else {
+//                    sprite = actor->spritePtr;
+                    sVar8 = actor->spritePtr->height;
+                }
+                uVar6 = actor->yPosMaybe - sVar8;
+                if ((actor_00 == (Actor *)0x0) || ((short)uVar6 < (short)local_8)) {
+                    actor_00 = actor;
+                    local_24 = actor;
+                    local_8 = uVar6; //actor->flags & 0xffff0000 | (UINT)uVar6;
+                    local_4 = ppAVar11;
                 }
             }
-        }
-    }
-//                    do {
-////                    LAB_004011cd:
-//                        while (TRUE) {
-//                            pAVar6 = actorListPtr;
-//                            if ((pAVar5 == (Actor *) 0x0) || (pAVar7 == pAVar5)) goto LAB_004011f2;
-//                            if (((pAVar5->flags & FLAG_10) != 0) &&
-//                                (BVar2 = doRectsOverlap(&pAVar7->rect, &pAVar5->rect), pAVar6 = pAVar5, BVar2 != 0))
-//                                break;
-//                            pAVar5 = pAVar5->next;
-//                        }
-//                        actorClearFlag10(pAVar7, pAVar6);
-//                        pAVar5 = actorListPtr;
-//                    } while (TRUE);
-//                }
-//                LAB_004011f2:
-//                ;
+            else {
+                if ((actor->flags & 1) != 0) {
+                    local_c = 1;
+                    actor->flags &= 0xfffffffe;
+                }
+                *ppAVar11 = *ppAVar1;
+                pAVar7 = local_20;
+            }
+            actor = *ppAVar1;
+            ppAVar11 = ppAVar1;
+        } while (actor != (Actor *)0x0);
+        actor = pAVar7;
+        if (actor_00 != (Actor *)0x0) {
+            sprite = actor_00->spritePtr;
+            spriteWidth = sprite->width;
+            spriteHeight = sprite->height;
+            sheetY = sprite->sheetYOffset;
+            if ((actor_00->flags & FLAG_4) == 0) {
+                rect = updateActorSpriteRect(actor_00);
+            }
+            else {
+                rect = &actor_00->someRect;
+            }
+//            cx = (int)sVar3;
+            //local_14._0_2_ = *(short *)&rect->left - (short)local_14; // TODO fixme
+            local_14 = rect->left - uVar6;
+            sVar10 = *(short *)&rect->top - y;
+            ski_assert(rect->right - rect->left == spriteWidth, 1203);
+            ski_assert(rect->bottom - rect->top == spriteHeight, 1204);
+            ski_assert(local_14 >= 0, 1205);
+            ski_assert(sVar10 >= 0, 1206);
+            ski_assert(newWidth >= spriteWidth, 1207);
+
+//            if (rect->right - rect->left != spriteWidth) {
+//                assertFailed(sourceFilename,1203);
 //            }
-//            pAVar7 = pAVar7->next;
-//        } while (pAVar7 != (Actor *)0x0);
-//    }
-
-    for (pAVar7 = actorListPtr; pAVar7 != (Actor *)0x0; pAVar7 = pAVar7->next) {
-        if ((pAVar7->flags & FLAG_10) != 0) {
-            drawActor(hdc,pAVar7);
+//            cy = (int)sVar8;
+//            if (rect->bottom - rect->top != spriteHeight) {
+//                assertFailed(sourceFilename,1204);
+//            }
+//            if ((short)local_14 < 0) {
+//                assertFailed(sourceFilename,1205);
+//            }
+//            if (sVar10 < 0) {
+//                assertFailed(sourceFilename,1206);
+//            }
+//            if (newWidth < spriteWidth) {
+//                assertFailed(sourceFilename,1207);
+//            }
+//            sVar9 = (short)local_18;
+            if (newHeight < spriteHeight) {
+                assertFailed(sourceFilename,1208);
+            }
+            if (local_1c == 0) {
+                local_1c = 1;
+                if ((((0 < (short)local_14) || (0 < sVar10)) || (spriteWidth < newWidth)) || (spriteHeight < newHeight))  {
+                    PatBlt(bitmapSourceDC,0,0,(int)newWidth,(int)newHeight,0xff0062);
+                }
+                hdcSrc = sprite->sheetDC;
+                rop = 0xcc0020;
+            }
+            else {
+                BitBlt(bitmapSourceDC,(int)(short)local_14,(int)sVar10,spriteWidth,spriteHeight,sprite->sheetDC_1bpp,0,(int)sheetY ,
+                       0xee0086);
+                hdcSrc = sprite->sheetDC;
+                rop = 0x8800c6;
+            }
+            BitBlt(bitmapSourceDC,(int)(short)local_14,(int)sVar10,spriteWidth,spriteHeight,hdcSrc,0,(int)sheetY,rop);
+            local_24->flags |= FLAG_1;
+            *local_4 = local_24->actorPtr;
+            actor = local_20;
         }
+    } while (actor != (Actor *)0x0);
+    if (local_1c != 0) {
+        BitBlt(hdc,(int)(short)local_14,(int)y,(int)newWidth,(int)(short)newHeight,bitmapSourceDC,0
+                ,0,0xcc0020);
+        return;
     }
-
-    for (pAVar7 = actorListPtr; pAVar7 != (Actor *)0x0; pAVar7 = pAVar7->next) {
-        if ((pAVar7->flags & FLAG_2) != 0) {
-            actorSetFlag8IfFlag1IsUnset(pAVar7);
-        }
+    if (local_c != 0) {
+        PatBlt(hdc,(int)(short)local_14,(int)y,(int)newWidth,(int)(short)newHeight,0xff0062);
     }
-    removeFlag8ActorsFromList();
 }
+
+
+
+
+
+
 
 
 

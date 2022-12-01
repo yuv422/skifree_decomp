@@ -105,3 +105,4 @@ _setupPermObjects
 _updateGameState
 @createBitmapSheets@4
 @drawWindow@8
+@drawActor@8

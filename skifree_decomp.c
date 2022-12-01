@@ -85,11 +85,11 @@ void __fastcall handleKeydownMessage(UINT charCode);
 void updateGameState();
 BOOL __fastcall createBitmapSheets(HDC param_1);
 void __fastcall drawWindow(HDC hdc, RECT *rect);
+void __fastcall drawActor(HDC hdc, Actor *actor);
 
 //
 // ASM Functions
 //
-extern void __fastcall drawActor(HDC hdc,Actor *actor);
 
 
 
@@ -337,7 +337,7 @@ Actor *__fastcall updateActorType2_dog(Actor *actor) {
             newY = actor->yPosMaybe + -2;
             /* dog wee */
             pAVar3 = addActorOfTypeWithSpriteIdx(0x11,0x52);
-            updateActorPositionMaybe(pAVar3,sVar1 - 4,newY,inAir);
+            updateActorPositionMaybe(pAVar3,(short)(sVar1 - 4),newY,inAir);
             ActorframeNo = 0x1b;
             playSound(&sound_8);
     }
@@ -787,14 +787,14 @@ void __fastcall handleCharMessage(UINT charCode) {
         case 'X':
             /* 'X' */
             if (playerActor) {
-                updateActorPositionMaybe(playerActor,playerActor->xPosMaybe - 2,playerActor->yPosMaybe,playerActor->isInAir);
+                updateActorPositionMaybe(playerActor,(short)(playerActor->xPosMaybe - 2),playerActor->yPosMaybe,playerActor->isInAir);
                 return;
             }
             break;
         case 'Y':
             /* 'Y' */
             if (playerActor) {
-                updateActorPositionMaybe(playerActor,playerActor->xPosMaybe,playerActor->yPosMaybe + -2,playerActor->isInAir);
+                updateActorPositionMaybe(playerActor,playerActor->xPosMaybe,(short)(playerActor->yPosMaybe + -2),playerActor->isInAir);
             }
             break;
         case 'f':
@@ -812,14 +812,14 @@ void __fastcall handleCharMessage(UINT charCode) {
         case 'x':
             /* 'x' */
             if (playerActor) {
-                updateActorPositionMaybe(playerActor,playerActor->xPosMaybe + 2,playerActor->yPosMaybe,playerActor->isInAir);
+                updateActorPositionMaybe(playerActor,(short)(playerActor->xPosMaybe + 2),playerActor->yPosMaybe,playerActor->isInAir);
                 return;
             }
             break;
         case 'y':
             /* 'y' */
             if (playerActor) {
-                updateActorPositionMaybe(playerActor,playerActor->xPosMaybe,playerActor->yPosMaybe + 2,playerActor->isInAir);
+                updateActorPositionMaybe(playerActor,playerActor->xPosMaybe,(short)(playerActor->yPosMaybe + 2),playerActor->isInAir);
                 return;
             }
     }
@@ -3780,4 +3780,163 @@ void __fastcall drawWindow(HDC hdc, RECT *windowRect) {
         }
     }
     removeFlag8ActorsFromList();
+}
+
+void __fastcall drawActor(HDC hdc,Actor *actor) {
+    Actor **ppAVar1;
+    short y;
+    RECT *rect;
+    USHORT uVar6;
+    Actor *pAVar7;
+    short sVar8;
+    short newWidth;
+    USHORT newHeight;
+    Actor *actor_00;
+    short sVar10;
+    Actor **ppAVar11;
+    DWORD rop;
+    Actor *local_24;
+    Actor *local_20;
+    int local_1c;
+    UINT local_14;
+    UINT actorRectLeft;
+    short sheetY;
+    int local_c;
+    UINT local_8;
+    Actor **local_4;
+    Sprite *sprite;
+    short spriteWidth;
+    short spriteHeight;
+
+    uVar6 = *(USHORT *)&(actor->rect).left;
+    actorRectLeft = (actor->rect).left;
+
+    y = *(short *)&(actor->rect).top;
+    newWidth = *(short *)&(actor->rect).right - uVar6;
+    newHeight = *(short *)&(actor->rect).bottom - y;
+
+    local_c = 0;
+    local_20 = actor;
+    ski_assert(actor, 1133);
+    ski_assert(hdc, 1134);
+    ski_assert((actor->flags & FLAG_10) != 0, 1135);
+
+    if (actor == (Actor *)0x0) {
+        return;
+    }
+    pAVar7 = actor;
+    while ((pAVar7->flags & FLAG_1) << 1 != (pAVar7->flags & FLAG_2)) {
+        pAVar7 = pAVar7->actorPtr;
+        if (pAVar7 == (Actor *)0x0) {
+            return;
+        }
+    }
+    local_1c = 0;
+    if (!changeScratchBitmapSize(newWidth,newHeight)) {
+        PatBlt(hdc,(int)(short)uVar6,(int)y,(int)newWidth,(int)(short)newHeight,0xff0062);
+        do {
+            if ((actor->flags & FLAG_1) == 0 && (actor->flags & FLAG_2) == 0) {
+                sprite = actor->spritePtr;
+                if ((actor->flags & FLAG_4) == 0) {
+                    rect = updateActorSpriteRect(actor);
+                }
+                else {
+                    rect = &actor->someRect;
+                }
+                BitBlt(hdc,rect->left,rect->top,(int)sprite->width,(int)sprite->height,sprite->sheetDC,0
+                        ,(int)sprite->sheetYOffset,0x8800c6);
+                actor->flags |= FLAG_1;
+            }
+            else {
+                actor->flags &= 0xfffffffe;
+            }
+            actor = actor->actorPtr;
+        } while( actor != NULL );
+        return;
+    }
+
+    do {
+        actor_00 = (Actor *)0x0;
+        local_24 = (Actor *)0x0;
+        pAVar7 = actor;
+        ppAVar11 = &local_20;
+        if (actor == (Actor *)0x0) break;
+        do {
+            ppAVar1 = &actor->actorPtr;
+            if ((actor->flags & FLAG_2) == 0) {
+                if ((actor->flags & FLAG_40) == 0) {
+                    sVar8 = 0;
+                }
+                else {
+                    sVar8 = actor->spritePtr->height;
+                }
+                uVar6 = actor->yPosMaybe - sVar8;
+                if ((actor_00 == (Actor *)0x0) || ((short)uVar6 < (short)local_8)) {
+                    actor_00 = actor;
+                    local_24 = actor;
+                    local_8 = uVar6; //actor->flags & 0xffff0000 | (UINT)uVar6;
+                    local_4 = ppAVar11;
+                }
+            }
+            else {
+                if ((actor->flags & FLAG_1) != 0) {
+                    local_c = 1;
+                    actor->flags &= 0xfffffffe;
+                }
+                *ppAVar11 = *ppAVar1;
+                pAVar7 = local_20;
+            }
+            actor = *ppAVar1;
+            ppAVar11 = ppAVar1;
+        } while (actor != (Actor *)0x0);
+        actor = pAVar7;
+        if (actor_00 != (Actor *)0x0) {
+            sprite = actor_00->spritePtr;
+            spriteWidth = sprite->width;
+            spriteHeight = sprite->height;
+            sheetY = sprite->sheetYOffset;
+            if ((actor_00->flags & FLAG_4) == 0) {
+                rect = updateActorSpriteRect(actor_00);
+            }
+            else {
+                rect = &actor_00->someRect;
+            }
+
+            local_14 = rect->left - actorRectLeft;
+            sVar10 = *(short *)&rect->top - y;
+            ski_assert(rect->right - rect->left == spriteWidth, 1203);
+            ski_assert(rect->bottom - rect->top == spriteHeight, 1204);
+            ski_assert(local_14 >= 0, 1205);
+            ski_assert(sVar10 >= 0, 1206);
+            ski_assert(newWidth >= spriteWidth, 1207);
+
+            if (newHeight < spriteHeight) {
+                assertFailed(sourceFilename,1208);
+            }
+            if (local_1c == 0) {
+                local_1c = 1;
+                if ((((0 < (short)local_14) || (0 < sVar10)) || (spriteWidth < newWidth)) || (spriteHeight < newHeight))  {
+                    PatBlt(bitmapSourceDC,0,0,(int)newWidth,(int)newHeight,0xff0062);
+                }
+                rop = 0xcc0020;
+            }
+            else {
+                BitBlt(bitmapSourceDC,(int)(short)local_14,(int)sVar10,spriteWidth,spriteHeight,sprite->sheetDC_1bpp,0,(int)sheetY ,
+                       0xee0086);
+                rop = 0x8800c6;
+            }
+            BitBlt(bitmapSourceDC,(int)(short)local_14,(int)sVar10,spriteWidth,spriteHeight,sprite->sheetDC,0,(int)sheetY,rop);
+            local_24->flags |= FLAG_1;
+            *local_4 = local_24->actorPtr;
+            actor = local_20;
+        }
+    } while (actor != (Actor *)0x0);
+    if (local_1c != 0) {
+        BitBlt(hdc,(int)(short)actorRectLeft,(int)y,(int)newWidth,(int)(short)newHeight,bitmapSourceDC,0
+                ,0,0xcc0020);
+        return;
+    }
+    if (local_c != 0) {
+        PatBlt(hdc,(int)(short)actorRectLeft,(int)y,(int)newWidth,(int)(short)newHeight,0xff0062);
+    }
 }

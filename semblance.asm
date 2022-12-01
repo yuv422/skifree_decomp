@@ -558,6 +558,7 @@ LAB_0040153f:
 @updateRectForSpriteAtLocation@20 endp
 ~
 
+COMMENT ~
 @drawActor@8 proc
           sub   esp, 000000040h
           push  ebx
@@ -927,6 +928,7 @@ LAB_00401962:
           db 090h
           db 090h
 @drawActor@8 endp
+~
 
 COMMENT ~
 @changeScratchBitmapSize@8 proc
