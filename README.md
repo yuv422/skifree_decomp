@@ -1,7 +1,8 @@
 Skifree Decompilation Project
 =============================
+By Eric Fry
 
-A decompilation of the 32bit version of Skifree (v1.04) back to C, compilable with Visual Studio 6.
+A source code reconstruction of the 32bit version of Skifree (v1.04) back to C, compilable with Visual Studio 6.
 
 ![Skifree](images/skifree.png)
 
@@ -29,5 +30,5 @@ Progress
 ----
 - [x] Convert functions to C
 - [ ] Convert data to C
-- [ ] Make sure all functions match with the original binary
-- [ ] Make sure data segments match original exactly
+- [ ] Make sure all functions exactly match with the original binary
+- [ ] Make sure data segments match the original exactly
