@@ -86,16 +86,8 @@ void updateGameState();
 BOOL __fastcall createBitmapSheets(HDC param_1);
 void __fastcall drawWindow(HDC hdc, RECT *rect);
 void __fastcall drawActor(HDC hdc, Actor *actor);
-
-//
-// ASM Functions
-//
-
-
-
-
-extern void __fastcall updateEntPackIniKeyValue(LPCSTR configKey, int value, int isTime);
-extern void __fastcall permObjectSetSpriteIdx(PermObject *permObject, USHORT spriteIdx);
+void __fastcall updateEntPackIniKeyValue(LPCSTR configKey, int value, int isTime);
+void __fastcall permObjectSetSpriteIdx(PermObject *permObject, USHORT spriteIdx);
 
 #include "data.h"
 

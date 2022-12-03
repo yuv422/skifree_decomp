@@ -91,55 +91,6 @@ LINK32=link.exe
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
-# Begin Group "asm"
-
-# PROP Default_Filter "asm"
-# Begin Source File
-
-SOURCE=.\data.asm
-
-!IF  "$(CFG)" == "skifree_decomp - Win32 Release"
-
-# PROP Exclude_From_Build 1
-
-!ELSEIF  "$(CFG)" == "skifree_decomp - Win32 Debug"
-
-# PROP Exclude_From_Build 1
-
-!ENDIF 
-
-# End Source File
-# Begin Source File
-
-SOURCE=.\rdata.asm
-
-!IF  "$(CFG)" == "skifree_decomp - Win32 Release"
-
-# PROP Exclude_From_Build 1
-
-!ELSEIF  "$(CFG)" == "skifree_decomp - Win32 Debug"
-
-# PROP Exclude_From_Build 1
-
-!ENDIF 
-
-# End Source File
-# Begin Source File
-
-SOURCE=.\semblance.asm
-
-!IF  "$(CFG)" == "skifree_decomp - Win32 Release"
-
-# PROP Exclude_From_Build 1
-
-!ELSEIF  "$(CFG)" == "skifree_decomp - Win32 Debug"
-
-# PROP Exclude_From_Build 1
-
-!ENDIF 
-
-# End Source File
-# End Group
 # Begin Source File
 
 SOURCE=.\skifree_decomp.c

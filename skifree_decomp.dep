@@ -1,22 +1,9 @@
 # Microsoft Developer Studio Generated Dependency File, included by skifree_decomp.mak
 
-!IF  "$(CFG)" == "skifree_decomp - Win32 Release"
-
-!ELSEIF  "$(CFG)" == "skifree_decomp - Win32 Debug"
-
-!ENDIF 
-
-!IF  "$(CFG)" == "skifree_decomp - Win32 Release"
-
-!ELSEIF  "$(CFG)" == "skifree_decomp - Win32 Debug"
-
-!ENDIF 
-
-!IF  "$(CFG)" == "skifree_decomp - Win32 Release"
-
-!ELSEIF  "$(CFG)" == "skifree_decomp - Win32 Debug"
-
-!ENDIF 
+.\skifree_decomp.c : \
+	".\data.h"\
+	".\types.h"\
+	
 
 .\skifree_decomp.rc : \
 	".\resources\iconski.ico"\
@@ -112,6 +99,7 @@
 	
 
 .\StdAfx.c : \
+	".\skifree_decomp.h"\
 	".\StdAfx.h"\
 	"c:\program files\microsoft visual studio\vc98\include\basetsd.h"\
 	

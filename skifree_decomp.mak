@@ -177,30 +177,6 @@ LINK32_OBJS= \
 
 
 !IF "$(CFG)" == "skifree_decomp - Win32 Release" || "$(CFG)" == "skifree_decomp - Win32 Debug"
-SOURCE=.\data.asm
-
-!IF  "$(CFG)" == "skifree_decomp - Win32 Release"
-
-!ELSEIF  "$(CFG)" == "skifree_decomp - Win32 Debug"
-
-!ENDIF 
-
-SOURCE=.\rdata.asm
-
-!IF  "$(CFG)" == "skifree_decomp - Win32 Release"
-
-!ELSEIF  "$(CFG)" == "skifree_decomp - Win32 Debug"
-
-!ENDIF 
-
-SOURCE=.\semblance.asm
-
-!IF  "$(CFG)" == "skifree_decomp - Win32 Release"
-
-!ELSEIF  "$(CFG)" == "skifree_decomp - Win32 Debug"
-
-!ENDIF 
-
 SOURCE=.\skifree_decomp.c
 
 "$(INTDIR)\skifree_decomp.obj"	"$(INTDIR)\skifree_decomp.sbr" : $(SOURCE) "$(INTDIR)" "$(INTDIR)\skifree_decomp.pch"
