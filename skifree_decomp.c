@@ -8,7 +8,7 @@
 
 
 int __fastcall initWindows(HINSTANCE param_1, HINSTANCE param_2, int param_3);
-void __fastcall assertFailed(char *srcFilename, int lineNumber);
+void __fastcall assertFailed(const char *srcFilename, int lineNumber);
 int __fastcall showErrorMessage(LPCSTR text);
 int allocateMemory();
 BOOL loadSoundFunc();
@@ -78,7 +78,7 @@ int resetGame();
 void __fastcall updatePermObject(PermObject *permObject);
 Actor * __fastcall updateActorPositionMaybe(Actor *actor, short newX, short newY, short inAir);
 void __fastcall updateWindowSize(HWND hWnd);
-Actor * __fastcall updateActorVelMaybe(Actor *actor, ActorVelStruct *param_2);
+Actor * __fastcall updateActorVelMaybe(Actor *actor, const ActorVelStruct *param_2);
 PermObject * __fastcall addPermObject(PermObjectList *objList, PermObject *permObject);
 void setupPermObjects();
 void __fastcall handleKeydownMessage(UINT charCode);
@@ -126,7 +126,7 @@ void __fastcall assertFailedDialog(LPCSTR lpCaption, LPCSTR lpText) {
     }
 }
 
-void __fastcall assertFailed(char *srcFilename, int lineNumber) {
+void __fastcall assertFailed(const char *srcFilename, int lineNumber) {
     CHAR local_20 [32];
 
     wsprintfA(local_20, s_assertErrorFormat, srcFilename, lineNumber);
@@ -281,7 +281,7 @@ Actor * __fastcall updateActorType1_Beginner(Actor *actor) {
         if (ActorframeNo - 22 >= 5) {
             assertFailed(sourceFilename, 2135);
         }
-        pAVar2 = updateActorVelMaybe(pAVar2, &beginnerActorMovementTbl + (ActorframeNo - 22));
+        pAVar2 = updateActorVelMaybe(pAVar2, &beginnerActorMovementTbl[ActorframeNo - 22]);
         if (random(0xc) == 0) {
             uVar1 = random(3);
             if (uVar1 == 0) {
@@ -1669,7 +1669,7 @@ Actor * __fastcall updatePlayerActor(Actor *actor) {
         pAVar2 = updateActorPositionWithVelocityMaybe(actor);
         ski_assert(ActorframeNo < 22, 2040);
 
-        actor = updateActorVelMaybe(pAVar2,ActorVelStruct_ARRAY_0040a308 + ActorframeNo);
+        actor = updateActorVelMaybe(pAVar2,&ActorVelStruct_ARRAY_0040a308[ActorframeNo]);
         switch(ActorframeNo) {
             case 8:
             case 10:
@@ -2059,7 +2059,7 @@ void __fastcall updateGsGameMode(Actor *actor, short xPos, short yPos) {
 }
 
 //TODO not byte accurate.
-Actor * __fastcall updateActorVelMaybe(Actor *actor,ActorVelStruct *param_2) {
+Actor * __fastcall updateActorVelMaybe(Actor *actor, const ActorVelStruct *param_2) {
     short xRelated;
     short sVar1;
     int iVar2;
