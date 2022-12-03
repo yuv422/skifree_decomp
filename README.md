@@ -6,7 +6,7 @@ A source code reconstruction of the 32bit version of Skifree (v1.04) back to C, 
 
 ![Skifree](images/skifree.png)
 
-The project aims to be byte compatible with the original version. Currently, all code has been converted
+The project aims to be byte compatible with the original version. Currently, all code and data has been converted
 back to C and labeled.
 
 You will need the original EXE for the gfx and icon resource. You can download the original version
@@ -29,6 +29,6 @@ with `n` being 1 to 89. The icon should be named `iconski.ico`
 Progress
 ----
 - [x] Convert functions to C
-- [ ] Convert data to C
+- [x] Convert data to C
 - [ ] Make sure all functions exactly match with the original binary
 - [ ] Make sure data segments match the original exactly
