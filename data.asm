@@ -352,8 +352,8 @@ PUBLIC C SCREEN_HEIGHT
 SCREEN_HEIGHT byte 4 DUP (00h)
 PUBLIC C sound_5
 sound_5 byte 8 DUP (00h)
-PUBLIC C PTR_0040c758
-PTR_0040c758 byte 4 DUP (00h)
+PUBLIC C permObjects
+permObjects byte 4 DUP (00h)
 PUBLIC C largeBitmapSheet_1bpp
 largeBitmapSheet_1bpp byte 4 DUP (00h)
 PUBLIC C DAT_0040c760

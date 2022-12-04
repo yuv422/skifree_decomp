@@ -5533,7 +5533,7 @@ _allocateMemory proc
           push  000000000h
           call  esi
           mov   ecx, dword ptr [stringCache]    ; <c674>
-          mov   dword ptr [PTR_0040c758], eax   ; <c758>
+          mov   dword ptr [permObjects], eax   ; <c758>
           test  ecx, ecx
           pop   esi
           jz    LAB_0040493d
@@ -6104,7 +6104,7 @@ COMMENT ~
           xor   eax, eax
           mov   ax, cx
           mov   esi, edx
-          mov   edx, dword ptr [PTR_0040c758]   ; <c758>
+          mov   edx, dword ptr [permObjects]   ; <c758>
           inc   cx
           lea   eax, dword ptr [eax+eax*8]
           mov   word ptr [permObjectCount], cx  ; <c702>

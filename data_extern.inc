@@ -249,7 +249,7 @@ EXTERN C currentFreeActor: far
 EXTERN C windowWithMarginTotalArea: far
 EXTERN C SCREEN_HEIGHT: far
 EXTERN C sound_5:Sound
-EXTERN C PTR_0040c758: far
+EXTERN C permObjects: far
 EXTERN C largeBitmapSheet_1bpp: far
 EXTERN C DAT_0040c760: far
 EXTERN C sound_2:Sound

@@ -464,7 +464,7 @@
 0040c74c:SCREEN_HEIGHT
 0040c750:sound_5.soundResource
 0040c754:sound_5.soundData
-0040c758:PTR_0040c758
+0040c758:permObjects
 0040c75c:largeBitmapSheet_1bpp
 0040c760:DAT_0040c760
 0040c768:sound_2.soundResource

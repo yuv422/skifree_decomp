@@ -10,7 +10,7 @@
 int __fastcall initWindows(HINSTANCE param_1, HINSTANCE param_2, int param_3);
 void __fastcall assertFailed(const char *srcFilename, int lineNumber);
 int __fastcall showErrorMessage(LPCSTR text);
-int allocateMemory();
+BOOL allocateMemory();
 BOOL loadSoundFunc();
 BOOL __fastcall loadSound(UINT resourceId, Sound *sound);
 void __fastcall statusWindowFindLongestTextString(HDC hdc, short *maxLength, LPCSTR textStr, int textLength);
@@ -234,25 +234,23 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 }
 
 // TODO not byte accurate.
-int allocateMemory() {
-    int iVar1;
+BOOL allocateMemory() {
+    int i;
 
-    stringCache = (char **)LocalAlloc(0,NUM_STRINGS * sizeof(char **));
-    sprites = (Sprite *)LocalAlloc(0,NUM_SPRITES * sizeof(Sprite));
-    actors = (Actor *)LocalAlloc(0,NUM_ACTORS * sizeof(Actor));
-    PTR_0040c758 = LocalAlloc(0,9216);
+    stringCache = LocalAlloc(LMEM_FIXED,NUM_STRINGS * sizeof(char **));
+    sprites = LocalAlloc(LMEM_FIXED,NUM_SPRITES * sizeof(Sprite));
+    actors = LocalAlloc(LMEM_FIXED,NUM_ACTORS * sizeof(Actor));
+    permObjects = LocalAlloc(LMEM_FIXED,   NUM_PERM_OBJECTS * sizeof(PermObject));
 
-    if ((((stringCache != NULL) && (actors != NULL)) && (sprites != NULL) ) &&
-        (PTR_0040c758 != NULL)) {
-
-        for (iVar1 = 0; iVar1 < NUM_STRINGS; iVar1++) {
-            stringCache[iVar1] = NULL;
+    if (stringCache && actors && sprites && permObjects) {
+        for (i = 0; i < NUM_STRINGS; i++) {
+            stringCache[i] = NULL;
         }
-        return 1;
+        return TRUE;
     }
 
     showErrorMessage(s_insufficient_local_memory);
-    return 0;
+    return FALSE;
 }
 
 // TODO not byte perfect
@@ -3035,7 +3033,7 @@ void __fastcall formatAndPrintStatusStrings(HDC windowDC) {
 PermObject * __fastcall addPermObject(PermObjectList *objList, PermObject *permObject) {
     PermObject *pPVar1;
 
-    pPVar1 = &PTR_0040c758[permObjectCount++]; // + uVar2;
+    pPVar1 = &permObjects[permObjectCount++]; // + uVar2;
     ski_assert(objList, 2587);
     ski_assert(permObject, 2588);
     ski_assert(permObjectCount <= 0x100, 2589);
