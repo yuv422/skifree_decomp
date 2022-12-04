@@ -583,8 +583,6 @@ void __fastcall playSound(Sound *sound) {
             sound->soundData = LockResource(sound->soundResource);
         }
         if ((sound->soundData != NULL) && (sndPlaySoundAFuncPtr != NULL)) {
-            /* 5 == SND_ASYNC | SND_MEMORY
-                */
             (*sndPlaySoundAFuncPtr)(sound->soundData, SND_ASYNC | SND_MEMORY);
         }
     }
@@ -1028,7 +1026,7 @@ BOOL setupGame() {
 
     inAir = 0;
     newY = 0;
-    actor = addActorOfType(0,3);
+    actor = addActorOfType(ACTOR_TYPE_0_PLAYER,3);
     playerActorPtrMaybe_1 = updateActorPositionMaybe(actor,0,newY,inAir);
     playerActor = playerActorPtrMaybe_1;
     if (!playerActorPtrMaybe_1) {
@@ -2246,13 +2244,13 @@ Actor * __fastcall handleActorCollision(Actor *actor1,Actor *actor2) {
     sVar1 = actor1->isInAir;
     sVar9 = actor2->spritePtr->height + actor2->isInAir;
     switch(actor1->typeMaybe) {
-        case 10:
+        case ACTOR_TYPE_10_WALKING_TREE:
             actor1->HorizontalVelMaybe = 0;
             return setActorFrameNo(actor1,0x3c);
-        case 5:
-        case 6:
-        case 7:
-        case 8:
+        case ACTOR_TYPE_5_YETI_TOP:
+        case ACTOR_TYPE_6_YETI_BOTTOM:
+        case ACTOR_TYPE_7_YETI_LEFT:
+        case ACTOR_TYPE_8_YETI_RIGHT:
             if (actor2 == playerActor) {
                 ski_assert(iVar4 == 0, 2393);
                 playSound(&sound_7);
@@ -2438,8 +2436,8 @@ Actor * __fastcall handleActorCollision(Actor *actor1,Actor *actor2) {
                     }
             }
             break;
-        case 4:
-        case 9:
+        case ACTOR_TYPE_4_CHAIRLIFT:
+        case ACTOR_TYPE_9_TREE_ON_FIRE:
             break;
         default:
             assertFailed(sourceFilename,2376);
@@ -2512,7 +2510,7 @@ void __fastcall updatePermObject(PermObject *permObject) {
     actorType = permObject->actorTypeMaybe;
     permObject->maybeY = permObject->maybeY + permObject->yVelocity;
     permObject->unk_0x18 = permObject->unk_0x18 + permObject->unk_0x1e;
-    if (actorType != 4) {
+    if (actorType != ACTOR_TYPE_4_CHAIRLIFT) {
         // TODO this is byte accurate but probably not how it was originally written in C
         if ((actorType <= 4) || (8 < actorType)) {
             assertFailed(sourceFilename,2809);
