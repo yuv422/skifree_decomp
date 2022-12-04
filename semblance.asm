@@ -4864,7 +4864,7 @@ LAB_004041d7:     mov   ax, word ptr [esi+01Ah]
           cmp   eax, 000000008h
           jg    LAB_00404207
           mov   ecx, esi
-          call  @FUN_00404350@4
+          call  @updateYeti@4
           jmp   LAB_0040421f
 LAB_00404207:     mov   edx, 000000AF9h
           mov   ecx, offset sourceFilename      ; <c090>
@@ -4994,7 +4994,7 @@ LAB_00404341:
 ~
 
 COMMENT ~
-@FUN_00404350@4 proc
+@updateYeti@4 proc
           sub   esp, 00000000Ch
           push  ebx
           push  ebp
@@ -5315,7 +5315,7 @@ DAT_004046d8  dword offset LAB_00404439
           db 090h
           db 090h
           db 090h
-@FUN_00404350@4 endp
+@updateYeti@4 endp
 ~
 
 COMMENT ~

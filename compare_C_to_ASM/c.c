@@ -54,7 +54,7 @@ extern Actor * __fastcall addActorForPermObject(PermObject *permObject);
 extern BOOL __fastcall doRectsOverlap(RECT *rect1, RECT *rect2);
 //extern void __fastcall updateRectForSpriteAtLocation(RECT *rect, Sprite *sprite, short newX, short newY, short param_5);
 extern void __fastcall updatePermObjectActorType4(PermObject *permObject);
-extern void __fastcall FUN_00404350(PermObject *permObject);
+extern void __fastcall updateYeti(PermObject *permObject);
 extern int allocateMemory();
 extern int resetGame();
 extern BOOL __fastcall initWindows(HINSTANCE hInstance,HINSTANCE hPrevInstance,int nCmdShow);

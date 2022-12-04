@@ -87,7 +87,7 @@ _resetPlayerFrameNo
 @addActorForPermObject@4
 @updatePermObject@4
 @updatePermObjectActorType4@4
-@FUN_00404350@4
+@updateYeti@4
 @FUN_004046e0@4
 _resetGame
 _deleteWindowObjects

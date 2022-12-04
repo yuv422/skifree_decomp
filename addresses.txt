@@ -60,7 +60,7 @@
 00404130:@addActorForPermObject@4
 004041c0:@updatePermObject@4
 00404290:@updatePermObjectActorType4@4
-00404350:@FUN_00404350@4
+00404350:@updateYeti@4
 004046e0:@FUN_004046e0@4
 004047c0:_timerCallbackFunc
 004047e0:_WinMain@16

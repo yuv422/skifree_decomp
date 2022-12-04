@@ -64,7 +64,7 @@ Actor * __fastcall updateActorType3_snowboarder(Actor *actor);
 Actor * __fastcall handleActorCollision(Actor *actor1,Actor *actor2);
 Actor * __fastcall addActorForPermObject(PermObject *permObject);
 void __fastcall updatePermObjectActorType4(PermObject *permObject);
-void __fastcall FUN_00404350(PermObject *permObject);
+void __fastcall updateYeti(PermObject *permObject);
 void __fastcall FUN_004046e0(PermObjectList *permObjList);
 void deleteWindowObjects();
 void handleMouseClick();
@@ -1013,7 +1013,7 @@ void setupActorList() {
         actors[uVar1].next = actors + uVar2;
         uVar1 = uVar3 & 0xffff;
         uVar2 = uVar1 + 1;
-    } while (uVar2 < 100);
+    } while (uVar2 < NUM_ACTORS);
     actors[uVar3].next = (Actor *)0x0;
 }
 
@@ -1596,20 +1596,20 @@ Actor * __fastcall updateActor(Actor *actor) {
     ski_assert(actor->typeMaybe < 11 && !actor->permObject, 2312);
 
     switch(actor->typeMaybe) {
-        case 0:
+        case ACTOR_TYPE_0_PLAYER:
             return updatePlayerActor(actor);
-        case 3:
+        case ACTOR_TYPE_3_SNOWBOARDER:
             return updateActorType3_snowboarder(actor);
-        case 2:
+        case ACTOR_TYPE_2_DOG:
             return updateActorType2_dog(actor);
-        case 1:
+        case ACTOR_TYPE_1_BEGINNER:
             return updateActorType1_Beginner(actor);
         default:
             assertFailed(sourceFilename,2335);
             return actor;
-        case 9:
+        case ACTOR_TYPE_9_TREE_ON_FIRE:
             return updateActorType9_treeOnFire(actor);
-        case 10:
+        case ACTOR_TYPE_10_WALKING_TREE:
             return updateActorTypeA_walkingTree(actor);
     }
 }
@@ -2517,7 +2517,7 @@ void __fastcall updatePermObject(PermObject *permObject) {
         if ((actorType <= 4) || (8 < actorType)) {
             assertFailed(sourceFilename,2809);
         } else {
-            FUN_00404350(permObject);
+            updateYeti(permObject);
         }
     }
     else {
@@ -2562,8 +2562,7 @@ void __fastcall updatePermObjectActorType4(PermObject *permObject) {
 }
 
 // TODO not byte accurate
-// Yeti logic??
-void __fastcall FUN_00404350(PermObject *permObject) {
+void __fastcall updateYeti(PermObject *permObject) {
     short permObjX;
     short permObjY;
     int iVar6;
@@ -2614,7 +2613,7 @@ void __fastcall FUN_00404350(PermObject *permObject) {
                     permObject->actorFrameNo = 0x37;
                     return;
                 case 0x37:
-                    permObject->actorFrameNo = iVar6 < 3000 ? 0x36 : 0x2a; // ((2999 < iVar6) - 1 & 0xc) + 0x2a;
+                    permObject->actorFrameNo = tickRelated < 3000 ? 0x36 : 0x2a; // ((2999 < iVar6) - 1 & 0xc) + 0x2a;
                     return;
                 default:
                     assertFailed(sourceFilename, 2678);
@@ -2628,13 +2627,13 @@ void __fastcall FUN_00404350(PermObject *permObject) {
         permObjX = permObject->maybeX;
         permObjY = permObject->maybeY;
         local_c = 0;
-        if (iVar6 == 5 && permObjY > -2000) {
+        if (iVar6 == ACTOR_TYPE_5_YETI_TOP && permObjY > -2000) {
             sVar9 = -10;
-        } else if (iVar6 == 6 && permObjY < 32000) {
+        } else if (iVar6 == ACTOR_TYPE_6_YETI_BOTTOM && permObjY < 32000) {
             sVar9 = 0x1a;
-        } else if (iVar6 == 7 && permObjX > -16000) {
+        } else if (iVar6 == ACTOR_TYPE_7_YETI_LEFT && permObjX > -16000) {
             local_c = -0x10;
-        } else if (iVar6 == 8 && permObjX < 16000) {
+        } else if (iVar6 == ACTOR_TYPE_8_YETI_RIGHT && permObjX < 16000) {
             local_c = 0x10;
         } else {
 //            LAB_004044dd:
@@ -2651,10 +2650,10 @@ void __fastcall FUN_00404350(PermObject *permObject) {
 //                }
 //                else if (iVar6 == 7 && sVar3 < -16000)
 
-                if ((iVar6 == 5 && pY < -2000) ||
-                    (iVar6 == 6 && pY > 32000) ||
-                    (iVar6 == 7 && pX < -16000) ||
-                    (iVar6 == 8 && pX > 16000)
+                if ((iVar6 == ACTOR_TYPE_5_YETI_TOP && pY < -2000) ||
+                    (iVar6 == ACTOR_TYPE_6_YETI_BOTTOM && pY > 32000) ||
+                    (iVar6 == ACTOR_TYPE_7_YETI_LEFT && pX < -16000) ||
+                    (iVar6 == ACTOR_TYPE_8_YETI_RIGHT && pX > 16000)
                         ) {
                     dX = (int) pX - (int) permObjX;
                     dY = (int) pY - (int) permObjY;
@@ -3225,7 +3224,7 @@ void setupPermObjects() {
         }
         sVar4 = sVar4 + 2048;
     } while (sVar4 <= 23552);
-    permObject.actorTypeMaybe = 7;
+    permObject.actorTypeMaybe = ACTOR_TYPE_7_YETI_LEFT;
     permObject.actorFrameNo = 0x2a;
     permObject.spriteIdx = 0;
     permObject.maybeX = -16060;
@@ -3235,14 +3234,14 @@ void setupPermObjects() {
     permObject.yVelocity = 0;
     permObject.xVelocity = 0;
     addPermObject(&PermObjectList_0040c720,&permObject);
-    permObject.actorTypeMaybe = 8;
+    permObject.actorTypeMaybe = ACTOR_TYPE_8_YETI_RIGHT;
     permObject.maybeX = 16060;
     addPermObject(&PermObjectList_0040c720,&permObject);
-    permObject.actorTypeMaybe = 5;
+    permObject.actorTypeMaybe = ACTOR_TYPE_5_YETI_TOP;
     permObject.maybeX = 0;
     permObject.maybeY = -2060;
     addPermObject(&PermObjectList_0040c720,&permObject);
-    permObject.actorTypeMaybe = 6;
+    permObject.actorTypeMaybe = ACTOR_TYPE_6_YETI_BOTTOM;
     permObject.maybeY = 32060;
     addPermObject(&PermObjectList_0040c720,&permObject);
 }
@@ -3521,7 +3520,7 @@ void updateGameState() {
     if (random(0x29a) != 0) {
         return;
     }
-    pAVar7 = addActorOfType(3,0x1f);
+    pAVar7 = addActorOfType(ACTOR_TYPE_3_SNOWBOARDER,0x1f);
 
     /* top of screen */
     updateActorWithOffscreenStartingPosition(pAVar7,2);
