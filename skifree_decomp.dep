@@ -2,7 +2,9 @@
 
 .\skifree_decomp.c : \
 	".\data.h"\
+	".\skifree_decomp.h"\
 	".\types.h"\
+	"c:\program files\microsoft visual studio\vc98\include\basetsd.h"\
 	
 
 .\skifree_decomp.rc : \
@@ -96,10 +98,4 @@
 	".\resources\ski32_88.bmp"\
 	".\resources\ski32_89.bmp"\
 	".\resources\ski32_9.bmp"\
-	
-
-.\StdAfx.c : \
-	".\skifree_decomp.h"\
-	".\StdAfx.h"\
-	"c:\program files\microsoft visual studio\vc98\include\basetsd.h"\
 	

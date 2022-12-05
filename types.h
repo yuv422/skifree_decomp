@@ -6,6 +6,7 @@
 #define SKIFREE_DECOMP_TYPES_H
 
 #include <windows.h>
+#include "resource.h"
 
 typedef struct {
     HDC sheetDC;

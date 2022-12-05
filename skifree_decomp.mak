@@ -42,11 +42,8 @@ ALL : "$(OUTDIR)\skifree_decomp.exe" "$(OUTDIR)\skifree_decomp.bsc"
 
 CLEAN :
 	-@erase "$(INTDIR)\skifree_decomp.obj"
-	-@erase "$(INTDIR)\skifree_decomp.pch"
 	-@erase "$(INTDIR)\skifree_decomp.res"
 	-@erase "$(INTDIR)\skifree_decomp.sbr"
-	-@erase "$(INTDIR)\StdAfx.obj"
-	-@erase "$(INTDIR)\StdAfx.sbr"
 	-@erase "$(INTDIR)\vc60.idb"
 	-@erase "$(OUTDIR)\skifree_decomp.bsc"
 	-@erase "$(OUTDIR)\skifree_decomp.exe"
@@ -54,14 +51,13 @@ CLEAN :
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
 
-CPP_PROJ=/nologo /ML /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /FR"$(INTDIR)\\" /Fp"$(INTDIR)\skifree_decomp.pch" /Yu"stdafx.h" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
+CPP_PROJ=/nologo /ML /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /FR"$(INTDIR)\\" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
 MTL_PROJ=/nologo /D "NDEBUG" /mktyplib203 /win32 
 RSC_PROJ=/l 0x409 /fo"$(INTDIR)\skifree_decomp.res" /d "NDEBUG" 
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\skifree_decomp.bsc" 
 BSC32_SBRS= \
-	"$(INTDIR)\skifree_decomp.sbr" \
-	"$(INTDIR)\StdAfx.sbr"
+	"$(INTDIR)\skifree_decomp.sbr"
 
 "$(OUTDIR)\skifree_decomp.bsc" : "$(OUTDIR)" $(BSC32_SBRS)
     $(BSC32) @<<
@@ -72,7 +68,6 @@ LINK32=link.exe
 LINK32_FLAGS=kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib winmm.lib /nologo /subsystem:windows /incremental:no /pdb:"$(OUTDIR)\skifree_decomp.pdb" /machine:I386 /out:"$(OUTDIR)\skifree_decomp.exe" 
 LINK32_OBJS= \
 	"$(INTDIR)\skifree_decomp.obj" \
-	"$(INTDIR)\StdAfx.obj" \
 	"$(INTDIR)\skifree_decomp.res"
 
 "$(OUTDIR)\skifree_decomp.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
@@ -93,11 +88,8 @@ ALL : "$(OUTDIR)\skifree_decomp.exe" "$(OUTDIR)\skifree_decomp.bsc"
 
 CLEAN :
 	-@erase "$(INTDIR)\skifree_decomp.obj"
-	-@erase "$(INTDIR)\skifree_decomp.pch"
 	-@erase "$(INTDIR)\skifree_decomp.res"
 	-@erase "$(INTDIR)\skifree_decomp.sbr"
-	-@erase "$(INTDIR)\StdAfx.obj"
-	-@erase "$(INTDIR)\StdAfx.sbr"
 	-@erase "$(INTDIR)\vc60.idb"
 	-@erase "$(INTDIR)\vc60.pdb"
 	-@erase "$(OUTDIR)\skifree_decomp.bsc"
@@ -108,14 +100,13 @@ CLEAN :
 "$(OUTDIR)" :
     if not exist "$(OUTDIR)/$(NULL)" mkdir "$(OUTDIR)"
 
-CPP_PROJ=/nologo /MLd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /FR"$(INTDIR)\\" /Fp"$(INTDIR)\skifree_decomp.pch" /Yu"stdafx.h" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /GZ /c 
+CPP_PROJ=/nologo /MLd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /FR"$(INTDIR)\\" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /GZ /c 
 MTL_PROJ=/nologo /D "_DEBUG" /mktyplib203 /win32 
 RSC_PROJ=/l 0x409 /fo"$(INTDIR)\skifree_decomp.res" /d "_DEBUG" 
 BSC32=bscmake.exe
 BSC32_FLAGS=/nologo /o"$(OUTDIR)\skifree_decomp.bsc" 
 BSC32_SBRS= \
-	"$(INTDIR)\skifree_decomp.sbr" \
-	"$(INTDIR)\StdAfx.sbr"
+	"$(INTDIR)\skifree_decomp.sbr"
 
 "$(OUTDIR)\skifree_decomp.bsc" : "$(OUTDIR)" $(BSC32_SBRS)
     $(BSC32) @<<
@@ -126,7 +117,6 @@ LINK32=link.exe
 LINK32_FLAGS=kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib winmm.lib /nologo /subsystem:windows /incremental:yes /pdb:"$(OUTDIR)\skifree_decomp.pdb" /debug /machine:I386 /out:"$(OUTDIR)\skifree_decomp.exe" /pdbtype:sept 
 LINK32_OBJS= \
 	"$(INTDIR)\skifree_decomp.obj" \
-	"$(INTDIR)\StdAfx.obj" \
 	"$(INTDIR)\skifree_decomp.res"
 
 "$(OUTDIR)\skifree_decomp.exe" : "$(OUTDIR)" $(DEF_FILE) $(LINK32_OBJS)
@@ -179,7 +169,7 @@ LINK32_OBJS= \
 !IF "$(CFG)" == "skifree_decomp - Win32 Release" || "$(CFG)" == "skifree_decomp - Win32 Debug"
 SOURCE=.\skifree_decomp.c
 
-"$(INTDIR)\skifree_decomp.obj"	"$(INTDIR)\skifree_decomp.sbr" : $(SOURCE) "$(INTDIR)" "$(INTDIR)\skifree_decomp.pch"
+"$(INTDIR)\skifree_decomp.obj"	"$(INTDIR)\skifree_decomp.sbr" : $(SOURCE) "$(INTDIR)"
 
 
 SOURCE=.\skifree_decomp.rc
@@ -187,30 +177,6 @@ SOURCE=.\skifree_decomp.rc
 "$(INTDIR)\skifree_decomp.res" : $(SOURCE) "$(INTDIR)"
 	$(RSC) $(RSC_PROJ) $(SOURCE)
 
-
-SOURCE=.\StdAfx.c
-
-!IF  "$(CFG)" == "skifree_decomp - Win32 Release"
-
-CPP_SWITCHES=/nologo /ML /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /FR"$(INTDIR)\\" /Fp"$(INTDIR)\skifree_decomp.pch" /Yc"stdafx.h" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /c 
-
-"$(INTDIR)\StdAfx.obj"	"$(INTDIR)\StdAfx.sbr"	"$(INTDIR)\skifree_decomp.pch" : $(SOURCE) "$(INTDIR)"
-	$(CPP) @<<
-  $(CPP_SWITCHES) $(SOURCE)
-<<
-
-
-!ELSEIF  "$(CFG)" == "skifree_decomp - Win32 Debug"
-
-CPP_SWITCHES=/nologo /MLd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /FR"$(INTDIR)\\" /Fp"$(INTDIR)\skifree_decomp.pch" /Yc"stdafx.h" /Fo"$(INTDIR)\\" /Fd"$(INTDIR)\\" /FD /GZ /c 
-
-"$(INTDIR)\StdAfx.obj"	"$(INTDIR)\StdAfx.sbr"	"$(INTDIR)\skifree_decomp.pch" : $(SOURCE) "$(INTDIR)"
-	$(CPP) @<<
-  $(CPP_SWITCHES) $(SOURCE)
-<<
-
-
-!ENDIF 
 
 
 !ENDIF 
