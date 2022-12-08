@@ -326,7 +326,7 @@ Actor *__fastcall updateActorType2_dog(Actor *actor) {
             sVar1 = actor->xPosMaybe;
             newY = actor->yPosMaybe + -2;
             /* dog wee */
-            pAVar3 = addActorOfTypeWithSpriteIdx(0x11,0x52);
+            pAVar3 = addActorOfTypeWithSpriteIdx(ACTOR_TYPE_17_SIGN,0x52);
             updateActorPositionMaybe(pAVar3,(short)(sVar1 - 4),newY,inAir);
             ActorframeNo = 0x1b;
             playSound(&sound_8);
@@ -386,22 +386,22 @@ void setupGameTitleActors() {
     y = playerY;
     x = -(sprites[0x35].width / 2) - 40;
 
-    actor = addActorOfTypeWithSpriteIdx(0x11, 0x35);
+    actor = addActorOfTypeWithSpriteIdx(ACTOR_TYPE_17_SIGN, 0x35);
     updateActorPositionMaybe(actor, x, y, 0);
 
     y = y + sprites[0x36].height + 4;
-    actor = addActorOfTypeWithSpriteIdx(0x11, 0x36);
+    actor = addActorOfTypeWithSpriteIdx(ACTOR_TYPE_17_SIGN, 0x36);
     updateActorPositionMaybe(actor, x, y, 0);
     x = sprites[0x37].width;
     if (sprites[0x37].width <= sprites[0x38].width) {
         x = sprites[0x38].width;
     }
     y = sprites[0x37].height;
-    actor = addActorOfTypeWithSpriteIdx(0x11, 0x37);
+    actor = addActorOfTypeWithSpriteIdx(ACTOR_TYPE_17_SIGN, 0x37);
     updateActorPositionMaybe(actor, x, y, 0);
 
     y = y + sprites[0x38].height + 4;
-    actor = addActorOfTypeWithSpriteIdx(0x11, 0x38);
+    actor = addActorOfTypeWithSpriteIdx(ACTOR_TYPE_17_SIGN, 0x38);
     updateActorPositionMaybe(actor, x, y, 0);
 }
 
@@ -553,12 +553,12 @@ USHORT __fastcall getSpriteIdxForActorType(int actorType) {
     int uVar1;
 
     switch(actorType) {
-        case 0xb:
+        case ACTOR_TYPE_11_MOGULS:
             return 0x1b;
         default:
             assertFailed(sourceFilename,1571);
             return 0;
-        case 0xd:
+        case ACTOR_TYPE_13_TREE:
             uVar1 = random(8);
             // TODO bytes here don't match exactly
             if (uVar1) {
@@ -568,11 +568,11 @@ USHORT __fastcall getSpriteIdxForActorType(int actorType) {
                 return 0x33;
             }
             return 0x32;
-        case 0xe:
+        case ACTOR_TYPE_14_ROCK_STUMP:
             return random(4) != 0 ? 0x2d : 0x2e;
-        case 0xf:
+        case ACTOR_TYPE_15_BUMP:
             return random(3) != 0 ? 0x2f : 0x30;
-        case 0x10:
+        case ACTOR_TYPE_16_JUMP:
             return 0x34;
     }
 }
@@ -1537,33 +1537,33 @@ int randomActorType1(void) {
         return 10;
     }
     if (uVar1 < 500) {
-        return 0xd;
+        return ACTOR_TYPE_13_TREE;
     }
     if (uVar1 < 700) {
-        return 0xf;
+        return ACTOR_TYPE_15_BUMP;
     }
     if (uVar1 < 0x2ee) {
-        return 0xb;
+        return ACTOR_TYPE_11_MOGULS;
     }
     if (uVar1 < 0x3b6) {
-        return 0xe;
+        return ACTOR_TYPE_14_ROCK_STUMP;
     }
     if (uVar1 < 0x3ca) {
-        return 0x10;
+        return ACTOR_TYPE_16_JUMP;
     }
     return (uVar1 < 0x3de) ? 1 : 2;
 }
 
 int areaBasedActorType() {
-    return ((totalAreaOfActorSprites <= windowWithMarginTotalArea / 64) -  1 & 7) + 0xb;
+    return (totalAreaOfActorSprites > windowWithMarginTotalArea / 64) ? ACTOR_TYPE_18_NOTHING : ACTOR_TYPE_11_MOGULS;
 }
 
 int randomActorType3() {
     if (totalAreaOfActorSprites > windowWithMarginTotalArea / 16) {
-        return 0x12;
+        return ACTOR_TYPE_18_NOTHING;
     }
 
-    return random(0x40) != 0 ? 0xb + 2 : 2;
+    return random(0x40) != 0 ? ACTOR_TYPE_13_TREE : ACTOR_TYPE_2_DOG;
 }
 
 int randomActorType2() {
@@ -1578,15 +1578,15 @@ int randomActorType2() {
         return 0xa;
     }
     if (uVar1 < 0x14) {
-        return 0xd;
+        return ACTOR_TYPE_13_TREE;
     }
     if (uVar1 < 0x32) {
-        return 0xf;
+        return ACTOR_TYPE_15_BUMP;
     }
     if (uVar1 < 0x3c) {
-        return 0xb;
+        return ACTOR_TYPE_11_MOGULS;
     }
-    return uVar1 < 0x50 ? 0xe : 0x10;
+    return uVar1 < 0x50 ? ACTOR_TYPE_14_ROCK_STUMP : ACTOR_TYPE_16_JUMP;
 }
 
 Actor * __fastcall updateActor(Actor *actor) {
@@ -2272,7 +2272,7 @@ Actor * __fastcall handleActorCollision(Actor *actor1,Actor *actor2) {
         case ACTOR_TYPE_0_PLAYER:
             if (local_c == 0x11) break;
             switch(iVar4) {
-                case 0xf:
+                case ACTOR_TYPE_15_BUMP:
                     if (sVar1 < 1) {
                         actor1->inAirCounter = 4;
 //                        LAB_00403cb4:
@@ -2289,8 +2289,8 @@ Actor * __fastcall handleActorCollision(Actor *actor1,Actor *actor2) {
                     playSound(sound);
                     return setActorFrameNo(actor1,local_c);
                 case ACTOR_TYPE_2_DOG:
-                case 0xc:
-                case 0x11:
+                case ACTOR_TYPE_12_SLALOM_FLAG:
+                case ACTOR_TYPE_17_SIGN:
                     if (bVar5) {
                         actor1->verticalVelocityMaybe = actor1->verticalVelocityMaybe / 2;
                     }
@@ -2300,7 +2300,7 @@ Actor * __fastcall handleActorCollision(Actor *actor1,Actor *actor2) {
                     }
                     break;
 
-                case 0xb:
+                case ACTOR_TYPE_11_MOGULS:
                     if (local_c == 0) {
                         local_c = 0xd;
                         actor1->inAirCounter = 1;
@@ -2313,7 +2313,7 @@ Actor * __fastcall handleActorCollision(Actor *actor1,Actor *actor2) {
 
                     //here
 
-                case 0xe:
+                case ACTOR_TYPE_14_ROCK_STUMP:
                     if (0 < sVar1) {
                         if (sVar9 < sVar1) {
                             if (actor2->spriteIdx2 == 0x56) {
@@ -2340,11 +2340,11 @@ Actor * __fastcall handleActorCollision(Actor *actor1,Actor *actor2) {
                 case 4:
                 case 9:
                 case 10:
-                case 0xd:
+                case ACTOR_TYPE_13_TREE:
                     if ((sVar9 < sVar1) || ((short)(actor1->spritePtr->height + sVar1) < actor2->isInAir)) {
                         if (iVar4 == 9) {
                             addStylePoints(1000);
-                            actor2->typeMaybe = 0xd;
+                            actor2->typeMaybe = ACTOR_TYPE_13_TREE;
                             actorSetSpriteIdx(actor2, 0x32);
                             return setActorFrameNo(actor1, local_c);
                         } else {
@@ -2353,7 +2353,7 @@ Actor * __fastcall handleActorCollision(Actor *actor1,Actor *actor2) {
                         }
                     }
                     if (bVar5) {
-                        if (iVar4 == 0xd) {
+                        if (iVar4 == ACTOR_TYPE_13_TREE) {
                             maxSpriteWidth = max(actor1->spritePtr->width,actor2->spritePtr->width);
                             if (abs((int)actor1->xPosMaybe - (int)actor2->xPosMaybe) > (int)maxSpriteWidth / 2) {
                                 actor1->verticalVelocityMaybe = actor1->verticalVelocityMaybe / 2;
@@ -2382,7 +2382,7 @@ Actor * __fastcall handleActorCollision(Actor *actor1,Actor *actor2) {
                     }
                     break;
 
-                case 0x10:
+                case ACTOR_TYPE_16_JUMP:
                     if (((bVar5) && ((int)sVar1 < (int)sVar9 / 2)) && (0 < actor1->verticalVelocityMaybe)) {
                         actor1->inAirCounter = actor1->verticalVelocityMaybe;
 //                        goto LAB_00403cb4;
@@ -2421,14 +2421,14 @@ Actor * __fastcall handleActorCollision(Actor *actor1,Actor *actor2) {
                     addStylePoints(0x14);
                 case ACTOR_TYPE_1_BEGINNER:
                 case ACTOR_TYPE_3_SNOWBOARDER:
-                case 0xd:
-                case 0xe:
+                case ACTOR_TYPE_13_TREE:
+                case ACTOR_TYPE_14_ROCK_STUMP:
                     if ((sVar1 < sVar9) && (local_c != 0x22)) {
                         return setActorFrameNo(actor1,0x22);
                     }
                     break;
-                case 0xf:
-                case 0x10:
+                case ACTOR_TYPE_15_BUMP:
+                case ACTOR_TYPE_16_JUMP:
                     if (sVar1 < sVar9) {
                         actor1->inAirCounter = actor1->verticalVelocityMaybe / 2;
                         playSound(&sound_5);
@@ -3033,7 +3033,7 @@ PermObject * __fastcall addPermObject(PermObjectList *objList, PermObject *permO
     pPVar1 = &permObjects[permObjectCount++]; // + uVar2;
     ski_assert(objList, 2587);
     ski_assert(permObject, 2588);
-    ski_assert(permObjectCount <= 0x100, 2589);
+    ski_assert(permObjectCount <= NUM_PERM_OBJECTS, 2589);
 
     if (objList->startingObject == (PermObject *)0x0) {
         objList->currentObj = pPVar1;
@@ -3061,7 +3061,7 @@ void setupPermObjects() {
     permObject.xVelocity = 0;
     permObject.unk_0x18 = 0;
     setPointerToNull(&PermObjectList_0040c630);
-    permObject.actorTypeMaybe = 0x11;
+    permObject.actorTypeMaybe = ACTOR_TYPE_17_SIGN;
     permObject.maybeX = ((short)playerX - skierScreenXOffset) + windowClientRect.left + 60;
     permObject.spriteIdx = 0x3d;
     if (permObject.maybeX < -320) {
@@ -3079,7 +3079,7 @@ void setupPermObjects() {
     permObject.spriteIdx = 0x3a;
     permObject.maybeX = -320;
     addPermObject(&PermObjectList_0040c630,&permObject);
-    permObject.actorTypeMaybe = 0xc;
+    permObject.actorTypeMaybe = ACTOR_TYPE_12_SLALOM_FLAG;
     bVar1 = TRUE;
     firstSlalomFlagLeft = (PermObject *)0x0;
     /* slalom flags */
@@ -3095,7 +3095,7 @@ void setupPermObjects() {
         }
         sVar4 = sVar4 + 320;
     } while (sVar4 < 8640);
-    permObject.actorTypeMaybe = 0x11;
+    permObject.actorTypeMaybe = ACTOR_TYPE_17_SIGN;
     permObject.spriteIdx = 0x3b;
     permObject.maybeX = -576;
     permObject.maybeY = 8640;
@@ -3104,7 +3104,7 @@ void setupPermObjects() {
     permObject.maybeX = -320;
     addPermObject(&PermObjectList_0040c630,&permObject);
     setPointerToNull(&PermObjectList_0040c5e0);
-    permObject.actorTypeMaybe = 0x11;
+    permObject.actorTypeMaybe = ACTOR_TYPE_17_SIGN;
     permObject.spriteIdx = 0x3e;
     permObject.maybeX =
             ((short)windowClientRect.right - skierScreenXOffset) + -0x3c + (short)playerX;
@@ -3129,7 +3129,7 @@ void setupPermObjects() {
     /* slalom flags, right hand side */
     sVar4 = 0x410;
     do {
-        permObject.actorTypeMaybe = 0xc;
+        permObject.actorTypeMaybe = ACTOR_TYPE_12_SLALOM_FLAG;
         permObject.spriteIdx = bVar1 ? 0x17 : 0x18;
         permObject.maybeX = bVar1 ? 400 : 432;
         bVar1 = !bVar1;
@@ -3138,15 +3138,15 @@ void setupPermObjects() {
         if (FirstSlalomFlagRight == (PermObject *)0x0) {
             FirstSlalomFlagRight = pPVar3;
         }
-        permObject.actorTypeMaybe = 0xd;
-        permObject.spriteIdx = getSpriteIdxForActorType(0xd);
+        permObject.actorTypeMaybe = ACTOR_TYPE_13_TREE;
+        permObject.spriteIdx = getSpriteIdxForActorType(ACTOR_TYPE_13_TREE);
         uVar2 = random(0x20);
         permObject.maybeX = uVar2 + 400;
         /* this should use the return value */
         random(400);
         sVar4 = sVar4 + 400;
     } while (sVar4 < 0x4100);
-    permObject.actorTypeMaybe = 0x11;
+    permObject.actorTypeMaybe = ACTOR_TYPE_17_SIGN;
     /* finish sign left */
     permObject.spriteIdx = 0x3b;
     permObject.maybeX = 320;
@@ -3158,7 +3158,7 @@ void setupPermObjects() {
     addPermObject(&PermObjectList_0040c5e0,&permObject);
     setPointerToNull(&PermObjectList_0040c658);
 
-    permObject.actorTypeMaybe = 0x11;
+    permObject.actorTypeMaybe = ACTOR_TYPE_17_SIGN;
     permObject.spriteIdx = 0x3f;
     permObject.maybeX = 0;
     permObject.maybeY = (windowClientRect.bottom - skierScreenYOffset);
@@ -3188,7 +3188,7 @@ void setupPermObjects() {
     /* ski lift poles??? */
     sVar4 = -1024;
     do {
-        permObject.actorTypeMaybe = 0xd;
+        permObject.actorTypeMaybe = ACTOR_TYPE_13_TREE;
         permObject.spriteIdx = 0x40;
         permObject.maybeX = -128;
         permObject.maybeY = sVar4;

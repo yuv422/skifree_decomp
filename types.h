@@ -101,16 +101,24 @@ typedef struct {
 #define BORDER_TOP    2
 #define BORDER_BOTTOM 3
 
-#define ACTOR_TYPE_0_PLAYER      0
-#define ACTOR_TYPE_1_BEGINNER    1
-#define ACTOR_TYPE_2_DOG         2
-#define ACTOR_TYPE_3_SNOWBOARDER 3
-#define ACTOR_TYPE_4_CHAIRLIFT   4
-#define ACTOR_TYPE_5_YETI_TOP    5
-#define ACTOR_TYPE_6_YETI_BOTTOM 6
-#define ACTOR_TYPE_7_YETI_LEFT   7
-#define ACTOR_TYPE_8_YETI_RIGHT  8
-#define ACTOR_TYPE_9_TREE_ON_FIRE 9
-#define ACTOR_TYPE_10_WALKING_TREE 10
+#define ACTOR_TYPE_0_PLAYER        0
+#define ACTOR_TYPE_1_BEGINNER      1
+#define ACTOR_TYPE_2_DOG           2
+#define ACTOR_TYPE_3_SNOWBOARDER   3
+#define ACTOR_TYPE_4_CHAIRLIFT     4
+#define ACTOR_TYPE_5_YETI_TOP      5
+#define ACTOR_TYPE_6_YETI_BOTTOM   6
+#define ACTOR_TYPE_7_YETI_LEFT     7
+#define ACTOR_TYPE_8_YETI_RIGHT    8
+#define ACTOR_TYPE_9_TREE_ON_FIRE  9
+#define ACTOR_TYPE_10_WALKING_TREE 10 // a
+#define ACTOR_TYPE_11_MOGULS       11 // b
+#define ACTOR_TYPE_12_SLALOM_FLAG  12 // c
+#define ACTOR_TYPE_13_TREE         13 // d
+#define ACTOR_TYPE_14_ROCK_STUMP   14 // e
+#define ACTOR_TYPE_15_BUMP         15 // f
+#define ACTOR_TYPE_16_JUMP         16 // 10
+#define ACTOR_TYPE_17_SIGN         17 // 11
+#define ACTOR_TYPE_18_NOTHING      18 // 12
 
 #endif //SKIFREE_DECOMP_TYPES_H

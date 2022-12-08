@@ -2,9 +2,9 @@
 .model flat
 .code
 
-include ..\\structs.inc
-include ..\\data_extern.inc
-include ..\\c_funcs.inc
+include ..\\asm\\structs.inc
+include ..\\asm\\data_extern.inc
+include ..\\asm\\c_funcs.inc
 
 ;extern  _updateGameState: proc
 ;extern @drawWindow@8: proc

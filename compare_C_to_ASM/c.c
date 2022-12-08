@@ -93,23 +93,12 @@ extern BOOL __fastcall changeScratchBitmapSize(short newWidth, short newHeight);
 //
 
 
-BOOL allocateMemory() {
-    int i;
-
-    stringCache = LocalAlloc(LMEM_FIXED,NUM_STRINGS * sizeof(char **));
-    sprites = LocalAlloc(LMEM_FIXED,NUM_SPRITES * sizeof(Sprite));
-    actors = LocalAlloc(LMEM_FIXED,NUM_ACTORS * sizeof(Actor));
-    permObjects = LocalAlloc(LMEM_FIXED,   NUM_PERM_OBJECTS * sizeof(PermObject));
-
-    if (stringCache && actors && sprites && permObjects) {
-        for (i = 0; i < NUM_STRINGS; i++) {
-            stringCache[i] = NULL;
-        }
-        return TRUE;
+int randomActorType3() {
+    if (totalAreaOfActorSprites > windowWithMarginTotalArea / 16) {
+        return ACTOR_TYPE_18_NOTHING;
     }
 
-    showErrorMessage(s_insufficient_local_memory);
-    return FALSE;
+    return random(0x40) != 0 ? ACTOR_TYPE_13_ : ACTOR_TYPE_2_DOG;
 }
 
 
